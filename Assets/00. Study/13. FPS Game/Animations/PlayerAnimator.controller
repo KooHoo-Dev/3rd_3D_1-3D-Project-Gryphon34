@@ -55,16 +55,16 @@ AnimatorStateMachine:
   m_ChildStates:
   - serializedVersion: 1
     m_State: {fileID: 3683637996361425864}
-    m_Position: {x: 360, y: 260, z: 0}
+    m_Position: {x: 310, y: 220, z: 0}
   - serializedVersion: 1
     m_State: {fileID: 5529967971035925702}
-    m_Position: {x: 540, y: 40, z: 0}
+    m_Position: {x: 520, y: 60, z: 0}
   - serializedVersion: 1
     m_State: {fileID: -3786012413141774382}
-    m_Position: {x: 90, y: 150, z: 0}
+    m_Position: {x: 100, y: 60, z: 0}
   - serializedVersion: 1
     m_State: {fileID: 1403756397979677642}
-    m_Position: {x: 310, y: 90, z: 0}
+    m_Position: {x: 310, y: 60, z: 0}
   m_ChildStateMachines: []
   m_AnyStateTransitions:
   - {fileID: 7226672216223309262}
@@ -73,8 +73,8 @@ AnimatorStateMachine:
   m_EntryTransitions: []
   m_StateMachineTransitions: {}
   m_StateMachineBehaviours: []
-  m_AnyStatePosition: {x: 180, y: -20, z: 0}
-  m_EntryPosition: {x: -80, y: 270, z: 0}
+  m_AnyStatePosition: {x: 330, y: -60, z: 0}
+  m_EntryPosition: {x: 40, y: 220, z: 0}
   m_ExitPosition: {x: 800, y: 120, z: 0}
   m_ParentStateMachinePosition: {x: 800, y: 20, z: 0}
   m_DefaultState: {fileID: 3683637996361425864}
@@ -234,6 +234,25 @@ MonoBehaviour:
   - name: SwapComplete
     time: 0.65
     parameter: 
+--- !u!114 &1391319003327110679
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a37e4f4147c8fc648aa0b99a37d5b716, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Study3D.FpsGame.AnimStateEventSender
+  events:
+  - name: ReloadComplete
+    time: 0.8
+    parameter: ReloadComplete_3
+  - name: StartReload
+    time: 0
+    parameter: 
 --- !u!1102 &1403756397979677642
 AnimatorState:
   serializedVersion: 6
@@ -247,7 +266,7 @@ AnimatorState:
   m_Transitions:
   - {fileID: -6732423435600228637}
   m_StateMachineBehaviours:
-  - {fileID: 8483157178444378043}
+  - {fileID: 1391319003327110679}
   m_Position: {x: 50, y: 50, z: 0}
   m_IKOnFeet: 0
   m_WriteDefaultValues: 1
@@ -340,19 +359,3 @@ AnimatorStateTransition:
   m_InterruptionSource: 0
   m_OrderedInterruption: 1
   m_CanTransitionToSelf: 1
---- !u!114 &8483157178444378043
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a37e4f4147c8fc648aa0b99a37d5b716, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  events:
-  - name: ReloadComplete
-    time: 0.8
-    parameter: ReloadComplete_3

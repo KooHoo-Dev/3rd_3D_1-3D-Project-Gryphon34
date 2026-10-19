@@ -18,12 +18,14 @@ namespace Study3D.FpsGame.Player
 
         private void OnEnable()
         {
-            
+            Player.LocalPlayer.OnStartChangeWeapon += PlayWeaponChangeAnimation;
+            Player.LocalPlayer.OnRequestedReload += PlayReloadAnimation;
         }
 
         private void OnDisable()
         {
-            
+            Player.LocalPlayer.OnStartChangeWeapon -= PlayWeaponChangeAnimation;
+            Player.LocalPlayer.OnRequestedReload -= PlayReloadAnimation;
         }
         
         private void Update()
