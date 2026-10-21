@@ -1,4 +1,6 @@
+using Study.Utilities;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 namespace BossRaid
 {
@@ -38,6 +40,17 @@ namespace BossRaid
                 : 1f + Mathf.InverseLerp(controller.WalkSpeed, controller.RunSpeed, speed);
 
             animator.SetFloat(SpeedHash, blend, dampTime, Time.deltaTime);
+            
+            // 테스트용. 확인 끝나면 지우세요.
+            if (SimpleInput.GetKeyDown(Key.Digit1)) animator.CrossFadeInFixedTime("Combo1_Start", 0.1f);
+            if (SimpleInput.GetKeyUp(Key.Digit1))   animator.CrossFadeInFixedTime("Combo1_End", 0.05f);
+
+            if (SimpleInput.GetKeyDown(Key.Digit2)) animator.CrossFadeInFixedTime("Combo2_Start", 0.1f);
+            if (SimpleInput.GetKeyUp(Key.Digit2))   animator.CrossFadeInFixedTime("Combo2_End", 0.05f);
+
+            if (SimpleInput.GetKeyDown(Key.Digit3)) animator.CrossFadeInFixedTime("Combo3_Start", 0.1f);
+            if (SimpleInput.GetKeyUp(Key.Digit3))   animator.CrossFadeInFixedTime("Combo3_End", 0.05f);
+            
         }
     }
 }
