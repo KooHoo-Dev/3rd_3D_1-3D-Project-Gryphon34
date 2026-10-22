@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: e5db9a40398c5ab42b006dacd0f9d8bc
+guid: 0a83cf16a85da124e9acc0fa41264d14
 ModelImporter:
   serializedVersion: 24200
   internalIDToNameTable:
@@ -419,7 +419,7 @@ ModelImporter:
     second: root
   - first:
       74: 7400000
-    second: Combo3_Start
+    second: Skill_H
   - first:
       95: 9500000
     second: //RootNode
@@ -458,11 +458,11 @@ ModelImporter:
     extraUserProperties: []
     clipAnimations:
     - serializedVersion: 16
-      name: Combo3_Start
+      name: Combo1_Start
       takeName: Take 001
       internalID: 0
       firstFrame: 0
-      lastFrame: 4
+      lastFrame: 7
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
@@ -627,11 +627,11 @@ ModelImporter:
       maskSource: {fileID: 31900000, guid: b038f001f1b41254e8e6cdb37c9fab85, type: 2}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: Combo3_Charge
+      name: Combo1_Charge
       takeName: Take 001
-      internalID: -6569761556518598023
-      firstFrame: 4
-      lastFrame: 6
+      internalID: -741908306355942791
+      firstFrame: 7
+      lastFrame: 11
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
@@ -656,11 +656,40 @@ ModelImporter:
       maskSource: {fileID: 31900000, guid: b038f001f1b41254e8e6cdb37c9fab85, type: 2}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: Combo3_End
+      name: Combo1_Attack
       takeName: Take 001
-      internalID: 7573900464418875947
-      firstFrame: 6
-      lastFrame: 40
+      internalID: -7492552602087138220
+      firstFrame: 11
+      lastFrame: 23
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 1
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 1
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask: []
+      maskType: 3
+      maskSource: {fileID: 31900000, guid: b038f001f1b41254e8e6cdb37c9fab85, type: 2}
+      additiveReferencePoseFrame: 0
+    - serializedVersion: 16
+      name: Combo1_End
+      takeName: Take 001
+      internalID: -4900179076508897249
+      firstFrame: 23
+      lastFrame: 47
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
@@ -1516,7 +1545,8 @@ ModelImporter:
     hasTranslationDoF: 0
     hasExtraRoot: 1
     skeletonHasParents: 1
-  lastHumanDescriptionAvatarSource: {fileID: 9000000, guid: 43992d4f16e57574fa5d16ef485c0cbd, type: 3}
+  lastHumanDescriptionAvatarSource: {fileID: 9000000, guid: 43992d4f16e57574fa5d16ef485c0cbd,
+    type: 3}
   autoGenerateAvatarMappingIfUnspecified: 1
   animationType: 3
   humanoidOversampling: 1
