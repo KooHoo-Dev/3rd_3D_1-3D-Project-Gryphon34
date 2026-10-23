@@ -1,4 +1,5 @@
-﻿using Study.Utilities;
+﻿using BossRaid.Weapon;
+using Study.Utilities;
 using UnityEngine;
 
 namespace BossRaid.Player.States
@@ -7,13 +8,13 @@ namespace BossRaid.Player.States
     {
         public ChargeState(PlayerController owner) : base(owner) { }
 
-        public float holdingTime = 0.0f;
+        public float chargingingTime = 0.0f;
         
         public override void Enter()
         {
             Animator.SetBool(PlayerController.IsAttackHash, false);
             Owner.StopMovement();
-            holdingTime = 0.0f;
+            chargingingTime = 0.0f;
         }
         
         public override void UpdateState(AnimatorStateInfo stateInfo)
@@ -22,8 +23,12 @@ namespace BossRaid.Player.States
             Animator.SetBool(PlayerController.IsChargingHash, isHolding);
             if (stateInfo.IsTag("Charge") && isHolding)
             {
-                holdingTime += Time.deltaTime;
+                chargingingTime += Time.deltaTime;
             }
+        }
+
+        public override void Exit()
+        {
         }
     }
 }
