@@ -1,19 +1,37 @@
 ﻿using System.Collections.Generic;
+using BossRaid.Combat;
 using UnityEngine;
 
 namespace BossRaid.Player
 {
     public class WeaponCollider : MonoBehaviour
     {
-        private Collider weaponCollider;
-        private HashSet<Collider> colliders = new HashSet<Collider>();
+        [SerializeField] private LayerMask mask;
+        
+        private HashSet<object> bossHash = new HashSet<object>();
+        private float damage;
+        private float stamina;
 
-        private void Awake()
+        public void SetAttackValue(float swordDamage, float swordStamina)
         {
-            weaponCollider =  GetComponent<Collider>();
-            weaponCollider.enabled = false;
+            damage = swordDamage;
+            stamina = swordStamina;
         }
-        
-        
+
+        public void ResetHash()
+        {
+            bossHash.Clear();
+        }
+
+        private void OnTriggerEnter(Collider other)
+        {
+            if (LayerMaskExtensions.Contains(mask, other.gameObject) == false) return;
+            if (other.TryGetComponent(out IDamageable damageable) == false) return;
+            if (bossHash.Contains(damageable.Owner)) return;
+            bossHash.Add(damageable.Owner);
+
+            AttackInfo info = new AttackInfo(damage, stamina, other.transform.position);
+            damageable.TakeDamage(info);
+        }
     }
 }

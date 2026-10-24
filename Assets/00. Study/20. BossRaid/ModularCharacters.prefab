@@ -1677,7 +1677,8 @@ GameObject:
   - component: {fileID: 4989580788354632039}
   - component: {fileID: 8288364000182803623}
   - component: {fileID: 3561666919561352330}
-  m_Layer: 0
+  - component: {fileID: 7183543783258040056}
+  m_Layer: 8
   m_Name: Combo2_Collider
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1777,6 +1778,21 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &7183543783258040056
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 385666477691191635}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cf0e66de89a2466680cd7fdcb4620b72, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BossRaid.Player.WeaponCollider
+  mask:
+    serializedVersion: 2
+    m_Bits: 512
 --- !u!1 &407693325225866690
 GameObject:
   m_ObjectHideFlags: 0
@@ -16431,7 +16447,8 @@ GameObject:
   - component: {fileID: 3041708467432100891}
   - component: {fileID: 4119598431544254059}
   - component: {fileID: 8201223458140843301}
-  m_Layer: 0
+  - component: {fileID: 3619196176528601182}
+  m_Layer: 8
   m_Name: Combo3_Collider
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -16531,6 +16548,21 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &3619196176528601182
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2165007934346919292}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cf0e66de89a2466680cd7fdcb4620b72, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BossRaid.Player.WeaponCollider
+  mask:
+    serializedVersion: 2
+    m_Bits: 512
 --- !u!1 &2167028803697822255
 GameObject:
   m_ObjectHideFlags: 0
@@ -55647,7 +55679,8 @@ GameObject:
   - component: {fileID: 4056153686300486463}
   - component: {fileID: 3549633387709568226}
   - component: {fileID: 1096927846889758171}
-  m_Layer: 0
+  - component: {fileID: 7206454837653082246}
+  m_Layer: 8
   m_Name: Combo1_Collider
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -55747,6 +55780,21 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &7206454837653082246
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7160830592374481653}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cf0e66de89a2466680cd7fdcb4620b72, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BossRaid.Player.WeaponCollider
+  mask:
+    serializedVersion: 2
+    m_Bits: 512
 --- !u!1 &7166291609775198920
 GameObject:
   m_ObjectHideFlags: 0
