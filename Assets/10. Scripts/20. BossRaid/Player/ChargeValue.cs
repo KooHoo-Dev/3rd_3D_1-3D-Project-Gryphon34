@@ -6,6 +6,6 @@
         public int Level;
         public float Time;
         public float Damage;
-        public float Stamina;
+        public float Fatigue;
     }
 }

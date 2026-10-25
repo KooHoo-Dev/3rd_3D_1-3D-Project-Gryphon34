@@ -8,13 +8,13 @@ namespace BossRaid.Player.States
     {
         public ChargeState(PlayerController owner) : base(owner) { }
 
-        public float chargingingTime = 0.0f;
+        public float chargingTime = 0.0f;
         
         public override void Enter()
         {
             Animator.SetBool(PlayerController.IsAttackHash, false);
             Owner.StopMovement();
-            chargingingTime = 0.0f;
+            chargingTime = 0.0f;
         }
         
         public override void UpdateState(AnimatorStateInfo stateInfo)
@@ -23,12 +23,14 @@ namespace BossRaid.Player.States
             Animator.SetBool(PlayerController.IsChargingHash, isHolding);
             if (stateInfo.IsTag("Charge") && isHolding)
             {
-                chargingingTime += Time.deltaTime;
+                chargingTime += Time.deltaTime;
             }
         }
 
         public override void Exit()
         {
+            // 모은 시간으로 차지 단계를 정해서 칼에 넘겨준다 (공격 상태로 넘어가기 직전)
+            Owner.Sword.ApplyCharge(chargingTime);
         }
     }
 }

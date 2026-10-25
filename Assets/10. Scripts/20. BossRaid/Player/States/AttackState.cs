@@ -5,7 +5,11 @@ namespace BossRaid.Player.States
     public class AttackState : PlayerStatesBase
     {
         public AttackState(PlayerController owner) : base(owner) { }
-        
+
+        public override void Enter()
+        {
+            Owner.Sword.ResetHash();
+        }
 
         public override void UpdateState(AnimatorStateInfo stateInfo)
         {

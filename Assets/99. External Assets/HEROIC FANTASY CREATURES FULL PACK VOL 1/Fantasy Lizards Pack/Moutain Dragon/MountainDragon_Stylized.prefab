@@ -3271,7 +3271,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 2.120387, y: -3.1752017, z: -6.72216}
-  m_LocalScale: {x: 0.5227, y: 0.5227, z: 0.5227}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 3979890189125571517}
@@ -3288,7 +3288,7 @@ Animator:
   m_GameObject: {fileID: 8723442837097035155}
   m_Enabled: 1
   m_Avatar: {fileID: 9000000, guid: e0080c37f479acb49b6389201658bbf1, type: 3}
-  m_Controller: {fileID: 9100000, guid: d6fa7ae44974f644f89bd7457084721b, type: 2}
+  m_Controller: {fileID: 9100000, guid: c7fe8fb167b251f4f9c489d7982c01ef, type: 2}
   m_CullingMode: 1
   m_UpdateMode: 0
   m_ApplyRootMotion: 1
@@ -3313,7 +3313,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BossRaid.Boss.Boss
   maxHp: 300
-  maxStamina: 30
+  maxFatigue: 30
   exhaustTime: 3
 --- !u!1 &8845109905554430120
 GameObject:

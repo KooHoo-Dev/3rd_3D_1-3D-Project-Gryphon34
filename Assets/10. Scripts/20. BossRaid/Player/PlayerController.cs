@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using BossRaid.Player.States;
+using BossRaid.Weapon;
 using Study.Utilities;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -35,6 +36,7 @@ namespace BossRaid.Player
 
         public Animator Animator { get; private set; }
         public ThirdPersonController Movement { get; private set; }
+        public GreatSword Sword { get; private set; }
 
         private readonly Dictionary<int, PlayerStatesBase> stateDic = new Dictionary<int, PlayerStatesBase>();
         private PlayerStatesBase defaultState; // Tag가 등록되지 않은 상태일 때 쓰는 기본 상태
@@ -44,6 +46,7 @@ namespace BossRaid.Player
         {
             Animator = GetComponentInChildren<Animator>();
             Movement = GetComponent<ThirdPersonController>();
+            Sword = GetComponentInChildren<GreatSword>();
 
             Animator.applyRootMotion = false;
 
