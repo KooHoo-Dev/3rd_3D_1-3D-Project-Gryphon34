@@ -9,7 +9,6 @@ namespace BossRaid.Boss
 {
     public class Boss : MonoBehaviour
     {
-        private static readonly int DieHash = Animator.StringToHash("Die");
         [SerializeField] private float maxHp = 100;
         [SerializeField] private float maxFatigue = 30;
         [SerializeField] private float exhaustTime = 3f;
@@ -27,7 +26,7 @@ namespace BossRaid.Boss
         public BossState CurrentState { get; private set; }
         private readonly Dictionary<BossState.StateName, BossState> statesDic = new Dictionary<BossState.StateName, BossState>();
         
-        public event Action OnDead;
+        public event Action OnDeath;
 
         private void Awake()
         {
@@ -131,12 +130,6 @@ namespace BossRaid.Boss
             CurrentState.ReceiveAnimEvent(eventName, parameter);
         }
 
-        [ContextMenu("Test Claw Attack")]
-        public void TestClawAttack()
-        {
-            ChangeState(BossState.StateName.ClawAttackState);
-        }
-
         private void Exhausted()
         {
             IsExhausted = true;
@@ -155,8 +148,8 @@ namespace BossRaid.Boss
         {
             foreach(var hurtbox in hurtboxes) hurtbox.Disable();
             Debug.Log(gameObject.name + " is dead");
-            Animator.SetTrigger(DieHash);
-            OnDead?.Invoke();
+            ChangeState(BossState.StateName.DeathState);
+            OnDeath?.Invoke();
         }
     }
 }

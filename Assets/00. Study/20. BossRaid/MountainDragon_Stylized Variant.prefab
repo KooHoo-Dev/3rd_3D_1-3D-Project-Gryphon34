@@ -44,8 +44,55 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 867aa55f43a644e7a7615e5b45a1bde7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BossRaid.Boss.States.IdleState
-  animatorStateName: 
+  animatorStateName: IdleState
   exitTime: 0.8
+  idleTime: 5
+--- !u!1 &442467085918213951
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1183491635434248609}
+  - component: {fileID: 1734265442131928620}
+  m_Layer: 0
+  m_Name: DeathState
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1183491635434248609
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 442467085918213951}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 3908744260580038545}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1734265442131928620
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 442467085918213951}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 13a9be20319e4c588a73b009e1c96606, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BossRaid.Boss.States.DeathState
+  animatorStateName: 
+  exitTime: 0
 --- !u!1 &2908866888326103559
 GameObject:
   m_ObjectHideFlags: 0
@@ -77,6 +124,7 @@ Transform:
   m_Children:
   - {fileID: 878764028608009638}
   - {fileID: 6804713129880345096}
+  - {fileID: 1183491635434248609}
   m_Father: {fileID: 5856249170217965408}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &7151634674224317015
@@ -198,6 +246,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::BossRaid.Boss.States.ClawAttack
   animatorStateName: ClawsAttackLeft
   exitTime: 0.8
+  hitbox: {fileID: 1395576116866120357}
 --- !u!1001 &9146079710950930374
 PrefabInstance:
   m_ObjectHideFlags: 0

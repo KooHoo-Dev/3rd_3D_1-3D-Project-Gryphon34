@@ -372,6 +372,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::BossRaid.Flow.HuntManager
   villageSceneName: 00. Village
   returnDelay: 3
+  boss: {fileID: 1550725179}
+  playerHealth: {fileID: 797866908}
 --- !u!4 &158170002
 Transform:
   m_ObjectHideFlags: 0
@@ -870,11 +872,30 @@ PrefabInstance:
       propertyPath: m_Name
       value: ModularCharacters
       objectReference: {fileID: 0}
+    - target: {fileID: 7191694385390462385, guid: 3498d9f5be392cd479870bb4b79b1cdd, type: 3}
+      propertyPath: lockTarget
+      value: 
+      objectReference: {fileID: 284140735}
+    - target: {fileID: 7191694385390462385, guid: 3498d9f5be392cd479870bb4b79b1cdd, type: 3}
+      propertyPath: cameraCollisionMask.m_Bits
+      value: 247
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3498d9f5be392cd479870bb4b79b1cdd, type: 3}
+--- !u!114 &797866908 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 52048873611168, guid: 3498d9f5be392cd479870bb4b79b1cdd, type: 3}
+  m_PrefabInstance: {fileID: 797866907}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3d9b42758257403fb86a64825293a5cc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BossRaid.Player.PlayerHealth
 --- !u!1001 &812932651
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1648,6 +1669,17 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 5856249170217965408, guid: 04ece8ed263062a4d83de796aa056fdf, type: 3}
   m_PrefabInstance: {fileID: 1550725177}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1550725179 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 570392973755331556, guid: 04ece8ed263062a4d83de796aa056fdf, type: 3}
+  m_PrefabInstance: {fileID: 1550725177}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 272833c7cc76496c9c00557bb75fafd2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BossRaid.Boss.Boss
 --- !u!1001 &1602275461
 PrefabInstance:
   m_ObjectHideFlags: 0

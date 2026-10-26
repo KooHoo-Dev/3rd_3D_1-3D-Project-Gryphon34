@@ -28344,6 +28344,11 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 419854, guid: 67f6358a70929f943ae115f8b4bcf075, type: 3}
   m_PrefabInstance: {fileID: 1952703661}
   m_PrefabAsset: {fileID: 0}
+--- !u!4 &1959857075 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 5856249170217965408, guid: 04ece8ed263062a4d83de796aa056fdf, type: 3}
+  m_PrefabInstance: {fileID: 1927304652459454663}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1968154402
 GameObject:
   m_ObjectHideFlags: 0
@@ -30987,7 +30992,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7041014786190935372, guid: 3498d9f5be392cd479870bb4b79b1cdd, type: 3}
       propertyPath: m_IsKinematic
-      value: 1
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7191694385390462385, guid: 3498d9f5be392cd479870bb4b79b1cdd, type: 3}
+      propertyPath: lockTarget
+      value: 
+      objectReference: {fileID: 1959857075}
+    - target: {fileID: 7191694385390462385, guid: 3498d9f5be392cd479870bb4b79b1cdd, type: 3}
+      propertyPath: cameraCollisionMask.m_Bits
+      value: 247
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -31016,7 +31029,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5856249170217965408, guid: 04ece8ed263062a4d83de796aa056fdf, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 5.9
+      value: 5.312
       objectReference: {fileID: 0}
     - target: {fileID: 5856249170217965408, guid: 04ece8ed263062a4d83de796aa056fdf, type: 3}
       propertyPath: m_LocalPosition.z
@@ -31055,7 +31068,7 @@ PrefabInstance:
       value: ClawsAttackLeft
       objectReference: {fileID: 0}
     m_RemovedComponents:
-    - {fileID: 8320447416363575887, guid: 04ece8ed263062a4d83de796aa056fdf, type: 3}
+    - {fileID: 0}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []

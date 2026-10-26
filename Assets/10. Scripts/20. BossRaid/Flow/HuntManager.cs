@@ -1,4 +1,6 @@
-using System.Collections;
+using System;
+using BossRaid.Player;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -10,11 +12,7 @@ namespace BossRaid.Flow
         Killed, // 보스 처치
         Died    // 플레이어 사망
     }
-
-    // 투기장 씬에 하나 둡니다.
-    // 사냥이 끝나면(처치 / 사망) 결과를 남기고, 잠시 뒤 마을로 돌려보냅니다.
-    // - 보스와 플레이어를 직접 알지 않습니다. 사망하는 쪽에서 BossKilled / PlayerDied를 불러주면 됩니다.
-    // - LastResult는 static이라 씬이 바뀌어도 남습니다. 마을의 Bonfire가 읽습니다.
+    
     public class HuntManager : MonoBehaviour
     {
         public static HuntResult LastResult { get; private set; } = HuntResult.None;
@@ -22,7 +20,22 @@ namespace BossRaid.Flow
         [SerializeField] private string villageSceneName = "00. Village";
         [SerializeField] private float returnDelay = 3f; // 결과가 난 뒤 마을로 돌아가기까지 기다리는 시간
 
+        public Boss.Boss boss;
+        public PlayerHealth playerHealth;
+        
         private bool isFinished; // 처치 직후 플레이어가 죽는 식으로 결과가 두 번 들어오는 것을 막습니다
+
+        private void OnEnable()
+        {
+            boss.OnDeath += BossKilled;
+            playerHealth.OnDeath += PlayerDied;
+        }
+
+        private void OnDisable()
+        {
+            boss.OnDeath -= BossKilled;
+            playerHealth.OnDeath -= PlayerDied;
+        }
 
         public void BossKilled()
         {
@@ -45,13 +58,12 @@ namespace BossRaid.Flow
                 Debug.Log("[사냥] 처치! 보상: 소울, 소재 (미구현)");
             else
                 Debug.Log("[사냥] 사망... 준 피해만큼 소울 (미구현)");
-
-            StartCoroutine(ReturnToVillage());
+            ReturnToVillage().Forget();
         }
 
-        private IEnumerator ReturnToVillage()
+        private async UniTask ReturnToVillage()
         {
-            yield return new WaitForSeconds(returnDelay);
+            await UniTask.Delay(TimeSpan.FromSeconds(returnDelay), cancellationToken: destroyCancellationToken);
             Debug.Log("[사냥] 마을로 돌아갑니다");
             SceneManager.LoadScene(villageSceneName);
         }

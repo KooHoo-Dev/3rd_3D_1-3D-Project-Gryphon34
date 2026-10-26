@@ -8,6 +8,7 @@ namespace BossRaid.Boss.States
         {
             IdleState,
             ClawAttackState,
+            DeathState,
         }
 
         [SerializeField] protected string animatorStateName;

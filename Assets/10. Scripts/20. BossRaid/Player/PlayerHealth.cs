@@ -1,4 +1,5 @@
-﻿using BossRaid.Combat;
+﻿using System;
+using BossRaid.Combat;
 using UnityEngine;
 
 namespace BossRaid.Player
@@ -16,11 +17,16 @@ namespace BossRaid.Player
         
         private Animator animator;
         private PlayerController playerController;
+        private Rigidbody playerRigidbody;
+        public event Action OnDeath;
+        
         private void Awake()
         {
             CurrentHealth = maxHealth;
             animator = GetComponent<Animator>();
             playerController = GetComponent<PlayerController>();
+            playerRigidbody = GetComponent<Rigidbody>();
+            playerRigidbody.isKinematic = false;
         }
         
         public void TakeDamage(AttackInfo info)
@@ -40,7 +46,9 @@ namespace BossRaid.Player
         {
             playerController.StopMovement();
             playerController.enabled = false;
+            playerRigidbody.isKinematic = true;
             animator.SetTrigger(Die);
+            OnDeath?.Invoke();
             Debug.Log($"[Player] 플레이어 is dead");
         }
 
