@@ -7377,52 +7377,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 467654, guid: 78466d0b55e39444a95c774fd1461854, type: 3}
   m_PrefabInstance: {fileID: 536585490}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &537326672 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 6833598422118439386, guid: 3498d9f5be392cd479870bb4b79b1cdd, type: 3}
-  m_PrefabInstance: {fileID: 524206614234476356}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &537326673
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 537326672}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0b82233eb1da6e849bdddd33dfea4800, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::BossRaid.Weapon.GreatSword
-  attackPower: 100
-  weaponColliders:
-  - {fileID: 1875978257}
-  - {fileID: 1974144882}
-  - {fileID: 539329319}
---- !u!114 &537326674
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 537326672}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3d9b42758257403fb86a64825293a5cc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::BossRaid.Player.PlayerHealth
-  maxHealth: 50
---- !u!114 &539329319 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 3619196176528601182, guid: 3498d9f5be392cd479870bb4b79b1cdd, type: 3}
-  m_PrefabInstance: {fileID: 524206614234476356}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cf0e66de89a2466680cd7fdcb4620b72, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::BossRaid.Player.WeaponCollider
 --- !u!4 &540735872 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 484294, guid: 7473a5138ccf3844a9cd93d43675b88e, type: 3}
@@ -21184,6 +21138,17 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 446176, guid: a475e72db2f78ba41b557ca01e7ed990, type: 3}
   m_PrefabInstance: {fileID: 1426751516}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1444972855 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1395576116866120357, guid: 04ece8ed263062a4d83de796aa056fdf, type: 3}
+  m_PrefabInstance: {fileID: 1927304652459454663}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1f5d895eadaed47499160c259c454ee8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: '::'
 --- !u!1001 &1448822800
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -26754,17 +26719,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 422452, guid: 52301af46bf2aca4cba80ecf307a7777, type: 3}
   m_PrefabInstance: {fileID: 1862611103}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &1875978257 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 7206454837653082246, guid: 3498d9f5be392cd479870bb4b79b1cdd, type: 3}
-  m_PrefabInstance: {fileID: 524206614234476356}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cf0e66de89a2466680cd7fdcb4620b72, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::BossRaid.Player.WeaponCollider
 --- !u!1001 &1878451449
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -28425,17 +28379,6 @@ Transform:
   - {fileID: 820149283}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: -194.583, z: 0}
---- !u!114 &1974144882 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 7183543783258040056, guid: 3498d9f5be392cd479870bb4b79b1cdd, type: 3}
-  m_PrefabInstance: {fileID: 524206614234476356}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cf0e66de89a2466680cd7fdcb4620b72, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::BossRaid.Player.WeaponCollider
 --- !u!1001 &1989851725
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -31038,36 +30981,18 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 3619196176528601182, guid: 3498d9f5be392cd479870bb4b79b1cdd, type: 3}
-      propertyPath: motionValue
-      value: 0.2
-      objectReference: {fileID: 0}
-    - target: {fileID: 3619196176528601182, guid: 3498d9f5be392cd479870bb4b79b1cdd, type: 3}
-      propertyPath: motionFatigue
-      value: 20
-      objectReference: {fileID: 0}
     - target: {fileID: 6833598422118439386, guid: 3498d9f5be392cd479870bb4b79b1cdd, type: 3}
       propertyPath: m_Name
       value: ModularCharacters
       objectReference: {fileID: 0}
-    - target: {fileID: 7183543783258040056, guid: 3498d9f5be392cd479870bb4b79b1cdd, type: 3}
-      propertyPath: motionValue
-      value: 0.15
-      objectReference: {fileID: 0}
-    - target: {fileID: 7183543783258040056, guid: 3498d9f5be392cd479870bb4b79b1cdd, type: 3}
-      propertyPath: motionFatigue
-      value: 10
+    - target: {fileID: 7041014786190935372, guid: 3498d9f5be392cd479870bb4b79b1cdd, type: 3}
+      propertyPath: m_IsKinematic
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 6833598422118439386, guid: 3498d9f5be392cd479870bb4b79b1cdd, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 537326673}
-    - targetCorrespondingSourceObject: {fileID: 6833598422118439386, guid: 3498d9f5be392cd479870bb4b79b1cdd, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 537326674}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3498d9f5be392cd479870bb4b79b1cdd, type: 3}
 --- !u!1001 &1927304652459454663
 PrefabInstance:
@@ -31081,6 +31006,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: MountainDragon_Stylized
       objectReference: {fileID: 0}
+    - target: {fileID: 4796851160711986420, guid: 04ece8ed263062a4d83de796aa056fdf, type: 3}
+      propertyPath: hitbox
+      value: 
+      objectReference: {fileID: 1444972855}
     - target: {fileID: 5856249170217965408, guid: 04ece8ed263062a4d83de796aa056fdf, type: 3}
       propertyPath: m_LocalPosition.x
       value: 12.84
@@ -31121,11 +31050,12 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 9122839832457631100, guid: 04ece8ed263062a4d83de796aa056fdf, type: 3}
-      propertyPath: m_Enabled
-      value: 1
+    - target: {fileID: 9159990558548435369, guid: 04ece8ed263062a4d83de796aa056fdf, type: 3}
+      propertyPath: m_Name
+      value: ClawsAttackLeft
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 8320447416363575887, guid: 04ece8ed263062a4d83de796aa056fdf, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []

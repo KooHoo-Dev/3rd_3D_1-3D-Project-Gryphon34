@@ -1,5 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
+using BossRaid.Boss.States;
 using BossRaid.Combat;
+using Study3D.FpsGame;
 using UnityEngine;
 
 namespace BossRaid.Boss
@@ -17,17 +20,35 @@ namespace BossRaid.Boss
         private bool IsDead =>  (CurrentHp <= 0);
         private float currentExhaustedTime = 0f;
         
-        private Animator animator;
+        public Animator Animator { get; private set; }
         private Hurtbox[] hurtboxes;
-
+        private AnimStateEventListener listener;
+        
+        public BossState CurrentState { get; private set; }
+        private readonly Dictionary<BossState.StateName, BossState> statesDic = new Dictionary<BossState.StateName, BossState>();
+        
         public event Action OnDead;
 
         private void Awake()
         {
-            animator = GetComponent<Animator>();
+            Animator = GetComponent<Animator>();
+            listener = GetComponent<AnimStateEventListener>();
             hurtboxes = GetComponentsInChildren<Hurtbox>();
             CurrentHp = maxHp;
             CurrentFatigue = maxFatigue;
+        }
+
+        private void Start()
+        {
+            BossState[] states = GetComponentsInChildren<BossState>();
+            for (int i = 0; i < states.Length; i++)
+            {
+                statesDic.Add(states[i].Name, states[i]);
+                states[i].Initialize(this);
+                states[i].gameObject.SetActive(false);
+            }
+            
+            ChangeState(BossState.StateName.IdleState);
         }
 
         private void Update()
@@ -77,6 +98,45 @@ namespace BossRaid.Boss
             Debug.Log($"{gameObject.name} hit! Fatigue: {CurrentFatigue}");
         }
 
+        public void ChangeState(BossState.StateName stateName)
+        {
+            if (CurrentState != null)
+            {
+                var prev = CurrentState;
+                prev.Exit();
+                prev.gameObject.SetActive(false);
+            }
+
+            var target = statesDic[stateName];
+            CurrentState = target;
+            
+            if(target.AnimatorTrigger != null) Animator.SetTrigger(target.AnimatorTrigger);
+            
+            target.gameObject.SetActive(true);
+            target.Enter();
+        }
+
+        private void OnEnable()
+        {
+            listener.OnOccursAnimStateEvent += HandleAnimEvent;
+        }
+
+        private void OnDisable()
+        {
+            listener.OnOccursAnimStateEvent -= HandleAnimEvent;
+        }
+
+        private void HandleAnimEvent(string eventName, string parameter)
+        {
+            CurrentState.ReceiveAnimEvent(eventName, parameter);
+        }
+
+        [ContextMenu("Test Claw Attack")]
+        public void TestClawAttack()
+        {
+            ChangeState(BossState.StateName.ClawAttackState);
+        }
+
         private void Exhausted()
         {
             IsExhausted = true;
@@ -95,7 +155,7 @@ namespace BossRaid.Boss
         {
             foreach(var hurtbox in hurtboxes) hurtbox.Disable();
             Debug.Log(gameObject.name + " is dead");
-            animator.SetTrigger(DieHash);
+            Animator.SetTrigger(DieHash);
             OnDead?.Invoke();
         }
     }

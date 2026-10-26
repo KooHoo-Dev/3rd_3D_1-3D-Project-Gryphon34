@@ -1793,6 +1793,8 @@ MonoBehaviour:
   mask:
     serializedVersion: 2
     m_Bits: 512
+  motionValue: 0.15
+  motionFatigue: 10
 --- !u!1 &407693325225866690
 GameObject:
   m_ObjectHideFlags: 0
@@ -16563,6 +16565,8 @@ MonoBehaviour:
   mask:
     serializedVersion: 2
     m_Bits: 512
+  motionValue: 0.2
+  motionFatigue: 20
 --- !u!1 &2167028803697822255
 GameObject:
   m_ObjectHideFlags: 0
@@ -53262,7 +53266,9 @@ GameObject:
   - component: {fileID: 7041014786190935372}
   - component: {fileID: 2149044827895473516}
   - component: {fileID: 1894294591189891265}
-  m_Layer: 0
+  - component: {fileID: 5713244783274757313}
+  - component: {fileID: 52048873611168}
+  m_Layer: 11
   m_Name: ModularCharacters
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -53407,6 +53413,36 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 43d5013f84bc96846ab2b7997218a7f3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Study3D.FpsGame.AnimStateEventListener
+--- !u!114 &5713244783274757313
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6833598422118439386}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0b82233eb1da6e849bdddd33dfea4800, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BossRaid.Weapon.GreatSword
+  attackPower: 100
+  weaponColliders:
+  - {fileID: 7206454837653082246}
+  - {fileID: 7183543783258040056}
+  - {fileID: 3619196176528601182}
+--- !u!114 &52048873611168
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6833598422118439386}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3d9b42758257403fb86a64825293a5cc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BossRaid.Player.PlayerHealth
+  maxHealth: 50
 --- !u!1 &6848005777275636109
 GameObject:
   m_ObjectHideFlags: 0
@@ -55795,6 +55831,8 @@ MonoBehaviour:
   mask:
     serializedVersion: 2
     m_Bits: 512
+  motionValue: 0.1
+  motionFatigue: 5
 --- !u!1 &7166291609775198920
 GameObject:
   m_ObjectHideFlags: 0
