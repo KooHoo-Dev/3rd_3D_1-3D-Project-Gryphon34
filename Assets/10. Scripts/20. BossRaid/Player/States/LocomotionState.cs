@@ -20,6 +20,12 @@ namespace BossRaid.Player.States
 
         public override void UpdateState(AnimatorStateInfo stateInfo)
         {
+            if (Owner.Stamina.CurrentStamina <= 0)
+            {
+                Animator.SetBool(PlayerController.IsExhaustedHash, true);
+                return;
+            }
+
             Owner.HandleMovement();
 
             if (SimpleInput.GetMouseButtonDown(SimpleInput.MouseButton.Left))

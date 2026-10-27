@@ -25,12 +25,14 @@ namespace BossRaid.Player
         private const string TagAttack = "Attack";
         private const string TagEnd = "End";
         private const string TagDodge = "Dodge";
+        private const string TagExhausted = "Exhausted";
 
         // 애니메이터 파라미터 해시. 상태 클래스들도 이 값을 씁니다.
         public static readonly int SpeedHash = Animator.StringToHash("Speed");
         public static readonly int IsAttackHash = Animator.StringToHash("IsAttack");
         public static readonly int IsChargingHash = Animator.StringToHash("IsCharging");
         public static readonly int DodgeHash = Animator.StringToHash("Dodge");
+        public static readonly int IsExhaustedHash = Animator.StringToHash("IsExhausted");
         
         [Header("Settings")]
         [SerializeField] private float speedDampTime = 0.05f; // Speed 값이 목표치까지 부드럽게 따라가는 시간
@@ -38,8 +40,10 @@ namespace BossRaid.Player
         [Header("Stamina")] 
         [SerializeField] private float dodgeStamina = 20f;
         [SerializeField] private float attackStamina = 25f;
+        [SerializeField] private float runStamina = 10f;
         public float DodgeStamina => dodgeStamina;
         public float AttackStamina => attackStamina;
+        public float RunStamina => runStamina; // 달리기 스태미너, 초당
         
         
 
@@ -54,6 +58,8 @@ namespace BossRaid.Player
         private PlayerStatesBase defaultState; // Tag가 등록되지 않은 상태일 때 쓰는 기본 상태
         private PlayerStatesBase currentState;
         private PlayerStatesBase dodgeState;
+
+        private bool isRunLocked; // 지친 뒤 Shift를 뗄 때까지 달리기를 막습니다
 
         private void Awake()
         {
@@ -76,6 +82,7 @@ namespace BossRaid.Player
             stateDic.Add(Animator.StringToHash(TagCharge), chargeState);
             stateDic.Add(Animator.StringToHash(TagAttack), new AttackState(this));
             stateDic.Add(Animator.StringToHash(TagEnd), new AttackEndState(this));
+            stateDic.Add(Animator.StringToHash(TagExhausted), new ExhaustedState(this));
         }
 
         private void Update()
@@ -129,7 +136,26 @@ namespace BossRaid.Player
         /// </summary>
         public void HandleMovement()
         {
-            Movement.SetMoveInput(SimpleInput.GetMoveAxisRaw(), SimpleInput.GetKey(Key.LeftShift));
+            bool isShiftHeld = SimpleInput.GetKey(Key.LeftShift);
+            if (isShiftHeld == false) isRunLocked = false;
+
+            bool hasRunInput = isShiftHeld && isRunLocked == false && (SimpleInput.GetMoveAxisRaw()) != Vector2.zero;
+            if (hasRunInput && Stamina.TryUseStamina(runStamina * Time.deltaTime))
+            {
+                Movement.SetMoveInput(SimpleInput.GetMoveAxisRaw(), true);
+            }
+            else
+            {
+                Movement.SetMoveInput(SimpleInput.GetMoveAxisRaw(), false);
+            }
+        }
+
+        /// <summary>
+        /// Shift를 뗐다가 다시 누를 때까지 달리기를 막습니다. 지친 상태의 Enter에서 호출합니다.
+        /// </summary>
+        public void LockRun()
+        {
+            isRunLocked = true;
         }
 
         /// <summary>

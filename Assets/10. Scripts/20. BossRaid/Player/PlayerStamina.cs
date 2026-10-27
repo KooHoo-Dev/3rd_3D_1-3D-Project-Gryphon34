@@ -4,7 +4,7 @@ namespace BossRaid.Player
 {
     public class PlayerStamina : MonoBehaviour
     {
-        [SerializeField] private float waitTime = 0.6f;
+        [SerializeField] private float waitTime = 2.0f;
         private float currentWaitTime = 0.0f;
         
         [SerializeField] private float maxStamina = 100f;
