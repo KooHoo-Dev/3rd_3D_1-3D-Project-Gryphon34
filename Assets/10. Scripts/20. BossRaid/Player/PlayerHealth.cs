@@ -48,6 +48,13 @@ namespace BossRaid.Player
             Debug.Log($"[Player] {info.Damage} 만큼 맞음. 현재 체력 : {CurrentHealth} / {maxHealth}");
         }
 
+        public void TakeHeal(float amount)
+        {
+            if (IsDead) return;
+            CurrentHealth += amount;
+            if (CurrentHealth > maxHealth) CurrentHealth = maxHealth;
+        }
+
         private void Dead()
         {
             playerController.StopMovement();
@@ -57,6 +64,15 @@ namespace BossRaid.Player
             OnDeath?.Invoke();
             Debug.Log($"[Player] 플레이어 is dead");
         }
+
+#if UNITY_EDITOR
+        // 임시 디버그 표시 (D-4 HP 바 만들면 삭제)
+        private void OnGUI()
+        {
+            GUIStyle style = new GUIStyle(GUI.skin.label) { fontSize = 24 };
+            GUI.Label(new Rect(20, 90, 600, 40), $"HP {CurrentHealth:F1} / {maxHealth}", style);
+        }
+#endif
 
         [ContextMenu("Test Player Hit")]
         public void PlayerHit()

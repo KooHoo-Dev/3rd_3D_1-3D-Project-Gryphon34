@@ -53265,10 +53265,11 @@ GameObject:
   - component: {fileID: 4512849472081530161}
   - component: {fileID: 7041014786190935372}
   - component: {fileID: 2149044827895473516}
-  - component: {fileID: 1894294591189891265}
   - component: {fileID: 5713244783274757313}
   - component: {fileID: 52048873611168}
   - component: {fileID: 5601841124536291836}
+  - component: {fileID: 5528195382553310315}
+  - component: {fileID: 3463808900814195973}
   m_Layer: 11
   m_Name: ModularCharacters
   m_TagString: Untagged
@@ -53403,18 +53404,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BossRaid.Player.PlayerController
   speedDampTime: 0.05
---- !u!114 &1894294591189891265
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6833598422118439386}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 43d5013f84bc96846ab2b7997218a7f3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Study3D.FpsGame.AnimStateEventListener
+  dodgeStamina: 20
+  attackStamina: 25
+  runStamina: 10
 --- !u!114 &5713244783274757313
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -53460,6 +53452,33 @@ MonoBehaviour:
   waitTime: 2
   maxStamina: 100
   staminaRegenRate: 35
+--- !u!114 &5528195382553310315
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6833598422118439386}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b69a343691e347a5b39ec32d34dfda4c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BossRaid.Player.PlayerPotion
+  maxCount: 3
+  healAmount: 50
+  healDuration: 0.7
+--- !u!114 &3463808900814195973
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6833598422118439386}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ac820a5cfb104fffacc454f21dd7b878, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BossRaid.AnimStateEventListener
 --- !u!1 &6848005777275636109
 GameObject:
   m_ObjectHideFlags: 0

@@ -10,6 +10,7 @@ namespace BossRaid.Player.States
     {
         public LocomotionState(PlayerController owner) : base(owner) { }
 
+        
         public override bool BlocksStaminaRegen => false;
 
         public override void Enter()
@@ -27,6 +28,12 @@ namespace BossRaid.Player.States
             }
 
             Owner.HandleMovement();
+            
+            if (SimpleInput.GetKeyDown(Key.R))
+            {
+                if (Owner.Potion.CanDrink)
+                    Animator.SetTrigger(PlayerController.DrinkHash);
+            }
 
             if (SimpleInput.GetMouseButtonDown(SimpleInput.MouseButton.Left))
             {

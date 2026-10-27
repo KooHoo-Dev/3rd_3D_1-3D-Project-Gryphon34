@@ -26,6 +26,7 @@ namespace BossRaid.Player
         private const string TagEnd = "End";
         private const string TagDodge = "Dodge";
         private const string TagExhausted = "Exhausted";
+        private const string TagDrink = "Drink";
 
         // 애니메이터 파라미터 해시. 상태 클래스들도 이 값을 씁니다.
         public static readonly int SpeedHash = Animator.StringToHash("Speed");
@@ -33,6 +34,7 @@ namespace BossRaid.Player
         public static readonly int IsChargingHash = Animator.StringToHash("IsCharging");
         public static readonly int DodgeHash = Animator.StringToHash("Dodge");
         public static readonly int IsExhaustedHash = Animator.StringToHash("IsExhausted");
+        public static readonly int DrinkHash = Animator.StringToHash("Drink");
         
         [Header("Settings")]
         [SerializeField] private float speedDampTime = 0.05f; // Speed 값이 목표치까지 부드럽게 따라가는 시간
@@ -52,6 +54,7 @@ namespace BossRaid.Player
         public GreatSword Sword { get; private set; }
         public PlayerHealth Health { get; private set; }
         public PlayerStamina Stamina { get; private set; }
+        public PlayerPotion Potion { get; private set; }
         
 
         private readonly Dictionary<int, PlayerStatesBase> stateDic = new Dictionary<int, PlayerStatesBase>();
@@ -68,6 +71,7 @@ namespace BossRaid.Player
             Sword = GetComponentInChildren<GreatSword>();
             Health = GetComponent<PlayerHealth>();
             Stamina = GetComponent<PlayerStamina>();
+            Potion = GetComponent<PlayerPotion>();
 
             Animator.applyRootMotion = false;
 
@@ -83,6 +87,7 @@ namespace BossRaid.Player
             stateDic.Add(Animator.StringToHash(TagAttack), new AttackState(this));
             stateDic.Add(Animator.StringToHash(TagEnd), new AttackEndState(this));
             stateDic.Add(Animator.StringToHash(TagExhausted), new ExhaustedState(this));
+            stateDic.Add(Animator.StringToHash(TagDrink), new DrinkState(this));
         }
 
         private void Update()
