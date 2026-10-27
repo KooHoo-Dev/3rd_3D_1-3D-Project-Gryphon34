@@ -1,5 +1,6 @@
 ﻿using Study.Utilities;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 namespace BossRaid.Player.States
 {
@@ -8,6 +9,8 @@ namespace BossRaid.Player.States
     public class LocomotionState : PlayerStatesBase
     {
         public LocomotionState(PlayerController owner) : base(owner) { }
+        
+        
 
         public override void Enter()
         {
@@ -22,6 +25,12 @@ namespace BossRaid.Player.States
             if (SimpleInput.GetMouseButtonDown(SimpleInput.MouseButton.Left))
             {
                 Animator.SetBool(PlayerController.IsAttackHash, true);
+            }
+
+            if (SimpleInput.GetKeyDown(Key.Space))
+            {
+                if(Owner.Stamina.TryUseStamina(Owner.DodgeStamina)) 
+                    Animator.SetTrigger(PlayerController.DodgeHash);
             }
         }
     }

@@ -24,35 +24,49 @@ namespace BossRaid.Player
         private const string TagCharge = "Charge";
         private const string TagAttack = "Attack";
         private const string TagEnd = "End";
+        private const string TagDodge = "Dodge";
 
         // 애니메이터 파라미터 해시. 상태 클래스들도 이 값을 씁니다.
         public static readonly int SpeedHash = Animator.StringToHash("Speed");
         public static readonly int IsAttackHash = Animator.StringToHash("IsAttack");
         public static readonly int IsChargingHash = Animator.StringToHash("IsCharging");
-
+        public static readonly int DodgeHash = Animator.StringToHash("Dodge");
+        
         [Header("Settings")]
         [SerializeField] private float speedDampTime = 0.05f; // Speed 값이 목표치까지 부드럽게 따라가는 시간
 
+        [Header("Stamina")] private float dodgeStamina = 20f;
+        public float DodgeStamina => dodgeStamina;
+        
 
         public Animator Animator { get; private set; }
         public ThirdPersonController Movement { get; private set; }
         public GreatSword Sword { get; private set; }
+        public PlayerHealth Health { get; private set; }
+        public PlayerStamina Stamina { get; private set; }
+        
 
         private readonly Dictionary<int, PlayerStatesBase> stateDic = new Dictionary<int, PlayerStatesBase>();
         private PlayerStatesBase defaultState; // Tag가 등록되지 않은 상태일 때 쓰는 기본 상태
         private PlayerStatesBase currentState;
+        private PlayerStatesBase dodgeState;
 
         private void Awake()
         {
             Animator = GetComponentInChildren<Animator>();
             Movement = GetComponent<ThirdPersonController>();
             Sword = GetComponentInChildren<GreatSword>();
+            Health = GetComponent<PlayerHealth>();
+            Stamina = GetComponent<PlayerStamina>();
 
             Animator.applyRootMotion = false;
 
             defaultState = new LocomotionState(this);
             stateDic.Add(Animator.StringToHash(TagLocomotion), defaultState);
 
+            dodgeState = new DodgeState(this);
+            stateDic.Add(Animator.StringToHash(TagDodge), dodgeState);
+            
             PlayerStatesBase chargeState = new ChargeState(this);
             stateDic.Add(Animator.StringToHash(TagStart), chargeState);
             stateDic.Add(Animator.StringToHash(TagCharge), chargeState);
@@ -118,6 +132,12 @@ namespace BossRaid.Player
         public void StopMovement(bool immediate = true)
         {
             Movement.StopMovement(immediate);
+        }
+
+        private void OnAnimatorMove()
+        {
+            if ((currentState == dodgeState) == false) return;
+            Movement.UpdateAnimMoveDelta(Animator.deltaPosition);
         }
     }
 }

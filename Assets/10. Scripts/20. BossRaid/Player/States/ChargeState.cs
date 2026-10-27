@@ -1,5 +1,4 @@
-﻿using BossRaid.Weapon;
-using Study.Utilities;
+﻿using Study.Utilities;
 using UnityEngine;
 
 namespace BossRaid.Player.States

@@ -12,6 +12,7 @@ namespace BossRaid.Player
         [SerializeField] private float maxHealth = 100f;
 
         public float CurrentHealth { get; private set; }
+        public bool IsInvincible { get; set; }
 
         public bool IsDead => (CurrentHealth <= 0);
         
@@ -32,6 +33,11 @@ namespace BossRaid.Player
         public void TakeDamage(AttackInfo info)
         {
             if (IsDead) return;
+            if(IsInvincible)
+            {
+                Debug.Log($"맞았지만 구르기 무적");
+                return; // 무적이면 로그 찍고 무시
+            }
             CurrentHealth -= info.Damage;
             if(CurrentHealth <= 0)
             {

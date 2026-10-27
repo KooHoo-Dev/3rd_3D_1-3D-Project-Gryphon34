@@ -2,7 +2,7 @@
 
 namespace BossRaid.Boss.States
 {
-    public class DeathState : BossState
+    public class DeathState : BossStates
     {
         public override StateName Name => StateName.DeathState;
 

@@ -161,11 +161,20 @@ namespace Study3D.FpsGame.Player
                 }
             }
 
+            // 발사 버튼을 뗀 순간 (Railgun처럼 떼야 발사되는 무기용)
+            if (SimpleInput.GetMouseButtonUp(SimpleInput.MouseButton.Left))
+            {
+                if (Player.LocalPlayer.ReleaseFire())
+                {
+                    animator.ResetTrigger(Fire);
+                    animator.SetTrigger(Fire);
+                }
+            }
+
             // 재장전
             if (SimpleInput.GetKeyDown(Key.R)) Player.LocalPlayer.RequestReload();
-
-            // if (SimpleInput.GetKeyDown(Key.Digit1)) PlayWeaponChangeAnimation();
-            // if (SimpleInput.GetKeyDown(Key.Digit2)) PlayWeaponChangeAnimation();
+            
+           
         }
         
         // 델리게이트를 연동하는 교안이어서 아래 함수가 있는거였습니다.
@@ -181,6 +190,7 @@ namespace Study3D.FpsGame.Player
             animator.ResetTrigger(Reload);
             animator.SetTrigger(Reload);
         }
+        
         
     }
 }

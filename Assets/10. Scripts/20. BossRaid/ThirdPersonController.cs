@@ -19,6 +19,7 @@ namespace BossRaid
         [SerializeField] private float brakeDeceleration = 12f;  // 반대로 꺾었을 때 미끄러지며 서는 감속도. 작을수록 많이 미끄러짐
         [SerializeField] private float brakeAngle = 135f;        // 진행 방향과 입력 방향이 이 각도보다 크면 브레이크
         [SerializeField] private float rotationSpeed = 720f;     // 초당 회전 각도
+        [SerializeField, Min(1f)] private float slideSpeedDivider = 2f; // 미끄러지며 설 때(StopMovement(false)) 처음 속도를 이 값으로 나눔. 클수록 덜 미끄러짐
 
         [Header("Ref")]
         [SerializeField] private Transform cameraTransform; // 이동 방향의 기준. 카메라가 보는 좌우 방향으로 움직입니다
@@ -56,7 +57,7 @@ namespace BossRaid
         /// <summary>
         /// 이동을 멈춥니다. 공격처럼 제자리에 서야 하는 상태에 들어갈 때 호출합니다.
         /// </summary>
-        /// <param name="immediate">true면 감속 없이 바로 섭니다. false면 감속도대로 미끄러지며 섭니다.</param>
+        /// <param name="immediate">true면 감속 없이 바로 섭니다. false면 속도를 slideSpeedDivider로 나눈 뒤 감속도대로 미끄러지며 섭니다.</param>
         public void StopMovement(bool immediate = true)
         {
             moveInput = Vector2.zero;
@@ -67,6 +68,15 @@ namespace BossRaid
                 CurrentSpeed = 0f;
                 IsBraking = false;
             }
+            else
+            {
+                CurrentSpeed /= slideSpeedDivider;
+            }
+        }
+
+        public void UpdateAnimMoveDelta(Vector3 moveDelta)
+        {
+            transform.position += moveDelta;
         }
 
         private void UpdatePosition()
@@ -113,6 +123,22 @@ namespace BossRaid
 
             // 이동은 항상 몸이 바라보는 방향으로 합니다. (관성)
             transform.position += transform.forward * (CurrentSpeed * Time.deltaTime);
+        }
+        
+        public void UpdateDodgeRotation(Vector2 axis)
+        {
+            bool hasInput = axis.sqrMagnitude >= 0.01f;
+
+            if (hasInput)
+            {
+                Vector3 inputVector = new Vector3(axis.x, 0f, axis.y);
+                Quaternion yaw = Quaternion.Euler(0f, cameraTransform.eulerAngles.y, 0f);
+                // inputVector를 yaw만큼 회전시킨 이동 벡터를 생성합니다.
+                Vector3 moveVector = (yaw * inputVector).normalized;
+                
+                Quaternion targetRotation = Quaternion.LookRotation(moveVector);   // 볼 방향 → 회전값
+                transform.rotation = targetRotation;                               // 바로 그 회전으로
+            }
         }
     }
 }

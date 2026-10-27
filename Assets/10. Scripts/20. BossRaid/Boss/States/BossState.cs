@@ -2,7 +2,7 @@
 
 namespace BossRaid.Boss.States
 {
-    public abstract class BossState : MonoBehaviour
+    public abstract class BossStates : MonoBehaviour
     {
         public enum StateName
         {

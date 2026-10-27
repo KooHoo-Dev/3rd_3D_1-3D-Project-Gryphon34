@@ -4,6 +4,6 @@ namespace Study3D.FpsGame.Player
 {
     public class Player : MonoBehaviour
     {
-        public static LocalPlayer LocalPlayer { get; set; }
+        public static LocalPlayer LocalPlayer { get; protected set; }
     }
 }

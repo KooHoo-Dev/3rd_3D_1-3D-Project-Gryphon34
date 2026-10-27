@@ -16822,7 +16822,7 @@ GameObject:
   - component: {fileID: 1180002615}
   - component: {fileID: 1180002614}
   m_Layer: 0
-  m_Name: Cube
+  m_Name: Gate
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -30990,18 +30990,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: ModularCharacters
       objectReference: {fileID: 0}
-    - target: {fileID: 7041014786190935372, guid: 3498d9f5be392cd479870bb4b79b1cdd, type: 3}
-      propertyPath: m_IsKinematic
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 7191694385390462385, guid: 3498d9f5be392cd479870bb4b79b1cdd, type: 3}
       propertyPath: lockTarget
       value: 
       objectReference: {fileID: 1959857075}
-    - target: {fileID: 7191694385390462385, guid: 3498d9f5be392cd479870bb4b79b1cdd, type: 3}
-      propertyPath: cameraCollisionMask.m_Bits
-      value: 247
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

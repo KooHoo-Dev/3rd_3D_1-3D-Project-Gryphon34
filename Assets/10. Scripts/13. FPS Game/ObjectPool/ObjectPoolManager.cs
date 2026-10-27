@@ -9,7 +9,7 @@ namespace Study3D.FpsGame
     {
         // 초기화를 위해 ObjectPoolManager에 입력하는 데이터가 됩니다.
         // 런타임에는 해당 데이터 클래스를 사용하지 않습니다.
-        // (struct였는데 왜 바뀌었지..?)
+        // (struct였었는데 왜 바뀌었지..?)
         [Serializable]
         public class ObjectPoolData
         {
@@ -67,7 +67,6 @@ namespace Study3D.FpsGame
         public static ObjectPoolManager Instance { get; private set; }
 
         [Header("만들 풀 목록")]
-        [FormerlySerializedAs("ObjectPoolDatas")]
         [SerializeField] private ObjectPoolData[] objectPoolDatas;
 
         private readonly Dictionary<string, ObjectPool> objectPoolDic = new Dictionary<string, ObjectPool>();
@@ -97,6 +96,8 @@ namespace Study3D.FpsGame
             }
         }
 
+        // ObjectPoolData를 이용해서 ObjectPool 한 단위를 만들고
+        // 내부 딕셔너리에 등록합니다
         public void CreatePool(ObjectPoolData data)
         {
             if (objectPoolDic.ContainsKey(data.Key))
@@ -127,6 +128,7 @@ namespace Study3D.FpsGame
         // 아이템을 입력받아서 해당 아이템을 관리하는 풀에 집어넣는 함수입니다.
         // - 어떤 아이템은 그 자체로 귀환할 수 있지만, 그렇지 못하는 케이스에 사용합니다.
         // - 현재의 오브젝트 풀은 새로운 IObjectPoolItem을 push 할 때 게임오브젝트를 비활성화 합니다
+        //  (내가 너무 많이 실수를 해서 저만 이렇게 처리할수도 있어요)
         public void ReturnToPool(IObjectPoolItem item)
         {
             if (objectPoolDic.TryGetValue(item.Key, out var pool) == false)

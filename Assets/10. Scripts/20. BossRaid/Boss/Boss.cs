@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using BossRaid.Boss.States;
 using BossRaid.Combat;
-using Study3D.FpsGame;
 using UnityEngine;
 
 namespace BossRaid.Boss
@@ -23,8 +22,8 @@ namespace BossRaid.Boss
         private Hurtbox[] hurtboxes;
         private AnimStateEventListener listener;
         
-        public BossState CurrentState { get; private set; }
-        private readonly Dictionary<BossState.StateName, BossState> statesDic = new Dictionary<BossState.StateName, BossState>();
+        public BossStates CurrentState { get; private set; }
+        private readonly Dictionary<BossStates.StateName, BossStates> statesDic = new Dictionary<BossStates.StateName, BossStates>();
         
         public event Action OnDeath;
 
@@ -39,7 +38,7 @@ namespace BossRaid.Boss
 
         private void Start()
         {
-            BossState[] states = GetComponentsInChildren<BossState>();
+            BossStates[] states = GetComponentsInChildren<BossStates>();
             for (int i = 0; i < states.Length; i++)
             {
                 statesDic.Add(states[i].Name, states[i]);
@@ -47,7 +46,7 @@ namespace BossRaid.Boss
                 states[i].gameObject.SetActive(false);
             }
             
-            ChangeState(BossState.StateName.IdleState);
+            ChangeState(BossStates.StateName.IdleState);
         }
 
         private void Update()
@@ -97,7 +96,7 @@ namespace BossRaid.Boss
             Debug.Log($"{gameObject.name} hit! Fatigue: {CurrentFatigue}");
         }
 
-        public void ChangeState(BossState.StateName stateName)
+        public void ChangeState(BossStates.StateName stateName)
         {
             if (CurrentState != null)
             {
@@ -148,7 +147,7 @@ namespace BossRaid.Boss
         {
             foreach(var hurtbox in hurtboxes) hurtbox.Disable();
             Debug.Log(gameObject.name + " is dead");
-            ChangeState(BossState.StateName.DeathState);
+            ChangeState(BossStates.StateName.DeathState);
             OnDeath?.Invoke();
         }
     }

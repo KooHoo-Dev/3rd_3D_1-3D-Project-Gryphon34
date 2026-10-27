@@ -2,7 +2,7 @@
 
 namespace BossRaid.Boss.States
 {
-    public class IdleState : BossState
+    public class IdleState : BossStates
     {
         public override StateName Name => StateName.IdleState;
         [SerializeField] private float idleTime = 5.0f;

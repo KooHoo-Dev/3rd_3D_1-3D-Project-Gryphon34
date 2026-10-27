@@ -2,7 +2,7 @@
 
 namespace BossRaid.Boss.States
 {
-    public class ClawAttack : BossState
+    public class ClawAttack : BossStates
     {
         [SerializeField] private BossHitbox hitbox;
         
