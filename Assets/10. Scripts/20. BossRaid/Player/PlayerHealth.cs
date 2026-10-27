@@ -11,6 +11,7 @@ namespace BossRaid.Player
 
         [SerializeField] private float maxHealth = 100f;
 
+        public float MaxHealth => maxHealth;
         public float CurrentHealth { get; private set; }
         public bool IsInvincible { get; set; }
 
@@ -64,15 +65,6 @@ namespace BossRaid.Player
             OnDeath?.Invoke();
             Debug.Log($"[Player] 플레이어 is dead");
         }
-
-#if UNITY_EDITOR
-        // 임시 디버그 표시 (D-4 HP 바 만들면 삭제)
-        private void OnGUI()
-        {
-            GUIStyle style = new GUIStyle(GUI.skin.label) { fontSize = 24 };
-            GUI.Label(new Rect(20, 90, 600, 40), $"HP {CurrentHealth:F1} / {maxHealth}", style);
-        }
-#endif
 
         [ContextMenu("Test Player Hit")]
         public void PlayerHit()

@@ -11,6 +11,7 @@ namespace BossRaid.Player
         [SerializeField] private int maxCount = 3;
         [SerializeField] private float healAmount = 50f;
         [SerializeField] private float healDuration = 0.6f; // HealStart부터 몇 초 동안 나눠서 채울지
+        public int MaxCount => maxCount;
         public int CurrentCount { get; private set; }
         public bool CanDrink => CurrentCount > 0;
 
@@ -76,14 +77,5 @@ namespace BossRaid.Player
             healedAmount += amount;
             if (healedAmount >= healAmount) isHealing = false;
         }
-
-#if UNITY_EDITOR
-        // 임시 디버그 표시 (D-4 UI 만들면 삭제)
-        private void OnGUI()
-        {
-            GUIStyle style = new GUIStyle(GUI.skin.label) { fontSize = 24 };
-            GUI.Label(new Rect(20, 125, 600, 40), $"Potion {CurrentCount} / {maxCount}  Healing {healedAmount:F1}", style);
-        }
-#endif
     }
 }
