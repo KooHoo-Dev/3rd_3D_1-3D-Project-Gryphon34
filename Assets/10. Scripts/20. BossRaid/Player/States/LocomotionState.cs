@@ -9,8 +9,8 @@ namespace BossRaid.Player.States
     public class LocomotionState : PlayerStatesBase
     {
         public LocomotionState(PlayerController owner) : base(owner) { }
-        
-        
+
+        public override bool BlocksStaminaRegen => false;
 
         public override void Enter()
         {
@@ -24,7 +24,8 @@ namespace BossRaid.Player.States
 
             if (SimpleInput.GetMouseButtonDown(SimpleInput.MouseButton.Left))
             {
-                Animator.SetBool(PlayerController.IsAttackHash, true);
+                if(Owner.Stamina.CanUseStamina(Owner.AttackStamina)) 
+                    Animator.SetBool(PlayerController.IsAttackHash, true);
             }
 
             if (SimpleInput.GetKeyDown(Key.Space))

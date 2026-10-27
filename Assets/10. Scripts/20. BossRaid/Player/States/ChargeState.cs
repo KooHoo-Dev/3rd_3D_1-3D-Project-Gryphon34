@@ -12,6 +12,7 @@ namespace BossRaid.Player.States
         public override void Enter()
         {
             Animator.SetBool(PlayerController.IsAttackHash, false);
+            Owner.Stamina.TryUseStamina(Owner.AttackStamina);
             Owner.StopMovement();
             chargingTime = 0.0f;
         }

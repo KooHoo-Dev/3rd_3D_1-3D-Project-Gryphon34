@@ -35,8 +35,12 @@ namespace BossRaid.Player
         [Header("Settings")]
         [SerializeField] private float speedDampTime = 0.05f; // Speed 값이 목표치까지 부드럽게 따라가는 시간
 
-        [Header("Stamina")] private float dodgeStamina = 20f;
+        [Header("Stamina")] 
+        [SerializeField] private float dodgeStamina = 20f;
+        [SerializeField] private float attackStamina = 25f;
         public float DodgeStamina => dodgeStamina;
+        public float AttackStamina => attackStamina;
+        
         
 
         public Animator Animator { get; private set; }
@@ -77,6 +81,8 @@ namespace BossRaid.Player
         private void Update()
         {
             UpdateAnimState();
+            if (currentState.BlocksStaminaRegen)
+                Stamina.ResetWaitTime();
             UpdateSpeedParameter();
         }
 

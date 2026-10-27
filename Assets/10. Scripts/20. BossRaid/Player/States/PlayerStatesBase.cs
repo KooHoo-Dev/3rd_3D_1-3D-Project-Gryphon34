@@ -12,6 +12,8 @@ namespace BossRaid.Player.States
         protected PlayerController Owner { get; }
         protected Animator Animator => Owner.Animator;
 
+        public virtual bool BlocksStaminaRegen => true;
+
         protected PlayerStatesBase(PlayerController owner)
         {
             Owner = owner;

@@ -1,5 +1,4 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace BossRaid.Player
 {
@@ -23,6 +22,12 @@ namespace BossRaid.Player
             RegenStamina();
         }
 
+        public bool CanUseStamina(float amount)
+        {
+            if ((CurrentStamina > 0) == false) return false;
+            return true;
+        }
+        
         public bool TryUseStamina(float amount)
         {
             if ((CurrentStamina > 0) == false) return false;
@@ -38,5 +43,20 @@ namespace BossRaid.Player
             if(currentWaitTime >= waitTime) CurrentStamina +=staminaRegenRate * Time.deltaTime;
             if(CurrentStamina >= maxStamina) CurrentStamina = maxStamina;
         }
+
+        public void ResetWaitTime()
+        {
+            currentWaitTime = 0.0f;
+        }
+
+#if UNITY_EDITOR
+        // 임시 디버그 표시 (D-4 스태미나 바 만들면 삭제)
+        private void OnGUI()
+        {
+            GUIStyle style = new GUIStyle(GUI.skin.label) { fontSize = 24 };
+            GUI.Label(new Rect(20, 20, 600, 40), $"Stamina {CurrentStamina:F1} / {maxStamina}", style);
+            GUI.Label(new Rect(20, 55, 600, 40), $"Wait {currentWaitTime:F2} / {waitTime}", style);
+        }
+#endif
     }
 }
