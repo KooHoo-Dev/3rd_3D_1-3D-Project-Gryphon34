@@ -13,13 +13,19 @@ namespace BossRaid.Boss.States
             [SerializeField] private StateName patternName;
             [SerializeField] private float minDistance;
             [SerializeField] private float maxDistance;
+            [SerializeField] private float minAngle;
+            [SerializeField] private float maxAngle;
             
             public StateName PatternName => patternName;
             public float MinDistance => minDistance;
             public float MaxDistance => maxDistance;
+            public float MinAngle => minAngle;
+            public float MaxAngle => maxAngle;
         }
         
         [SerializeField] private Pattern[] patterns;
+        private StateName lastState;
+        
         public Pattern[] Patterns => patterns; // Boss의 거리 기즈모가 읽습니다
         
         public override StateName Name => StateName.DecideState;
@@ -34,38 +40,58 @@ namespace BossRaid.Boss.States
             }
 
             Debug.Log("Entered DecideState");
-            float distance = boss.transform.FlatDistanceTo(boss.Player.transform);
+            GetInfo(out float distance, out float angle);
             Debug.Log($"Distance: {distance}");
-
-            List<Pattern> patternList = new List<Pattern>();
+            Debug.Log($"Angle: {angle}");
             
+            List<Pattern> patternList = new List<Pattern>();
+            List<Pattern> tempPatternList = new List<Pattern>();
+
             foreach (Pattern pattern in patterns)
             {
-                if (pattern.MinDistance <= distance && pattern.MaxDistance >= distance)
-                {
-                    patternList.Add(pattern);
-                }
+                if (IsInRange(pattern, distance, angle)) patternList.Add(pattern);
             }
+            
             Debug.Log($"Found {patternList.Count} patterns");
 
-            if (patternList.Count >= 1)
+            // 지난번과 다른 후보가 있으면 그것만, 지난번 것뿐이면 연속 허용
+            foreach (Pattern pattern in patternList)
+                if (pattern.PatternName != lastState) tempPatternList.Add(pattern);
+
+            List<Pattern> pickList = tempPatternList.Count >= 1 ? tempPatternList : patternList;
+
+            if (pickList.Count >= 1)
             {
-                int result = UnityEngine.Random.Range(0, patternList.Count);
-                Pattern pattern = patternList[result];
+                int result = UnityEngine.Random.Range(0, pickList.Count);
+                Pattern pattern = pickList[result];
+                lastState = pattern.PatternName;
                 boss.ChangeState(pattern.PatternName);
             }
             else boss.ChangeState(StateName.ChaseState);
             
         }
 
-        public bool CanAttack(float distance)
+        private void GetInfo(out float distance, out float angle)
         {
+            distance = boss.transform.FlatDistanceTo(boss.Player.transform);
+            angle = Vector3.SignedAngle(boss.transform.forward, boss.transform.FlatDirectionTo(boss.Player.transform), Vector3.up);
+        }
+
+        public bool CanAttack()
+        {
+            GetInfo(out float distance, out float angle);
             foreach (Pattern p in patterns)
             {
-                if (p.MinDistance <= distance && p.MaxDistance >= distance)
+                if (IsInRange(p, distance, angle))
                     return true;
             }
             return false;
+        }
+
+        private bool IsInRange(Pattern pattern, float distance, float angle)
+        {
+            return (pattern.MinDistance <= distance && pattern.MaxDistance >= distance &&
+                    pattern.MinAngle <= angle && pattern.MaxAngle >= angle);
         }
     }
 }

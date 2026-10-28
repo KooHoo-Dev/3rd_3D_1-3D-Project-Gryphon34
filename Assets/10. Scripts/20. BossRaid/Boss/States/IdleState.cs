@@ -18,6 +18,8 @@ namespace BossRaid.Boss.States
                 float distance = boss.transform.FlatDistanceTo(boss.Player.transform);
                 if (distance <= discoverDistance) boss.SetDiscover();
                 if (boss.IsDiscovered == false) return;
+                boss.ChangeState(StateName.RoarState);
+                return;
             }
 
             currentIdleTime += Time.deltaTime;

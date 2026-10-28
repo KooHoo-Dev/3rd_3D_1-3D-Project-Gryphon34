@@ -7,14 +7,6 @@ using UnityEngine.InputSystem;
 
 namespace BossRaid.Player
 {
-    // "무엇을 할지" 결정하는 클래스입니다.
-    // - PlayerController       : 입력을 읽고, 상태를 갈아끼우고, 상태들이 쓰는 공용 동작을 제공합니다
-    // - ThirdPersonController  : "어떻게 움직일지" (가속, 감속, 회전, 이동)
-    // - States                 : 애니메이터 상태(Tag)별 행동
-    //
-    // 전이(Transition)의 주인은 애니메이터입니다. (Follower FSM)
-    // 매 프레임 애니메이터의 현재 상태 Tag를 읽어서 그에 맞는 상태 클래스를 실행합니다.
-    // 그래서 여기에는 "언제 어느 상태로 갈지" 결정하는 로직이 없습니다.
     [RequireComponent(typeof(ThirdPersonController))]
     public class PlayerController : MonoBehaviour
     {
@@ -27,6 +19,8 @@ namespace BossRaid.Player
         private const string TagDodge = "Dodge";
         private const string TagExhausted = "Exhausted";
         private const string TagDrink = "Drink";
+        private const string TagHit = "Hit";
+        private const string TagDown = "Down";
 
         // 애니메이터 파라미터 해시. 상태 클래스들도 이 값을 씁니다.
         public static readonly int SpeedHash = Animator.StringToHash("Speed");
@@ -35,6 +29,7 @@ namespace BossRaid.Player
         public static readonly int DodgeHash = Animator.StringToHash("Dodge");
         public static readonly int IsExhaustedHash = Animator.StringToHash("IsExhausted");
         public static readonly int DrinkHash = Animator.StringToHash("Drink");
+        public static readonly int StandUpHash = Animator.StringToHash("StandUp");
         
         [Header("Settings")]
         [SerializeField] private float speedDampTime = 0.05f; // Speed 값이 목표치까지 부드럽게 따라가는 시간
@@ -88,6 +83,8 @@ namespace BossRaid.Player
             stateDic.Add(Animator.StringToHash(TagEnd), new AttackEndState(this));
             stateDic.Add(Animator.StringToHash(TagExhausted), new ExhaustedState(this));
             stateDic.Add(Animator.StringToHash(TagDrink), new DrinkState(this));
+            stateDic.Add(Animator.StringToHash(TagHit), new HitState(this));
+            stateDic.Add(Animator.StringToHash(TagDown), new KnockDownState(this));
         }
 
         private void Update()

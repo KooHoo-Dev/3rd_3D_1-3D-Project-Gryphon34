@@ -18,9 +18,8 @@ namespace BossRaid.Boss.States
                 Quaternion.RotateTowards(boss.transform.rotation,
                     boss.transform.FlatRotationTo(boss.Player.transform), 
                     rotateSpeed * Time.deltaTime);
-            float distance = boss.transform.FlatDistanceTo(boss.Player.transform);
 
-            if(decideState.CanAttack(distance)) boss.ChangeState(StateName.DecideState);
+            if(decideState.CanAttack()) boss.ChangeState(StateName.DecideState);
         }
         
         

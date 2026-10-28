@@ -176,7 +176,10 @@ namespace BossRaid.Boss
             string distanceText = Player != null
                 ? transform.FlatDistanceTo(Player.transform).ToString("F2")
                 : "Player 없음";
-            GUI.Label(new Rect(Screen.width * 0.5f - 250f, 20f, 500f, 40f), $"Boss: {stateName} / 거리: {distanceText}", style);
+            string angleText = Player != null
+                ? Vector3.SignedAngle(transform.forward, transform.FlatDirectionTo(Player.transform), Vector3.up).ToString("F0")
+                : "-";
+            GUI.Label(new Rect(Screen.width * 0.5f - 350f, 20f, 700f, 40f), $"Boss: {stateName} / 거리: {distanceText} / 각도: {angleText}", style);
         }
 
 #if UNITY_EDITOR

@@ -7,6 +7,8 @@ namespace BossRaid.Player
     public class PlayerHealth : MonoBehaviour, IDamageable
     {
         private static readonly int Die = Animator.StringToHash("Die");
+        private static readonly int HitHash = Animator.StringToHash("Hit");
+        private static readonly int ReactionHash = Animator.StringToHash("Reaction");
         public object Owner => this;
 
         [SerializeField] private float maxHealth = 100f;
@@ -46,6 +48,8 @@ namespace BossRaid.Player
                 Dead();
                 return;
             }
+            animator.SetInteger(ReactionHash, (int)info.Reaction);
+            animator.SetTrigger(HitHash);
             Debug.Log($"[Player] {info.Damage} 만큼 맞음. 현재 체력 : {CurrentHealth} / {maxHealth}");
         }
 
@@ -71,6 +75,12 @@ namespace BossRaid.Player
         {
             AttackInfo info = new AttackInfo(30, 0, transform.position);
             TakeDamage(info);
+        }
+        
+
+        private void TestHit(HitReaction reaction)
+        {
+            TakeDamage(new AttackInfo(0, 0, transform.position, reaction));
         }
     }
 }

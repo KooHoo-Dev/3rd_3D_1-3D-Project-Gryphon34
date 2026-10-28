@@ -11,6 +11,13 @@ namespace BossRaid.Boss.States
             DeathState,
             DecideState,
             ChaseState,
+            RoarState,
+            ClawAttackRightState,
+            ClawComboState,
+            TurnLeftState,
+            TurnRightState,
+            BiteState,
+            JumpBiteState,
         }
 
         [SerializeField] protected string animatorStateName;
@@ -39,6 +46,8 @@ namespace BossRaid.Boss.States
 
         protected virtual void Update()
         {
+            if (animator.IsInTransition(0)) return;
+
             var currentState = animator.GetCurrentAnimatorStateInfo(0);
             if (currentState.IsName(animatorStateName) == false) return;
 
