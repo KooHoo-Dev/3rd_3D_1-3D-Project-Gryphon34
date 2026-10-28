@@ -2,7 +2,12 @@
 using System.Collections.Generic;
 using BossRaid.Boss.States;
 using BossRaid.Combat;
+using BossRaid.Player;
+using Study.Utilities;
 using UnityEngine;
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 
 namespace BossRaid.Boss
 {
@@ -14,6 +19,8 @@ namespace BossRaid.Boss
         public float CurrentHp { get; private set; }
         public float CurrentFatigue { get; private set; }
         public bool IsExhausted { get; private set; }
+        public bool IsDiscovered { get; private set; }
+        public PlayerController Player { get; private set; }
 
         private bool IsDead =>  (CurrentHp <= 0);
         private float currentExhaustedTime = 0f;
@@ -96,6 +103,16 @@ namespace BossRaid.Boss
             Debug.Log($"{gameObject.name} hit! Fatigue: {CurrentFatigue}");
         }
 
+        public void SetPlayer(PlayerController player)
+        {
+            Player = player;
+        }
+
+        public void SetDiscover()
+        {
+            IsDiscovered = true;
+        }
+
         public void ChangeState(BossStates.StateName stateName)
         {
             if (CurrentState != null)
@@ -150,5 +167,34 @@ namespace BossRaid.Boss
             ChangeState(BossStates.StateName.DeathState);
             OnDeath?.Invoke();
         }
+
+        // 임시: 보스 AI 거리 테스트용. 패턴 거리 값을 정한 뒤 지웁니다
+        private void OnGUI()
+        {
+            var style = new GUIStyle(GUI.skin.label) { fontSize = 24 };
+            string stateName = CurrentState != null ? CurrentState.Name.ToString() : "-";
+            string distanceText = Player != null
+                ? transform.FlatDistanceTo(Player.transform).ToString("F2")
+                : "Player 없음";
+            GUI.Label(new Rect(Screen.width * 0.5f - 250f, 20f, 500f, 40f), $"Boss: {stateName} / 거리: {distanceText}", style);
+        }
+
+#if UNITY_EDITOR
+        // 용 루트를 선택하면 DecideState의 패턴별 거리 범위를 바닥에 원으로 그립니다 (노랑 = 최소, 빨강 = 최대)
+        private void OnDrawGizmosSelected()
+        {
+            var decide = GetComponentInChildren<DecideState>(true);
+            if (decide == null || decide.Patterns == null) return;
+
+            foreach (var pattern in decide.Patterns)
+            {
+                Handles.color = Color.yellow;
+                Handles.DrawWireDisc(transform.position, Vector3.up, pattern.MinDistance);
+                Handles.color = Color.red;
+                Handles.DrawWireDisc(transform.position, Vector3.up, pattern.MaxDistance);
+                Handles.Label(transform.position + transform.forward * pattern.MaxDistance, pattern.PatternName.ToString());
+            }
+        }
+#endif
     }
 }

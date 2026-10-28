@@ -21,20 +21,25 @@ namespace BossRaid.Flow
         [SerializeField] private float returnDelay = 3f; // 결과가 난 뒤 마을로 돌아가기까지 기다리는 시간
 
         public Boss.Boss boss;
-        public PlayerHealth playerHealth;
+        public PlayerController player;
         
         private bool isFinished; // 처치 직후 플레이어가 죽는 식으로 결과가 두 번 들어오는 것을 막습니다
 
+        private void Start()
+        {
+            player.Health.OnDeath += PlayerDied;
+            boss.SetPlayer(player);
+        }
+        
         private void OnEnable()
         {
             boss.OnDeath += BossKilled;
-            playerHealth.OnDeath += PlayerDied;
         }
 
         private void OnDisable()
         {
             boss.OnDeath -= BossKilled;
-            playerHealth.OnDeath -= PlayerDied;
+            player.Health.OnDeath -= PlayerDied;
         }
 
         public void BossKilled()

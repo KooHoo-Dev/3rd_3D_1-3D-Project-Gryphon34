@@ -46,7 +46,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::BossRaid.Boss.States.IdleState
   animatorStateName: IdleState
   exitTime: 0.8
-  idleTime: 5
+  idleTime: 3
+  discoverDistance: 100
 --- !u!1 &442467085918213951
 GameObject:
   m_ObjectHideFlags: 0
@@ -93,6 +94,104 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::BossRaid.Boss.States.DeathState
   animatorStateName: 
   exitTime: 0
+--- !u!1 &903966675156877656
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3762891052333668408}
+  - component: {fileID: 5313827408565153702}
+  m_Layer: 0
+  m_Name: DecideState
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3762891052333668408
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 903966675156877656}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 3908744260580038545}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &5313827408565153702
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 903966675156877656}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4bf07c273c5940b786af9a8460c4083c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BossRaid.Boss.States.DecideState
+  animatorStateName: 
+  exitTime: 0
+  patterns:
+  - patternName: 1
+    minDistance: 5
+    maxDistance: 12
+--- !u!1 &2265810453922399232
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6330625148644030464}
+  - component: {fileID: 1198478999174423040}
+  m_Layer: 0
+  m_Name: ChaseState
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6330625148644030464
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2265810453922399232}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 3908744260580038545}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1198478999174423040
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2265810453922399232}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 250976b73a514223a7557cb64a3128e6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BossRaid.Boss.States.ChaseState
+  animatorStateName: 
+  exitTime: 0
+  decideState: {fileID: 5313827408565153702}
+  rotateSpeed: 120
 --- !u!1 &2908866888326103559
 GameObject:
   m_ObjectHideFlags: 0
@@ -125,6 +224,8 @@ Transform:
   - {fileID: 878764028608009638}
   - {fileID: 6804713129880345096}
   - {fileID: 1183491635434248609}
+  - {fileID: 3762891052333668408}
+  - {fileID: 6330625148644030464}
   m_Father: {fileID: 5856249170217965408}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &7151634674224317015
@@ -247,6 +348,7 @@ MonoBehaviour:
   animatorStateName: ClawsAttackLeft
   exitTime: 0.8
   hitbox: {fileID: 1395576116866120357}
+  rotationSpeed: 120
 --- !u!1001 &9146079710950930374
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -353,19 +455,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3434263673997598886, guid: c2f0a1dbbf1021740a45118816c67b1b, type: 3}
       propertyPath: m_LocalRotation.w
-      value: -0.2374502
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3434263673997598886, guid: c2f0a1dbbf1021740a45118816c67b1b, type: 3}
       propertyPath: m_LocalRotation.x
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3434263673997598886, guid: c2f0a1dbbf1021740a45118816c67b1b, type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0.9713997
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3434263673997598886, guid: c2f0a1dbbf1021740a45118816c67b1b, type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3434263673997598886, guid: c2f0a1dbbf1021740a45118816c67b1b, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -373,7 +475,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3434263673997598886, guid: c2f0a1dbbf1021740a45118816c67b1b, type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
-      value: 207.472
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3434263673997598886, guid: c2f0a1dbbf1021740a45118816c67b1b, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
@@ -491,9 +593,17 @@ PrefabInstance:
       propertyPath: maxDurability
       value: 100
       objectReference: {fileID: 0}
+    - target: {fileID: 8503973588388864554, guid: c2f0a1dbbf1021740a45118816c67b1b, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 8723442837097035155, guid: c2f0a1dbbf1021740a45118816c67b1b, type: 3}
       propertyPath: m_Name
       value: MountainDragon_Stylized Variant
+      objectReference: {fileID: 0}
+    - target: {fileID: 8723442837097035155, guid: c2f0a1dbbf1021740a45118816c67b1b, type: 3}
+      propertyPath: m_Layer
+      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 8845109905554430120, guid: c2f0a1dbbf1021740a45118816c67b1b, type: 3}
       propertyPath: m_Layer
@@ -519,6 +629,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 8723442837097035155, guid: c2f0a1dbbf1021740a45118816c67b1b, type: 3}
       insertIndex: -1
       addedObject: {fileID: 4898535980155732747}
+    - targetCorrespondingSourceObject: {fileID: 8723442837097035155, guid: c2f0a1dbbf1021740a45118816c67b1b, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1538448762925776792}
     - targetCorrespondingSourceObject: {fileID: 5087216514980875451, guid: c2f0a1dbbf1021740a45118816c67b1b, type: 3}
       insertIndex: -1
       addedObject: {fileID: 858077016712027990}
@@ -902,6 +1015,29 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ac820a5cfb104fffacc454f21dd7b878, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BossRaid.AnimStateEventListener
+--- !u!136 &1538448762925776792
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 568159442218713685}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 1.05
+  m_Height: 4.01
+  m_Direction: 2
+  m_Center: {x: -0.0000011026859, y: 2.3314176, z: -0.07363862}
 --- !u!1 &1170440112579052608 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 7985825652501099398, guid: c2f0a1dbbf1021740a45118816c67b1b, type: 3}

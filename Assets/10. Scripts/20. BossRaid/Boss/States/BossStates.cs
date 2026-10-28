@@ -9,6 +9,8 @@ namespace BossRaid.Boss.States
             IdleState,
             ClawAttackState,
             DeathState,
+            DecideState,
+            ChaseState,
         }
 
         [SerializeField] protected string animatorStateName;
@@ -35,7 +37,7 @@ namespace BossRaid.Boss.States
         {
         }
 
-        private void Update()
+        protected virtual void Update()
         {
             var currentState = animator.GetCurrentAnimatorStateInfo(0);
             if (currentState.IsName(animatorStateName) == false) return;
