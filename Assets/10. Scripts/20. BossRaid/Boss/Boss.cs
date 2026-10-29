@@ -5,6 +5,7 @@ using BossRaid.Combat;
 using BossRaid.Player;
 using Study.Utilities;
 using UnityEngine;
+using UnityEngine.InputSystem;
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
@@ -58,6 +59,11 @@ namespace BossRaid.Boss
 
         private void Update()
         {
+            // 임시: 브레스 테스트용. B 키로 바로 브레스. 브레스를 패턴 목록에 넣은 뒤 지웁니다
+            if (Keyboard.current.bKey.wasPressedThisFrame) ChangeState(BossStates.StateName.BreathState);
+            // 임시: 불덩이 테스트용. F 키
+            if (Keyboard.current.fKey.wasPressedThisFrame) ChangeState(BossStates.StateName.FireBallState);
+
             if (IsExhausted)
             {
                 currentExhaustedTime += Time.deltaTime;

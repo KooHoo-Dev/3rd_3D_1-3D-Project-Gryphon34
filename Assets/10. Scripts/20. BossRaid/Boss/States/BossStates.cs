@@ -18,6 +18,8 @@ namespace BossRaid.Boss.States
             TurnRightState,
             BiteState,
             JumpBiteState,
+            BreathState,
+            FireBallState,
         }
 
         [SerializeField] protected string animatorStateName;

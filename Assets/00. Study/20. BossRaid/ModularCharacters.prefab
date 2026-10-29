@@ -53436,7 +53436,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3d9b42758257403fb86a64825293a5cc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BossRaid.Player.PlayerHealth
-  maxHealth: 10000
+  maxHealth: 100
 --- !u!114 &5601841124536291836
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -62926,8 +62926,8 @@ MonoBehaviour:
   followSmoothTime: 0.08
   cameraTransform: {fileID: 9140602462559383749}
   distance: 5.6
-  horizontalSensitivity: 0.5
-  verticalSensitivity: 0.5
+  horizontalSensitivity: 0.15
+  verticalSensitivity: 0.1
   pitchAngleMin: -30
   pitchAngleMax: 60
   lockTarget: {fileID: 0}

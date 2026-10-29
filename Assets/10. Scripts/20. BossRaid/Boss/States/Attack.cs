@@ -3,8 +3,8 @@ using UnityEngine;
 
 namespace BossRaid.Boss.States
 {
-    // 근접 공격 공통: 히트박스 전까지 플레이어 쪽으로 회전, parameter와 같은 id의 히트박스를 켜고 끕니다
-    public abstract class MeleeAttack : BossStates
+    // 공격 공통: 히트박스 전까지 플레이어 쪽으로 회전, parameter와 같은 id의 히트박스를 켜고 끕니다
+    public abstract class Attack : BossStates
     {
         [SerializeField] private float rotationSpeed = 120.0f;
 

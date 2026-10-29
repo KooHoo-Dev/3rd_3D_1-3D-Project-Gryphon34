@@ -1,6 +1,6 @@
 ﻿namespace BossRaid.Boss.States
 {
-    public class ClawAttackLeft : MeleeAttack
+    public class ClawAttackLeft : Attack
     {
         public override StateName Name => StateName.ClawAttackState;
 
