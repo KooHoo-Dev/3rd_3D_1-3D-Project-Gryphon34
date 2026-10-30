@@ -49,6 +49,7 @@ namespace BossRaid.Boss.States
                 SetHitbox(parameter, true);
             }
             if(eventName == "HitboxOff") SetHitbox(parameter, false);
+            if (eventName == "RotateOff") isRotating = false;
         }
 
         private void SetHitbox(string id, bool active)

@@ -146,7 +146,7 @@ MonoBehaviour:
     maxDistance: 10
     minAngle: 45
     maxAngle: 90
-  - patternName: 6
+  - patternName: 1
     minDistance: 2
     maxDistance: 10
     minAngle: -90
@@ -181,6 +181,21 @@ MonoBehaviour:
     maxDistance: 20
     minAngle: -40
     maxAngle: 40
+  - patternName: 13
+    minDistance: 15
+    maxDistance: 20
+    minAngle: -40
+    maxAngle: 40
+  - patternName: 14
+    minDistance: 15
+    maxDistance: 20
+    minAngle: 60
+    maxAngle: 110
+  - patternName: 14
+    minDistance: 15
+    maxDistance: 20
+    minAngle: -110
+    maxAngle: -60
 --- !u!1 &999157473226690486
 GameObject:
   m_ObjectHideFlags: 0
@@ -360,6 +375,56 @@ CapsuleCollider:
   m_Height: 9.61
   m_Direction: 2
   m_Center: {x: 0, y: 0.03, z: 6.25}
+--- !u!1 &2264931558405696380
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5483044620038161327}
+  - component: {fileID: 1452460946761797962}
+  m_Layer: 0
+  m_Name: HipCheckState
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5483044620038161327
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2264931558405696380}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 3908744260580038545}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1452460946761797962
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2264931558405696380}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9facbb592bb64fd2b270dad01bedb2d9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BossRaid.Boss.States.HipCheckState
+  animatorStateName: HipCheck
+  exitTime: 0.65
+  rotationSpeed: 0
+  waitTime: 0.5
+  waitSpeed: 0.1
+  slowDownTime: 0.2
 --- !u!1 &2265810453922399232
 GameObject:
   m_ObjectHideFlags: 0
@@ -488,7 +553,6 @@ Transform:
   - {fileID: 8380813325716717133}
   - {fileID: 6330625148644030464}
   - {fileID: 6804713129880345096}
-  - {fileID: 7534230027055162871}
   - {fileID: 6382384731880411498}
   - {fileID: 2583828204800108099}
   - {fileID: 8503178686119116719}
@@ -496,8 +560,60 @@ Transform:
   - {fileID: 4043135730095309025}
   - {fileID: 3548011703728063920}
   - {fileID: 542363021048288439}
+  - {fileID: 7403320570600602169}
+  - {fileID: 5483044620038161327}
   m_Father: {fileID: 5856249170217965408}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &3136587525905374028
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7403320570600602169}
+  - component: {fileID: 3478891208091202784}
+  m_Layer: 0
+  m_Name: FireBallState
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7403320570600602169
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3136587525905374028}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 3908744260580038545}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &3478891208091202784
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3136587525905374028}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 842b5de975e3e2b4fa4b4081b580f32d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BossRaid.Boss.States.FireBall
+  animatorStateName: FireBall
+  exitTime: 0.7
+  rotationSpeed: 120
+  projectilePrefab: {fileID: 5859001189135049002, guid: 1bf41b16a37875f418b4ef48bbb9a44b, type: 3}
+  shootPoint: {fileID: 6585710959377102703}
+  aimHeight: 1
 --- !u!1 &3226704674914335892
 GameObject:
   m_ObjectHideFlags: 0
@@ -543,7 +659,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BossRaid.Boss.States.Bite
   animatorStateName: Bite
-  exitTime: 0.8
+  exitTime: 0.7
   rotationSpeed: 120
 --- !u!1 &3334133951459244820
 GameObject:
@@ -730,7 +846,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::BossRaid.Boss.States.Breath
   animatorStateName: BreathAttack
   exitTime: 0.9
-  rotationSpeed: 120
+  rotationSpeed: 0
   flame: {fileID: 4395141839344280807}
   ember: {fileID: 3995311740219342524}
   speedBreath: 0.7
@@ -781,7 +897,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BossRaid.Boss.States.JumpBite
   animatorStateName: JumpBite
-  exitTime: 0.8
+  exitTime: 0.75
   rotationSpeed: 120
 --- !u!1 &6970101935050543628
 GameObject:
@@ -931,7 +1047,7 @@ MonoBehaviour:
   damage: 20
   id: L_Hand
   reaction: 0
---- !u!1 &8452953261335865579
+--- !u!1 &8041483929696295126
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -939,45 +1055,70 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 7534230027055162871}
-  - component: {fileID: 4228584224354581657}
-  m_Layer: 0
-  m_Name: ClawsAttackRight
+  - component: {fileID: 6406183131006371046}
+  - component: {fileID: 7402249801762451216}
+  - component: {fileID: 8255128029828779570}
+  m_Layer: 10
+  m_Name: HipCheck
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &7534230027055162871
+--- !u!4 &6406183131006371046
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8452953261335865579}
+  m_GameObject: {fileID: 8041483929696295126}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 3908744260580038545}
+  m_Father: {fileID: 7025551997195699528}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &4228584224354581657
+--- !u!114 &7402249801762451216
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8452953261335865579}
+  m_GameObject: {fileID: 8041483929696295126}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fc59ee5ad2336104ca0f24b72645041f, type: 3}
+  m_Script: {fileID: 11500000, guid: 1f5d895eadaed47499160c259c454ee8, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::BossRaid.Boss.States.ClawAttackRight
-  animatorStateName: ClawsAttackRight
-  exitTime: 0.8
-  rotationSpeed: 120
+  m_EditorClassIdentifier: '::'
+  mask:
+    serializedVersion: 2
+    m_Bits: 2048
+  damage: 20
+  id: HipCheck
+  reaction: 2
+--- !u!65 &8255128029828779570
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8041483929696295126}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 6.61, y: 5.51, z: 5.15}
+  m_Center: {x: 0.85, y: 0.65, z: 0}
 --- !u!1 &9159990558548435369
 GameObject:
   m_ObjectHideFlags: 0
@@ -989,7 +1130,7 @@ GameObject:
   - component: {fileID: 6804713129880345096}
   - component: {fileID: 4471034415406445458}
   m_Layer: 0
-  m_Name: ClawsAttackLeft
+  m_Name: ClawsAttack
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1022,7 +1163,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4c61d527ba9b283469536b9ed762417a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BossRaid.Boss.States.ClawAttackLeft
-  animatorStateName: ClawsAttackLeft
+  animatorStateName: ClawsAttack
   exitTime: 0.8
   rotationSpeed: 120
 --- !u!1001 &3869495274011081624
@@ -2653,6 +2794,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 3434263673997598886, guid: c2f0a1dbbf1021740a45118816c67b1b, type: 3}
       insertIndex: -1
       addedObject: {fileID: 3908744260580038545}
+    - targetCorrespondingSourceObject: {fileID: 2275058176225309326, guid: c2f0a1dbbf1021740a45118816c67b1b, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 6406183131006371046}
     - targetCorrespondingSourceObject: {fileID: 962128923168929736, guid: c2f0a1dbbf1021740a45118816c67b1b, type: 3}
       insertIndex: 0
       addedObject: {fileID: 6895290364433061047}
@@ -4231,6 +4375,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0dc1b428c3e6458a91b39af530d55730, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BossRaid.Boss.BossPart
+--- !u!4 &7025551997195699528 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 2275058176225309326, guid: c2f0a1dbbf1021740a45118816c67b1b, type: 3}
+  m_PrefabInstance: {fileID: 9146079710950930374}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &7028037248910514564 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 2262493312850423362, guid: c2f0a1dbbf1021740a45118816c67b1b, type: 3}

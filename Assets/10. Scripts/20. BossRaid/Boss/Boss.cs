@@ -63,6 +63,8 @@ namespace BossRaid.Boss
             if (Keyboard.current.bKey.wasPressedThisFrame) ChangeState(BossStates.StateName.BreathState);
             // 임시: 불덩이 테스트용. F 키
             if (Keyboard.current.fKey.wasPressedThisFrame) ChangeState(BossStates.StateName.FireBallState);
+            // 임시: 철산고 테스트용. H 키
+            if (Keyboard.current.hKey.wasPressedThisFrame) ChangeState(BossStates.StateName.HipCheckState);
 
             if (IsExhausted)
             {

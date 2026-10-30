@@ -12,7 +12,7 @@ namespace BossRaid.Boss.States
             DecideState,
             ChaseState,
             RoarState,
-            ClawAttackRightState,
+            ClawAttackRightState, // 사용 안 함 (ClawAttack 하나로 합침). 지우면 아래 값이 밀려서 남겨 둠
             ClawComboState,
             TurnLeftState,
             TurnRightState,
@@ -20,6 +20,7 @@ namespace BossRaid.Boss.States
             JumpBiteState,
             BreathState,
             FireBallState,
+            HipCheckState,
         }
 
         [SerializeField] protected string animatorStateName;
@@ -51,7 +52,8 @@ namespace BossRaid.Boss.States
             if (animator.IsInTransition(0)) return;
 
             var currentState = animator.GetCurrentAnimatorStateInfo(0);
-            if (currentState.IsName(animatorStateName) == false) return;
+            // 왼쪽/오른쪽처럼 칸이 여러 개인 상태는 칸들에 같은 Tag를 붙이고 animatorStateName에 그 Tag를 적습니다
+            if (currentState.IsName(animatorStateName) == false && currentState.IsTag(animatorStateName) == false) return;
 
             if (currentState.normalizedTime > exitTime)
             {

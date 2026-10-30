@@ -105,6 +105,8 @@ MonoBehaviour:
   explosionLifeTime: 3
   explosionHitboxPrefab: {fileID: 1883515548593787144, guid: 91ae9eb643916dc469e0ed9e9d6cade1, type: 3}
   explosionHitTime: 0.1
+  fireballEffect: {fileID: 2435996355994945777}
+  effectFadeTime: 3
 --- !u!1001 &2526006309437856857
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -202,6 +204,11 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 4b21d5ab091be5a46ad6e87699fab62c, type: 3}
+--- !u!198 &2435996355994945777 stripped
+ParticleSystem:
+  m_CorrespondingSourceObject: {fileID: 198238224484258984, guid: 4b21d5ab091be5a46ad6e87699fab62c, type: 3}
+  m_PrefabInstance: {fileID: 2526006309437856857}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &2522570605008998813 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4457159321914820, guid: 4b21d5ab091be5a46ad6e87699fab62c, type: 3}

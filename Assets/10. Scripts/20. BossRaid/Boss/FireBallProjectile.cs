@@ -15,6 +15,8 @@ namespace BossRaid.Boss
         [SerializeField] private float explosionLifeTime = 3f;
         [SerializeField] private BossHitbox explosionHitboxPrefab;
         [SerializeField] private float explosionHitTime = 0.1f; // 폭발 판정이 켜져 있는 시간
+        [SerializeField] private ParticleSystem fireballEffect;
+        [SerializeField] private float effectFadeTime = 3f; // 폭발 뒤 남은 꼬리가 사라질 때까지 기다리는 시간
 
         private Rigidbody projectileRigidbody;
         private Transform target;
@@ -38,6 +40,8 @@ namespace BossRaid.Boss
 
         private void FixedUpdate()
         {
+            if (isExploded) return; // 터진 뒤에는 그 자리에 멈춰서 꼬리만 사라지게
+
             Quaternion rotation = projectileRigidbody.rotation;
             if (target != null)
             {
@@ -77,7 +81,9 @@ namespace BossRaid.Boss
             BossHitbox explosionHitbox = Instantiate(explosionHitboxPrefab, transform.position, Quaternion.identity);
             Destroy(explosionHitbox.gameObject, explosionHitTime);
 
-            Destroy(gameObject);
+            // 바로 지우면 자식 파티클(꼬리)도 같이 사라지므로, 새 입자만 멈추고 남은 입자가 사라진 뒤 지웁니다
+            if (fireballEffect != null) fireballEffect.Stop();
+            Destroy(gameObject, effectFadeTime);
         }
     }
 }

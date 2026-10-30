@@ -783,11 +783,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2480341e3b324fa88befeeb71797f21d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BossRaid.Player.PlayerController
---- !u!4 &804407471 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 3908744260580038545, guid: 04ece8ed263062a4d83de796aa056fdf, type: 3}
-  m_PrefabInstance: {fileID: 1550725177}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &812932651
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1039,56 +1034,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &1258325726
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1258325727}
-  - component: {fileID: 1258325728}
-  m_Layer: 0
-  m_Name: FireBallState
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1258325727
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1258325726}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 804407471}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1258325728
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1258325726}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 842b5de975e3e2b4fa4b4081b580f32d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::BossRaid.Boss.States.FireBall
-  animatorStateName: FireBall
-  exitTime: 0.74
-  rotationSpeed: 120
-  projectilePrefab: {fileID: 5859001189135049002, guid: 1bf41b16a37875f418b4ef48bbb9a44b, type: 3}
-  shootPoint: {fileID: 1447141295}
-  aimHeight: 1
 --- !u!1001 &1274133225
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1307,11 +1252,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 407602, guid: 37b8bc688caaa5a44b7dec1fa9ef2d2a, type: 3}
   m_PrefabInstance: {fileID: 1369620621}
   m_PrefabAsset: {fileID: 0}
---- !u!4 &1447141295 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 6585710959377102703, guid: 04ece8ed263062a4d83de796aa056fdf, type: 3}
-  m_PrefabInstance: {fileID: 1550725177}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1550725177
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1366,10 +1306,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
-    m_AddedGameObjects:
-    - targetCorrespondingSourceObject: {fileID: 3908744260580038545, guid: 04ece8ed263062a4d83de796aa056fdf, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1258325727}
+    m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 04ece8ed263062a4d83de796aa056fdf, type: 3}
 --- !u!4 &1550725178 stripped

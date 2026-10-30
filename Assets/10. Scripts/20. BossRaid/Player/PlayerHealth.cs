@@ -38,7 +38,7 @@ namespace BossRaid.Player
             if (IsDead) return;
             if(IsInvincible)
             {
-                Debug.Log($"맞았지만 구르기 무적");
+                Debug.Log($"맞았지만 무적");
                 return; // 무적이면 로그 찍고 무시
             }
             CurrentHealth -= info.Damage;
