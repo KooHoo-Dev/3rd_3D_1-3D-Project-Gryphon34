@@ -31,7 +31,9 @@ namespace BossRaid.Player.States
             
             if (SimpleInput.GetKeyDown(Key.R))
             {
-                if (Owner.Potion.CanDrink)
+                // 고른 칸을 쓸 수 있을 때만 (0 = 회복약, 1 = 인간성). 마시는 동작은 같음
+                bool canUse = Owner.Potion.CurrentIndex == 0 ? Owner.Potion.CanDrink : Owner.Potion.CanUseHumanity;
+                if (canUse)
                     Animator.SetTrigger(PlayerController.DrinkHash);
             }
 

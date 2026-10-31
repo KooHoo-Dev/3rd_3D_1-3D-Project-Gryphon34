@@ -24,6 +24,7 @@ namespace BossRaid.Boss.States
 
             currentIdleTime += Time.deltaTime;
             if (boss.IsExhausted) return;
+            if (boss.IsAIPaused) return; // 임시: P 키로 멈춤
             if (currentIdleTime >= idleTime) boss.ChangeState(StateName.DecideState);
         }
 

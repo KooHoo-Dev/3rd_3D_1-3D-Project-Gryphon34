@@ -12,6 +12,17 @@ namespace BossRaid.Boss.States
         [SerializeField] private Transform shootPoint;
         [SerializeField] private float aimHeight = 1f; // 발밑 대신 몸통을 노림
 
+        // 쏜 뒤: 다음 패턴 사거리 안까지 Chase로 따라가서 다음 패턴 (불덩이 → 점프 물기)
+        [SerializeField] private ChaseState chaseState;
+        [SerializeField] private StateName nextPattern = StateName.JumpBiteState;
+        [SerializeField] private float nextRange = 20f;
+
+        protected override void OnAnimationEnd()
+        {
+            chaseState.Reserve(nextPattern, nextRange);
+            boss.ChangeState(StateName.ChaseState);
+        }
+
         public override void ReceiveAnimEvent(string eventName, string parameter)
         {
             base.ReceiveAnimEvent(eventName, parameter);

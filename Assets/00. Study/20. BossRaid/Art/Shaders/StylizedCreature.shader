@@ -26,6 +26,9 @@ Shader "BossRaid/StylizedCreature"
 		[Header(Emission)]
 		_EmissionMap("Emission Map", 2D) = "black" {}
 		[HDR] _EmissionColor("Emission Color", Color) = (1,1,1,1)
+
+		[Header(Flash)]
+		[HDR] _FlashColor("Flash Color", Color) = (0,0,0,0) // 몸 전체에 그냥 더하는 색. 맞았을 때 번쩍임 (검정 = 효과 없음)
 	}
 
 	SubShader
@@ -42,6 +45,7 @@ Shader "BossRaid/StylizedCreature"
 			float4 _EmissionMap_ST;
 			half4 _Tint;
 			half4 _EmissionColor;
+			half4 _FlashColor;
 			half _HueShift;
 			half _Saturation;
 			half _Brightness;
@@ -171,6 +175,7 @@ Shader "BossRaid/StylizedCreature"
 				surfaceData.alpha = 1.0;
 
 				half4 finalColor = UniversalFragmentPBR(inputData, surfaceData);
+				finalColor.rgb += _FlashColor.rgb; // 발광 텍스처와 상관없이 몸 전체
 				finalColor.rgb = MixFog(finalColor.rgb, inputData.fogCoord);
 				finalColor.a = 1.0;
 				return finalColor;

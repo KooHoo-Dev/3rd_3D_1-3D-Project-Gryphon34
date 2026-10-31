@@ -68,6 +68,7 @@ namespace BossRaid.Boss.States
         {
             base.Exit();
             animator.SetFloat("HipWaitSpeed", 1f); // 멈춘 채 끊겨도 다음에 멈춰 있지 않게
+            animator.ResetTrigger("HipCheckGo");
         }
     }
 }

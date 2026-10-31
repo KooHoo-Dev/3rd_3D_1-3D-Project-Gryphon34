@@ -15,18 +15,22 @@ namespace BossRaid.Boss.States
             [SerializeField] private float maxDistance;
             [SerializeField] private float minAngle;
             [SerializeField] private float maxAngle;
+            [SerializeField] private bool farDistancePattern;
             
             public StateName PatternName => patternName;
             public float MinDistance => minDistance;
             public float MaxDistance => maxDistance;
             public float MinAngle => minAngle;
             public float MaxAngle => maxAngle;
+            public bool FarDistancePattern => farDistancePattern;
         }
         
         [SerializeField] private Pattern[] patterns;
+        [SerializeField] private DetectDistance detect;
         private StateName lastState;
         
-        public Pattern[] Patterns => patterns; // Boss의 거리 기즈모가 읽습니다
+        public Pattern[] Patterns => patterns;
+        
         
         public override StateName Name => StateName.DecideState;
         
@@ -65,6 +69,7 @@ namespace BossRaid.Boss.States
                 int result = UnityEngine.Random.Range(0, pickList.Count);
                 Pattern pattern = pickList[result];
                 lastState = pattern.PatternName;
+                if (pattern.FarDistancePattern) detect.ResetFarTime(); // 도망 한 번 → 불덩이 한 번
                 boss.ChangeState(pattern.PatternName);
             }
             else boss.ChangeState(StateName.ChaseState);
@@ -90,6 +95,7 @@ namespace BossRaid.Boss.States
 
         private bool IsInRange(Pattern pattern, float distance, float angle)
         {
+            if (pattern.FarDistancePattern && detect.IsPlayerMovingAway == false) return false;
             return (pattern.MinDistance <= distance && pattern.MaxDistance >= distance &&
                     pattern.MinAngle <= angle && pattern.MaxAngle >= angle);
         }

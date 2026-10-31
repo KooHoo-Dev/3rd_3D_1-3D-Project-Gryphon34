@@ -14,6 +14,7 @@ namespace BossRaid.Boss
 
         private Boss boss;
         public object Owner => boss;
+        public string PartName => partName;
         public float CurrentDurability { get; private set; }
         public bool IsBroken { get; private set; }
         public bool CanBroken => canBroken;
@@ -33,14 +34,17 @@ namespace BossRaid.Boss
             boss.ApplyHit(info, this);
         }
 
-        public void ReduceDurability(float amount)
+        // 이번에 깎아서 깨졌으면 true (Boss가 이걸 보고 OnPartBroken을 보냄)
+        public bool ReduceDurability(float amount)
         {
             CurrentDurability -= amount;
             if (CurrentDurability <= 0)
             {
                 CurrentDurability = 0;
                 BrokenPart();
+                return true;
             }
+            return false;
         }
 
         public void BrokenPart()

@@ -183,6 +183,7 @@ Shader "BossRaid/EclipseSky"
 				float localX = dot(dir, right);
 				float localY = dot(dir, upE);
 				float front = step(0, forward);
+				float frontSoft = smoothstep(-0.1, 0.3, forward); // 빛기둥용: front처럼 뒤쪽 반구를 지우되 경계가 뚝 끊기지 않게
 
 				float radius = radians(_EclipseSize * 0.5);
 				float angle = acos(clamp(forward, -1, 1));
@@ -201,7 +202,7 @@ Shader "BossRaid/EclipseSky"
 
 				// 빛무리: 원판 주변의 붉은 번짐 + 하늘 전체로 퍼지는 아주 옅은 붉은 기
 				float glow = exp(-outside * 3 / _GlowSize) + 0.08 * exp(-angle * 1.5);
-				color += _GlowColor.rgb * glow * front;
+				color += _GlowColor.rgb * glow; // angle로 이미 서서히 옅어짐. front를 곱하면 90°에서 하늘이 반으로 갈림
 
 				// 빛기둥: 원판 아래로 가늘게 떨어지고, 내려갈수록 퍼지면서 옅어짐
 				float below = degrees(asin(clamp(-localY, -1, 1)));
@@ -210,7 +211,7 @@ Shader "BossRaid/EclipseSky"
 				float beam = exp(-(beamX * beamX) / (beamWidth * beamWidth));
 				beam *= step(0, below) * pow(saturate(1 - below / max(_BeamLength, 1e-3)), 1.5);
 				beam *= 0.85 + 0.15 * ValueNoise(float3(time * 2, 0, 0));
-				beam *= front * saturate(1 + dir.y * 10);
+				beam *= frontSoft * saturate(1 + dir.y * 10);
 				color += _BeamColor.rgb * beam;
 
 				// 코로나: 원판 테두리에서 바깥으로 빠르게 사라지는 고리. 각도마다 두께가 출렁임
@@ -233,7 +234,7 @@ Shader "BossRaid/EclipseSky"
 				float cloud = smoothstep(threshold, threshold + 0.35, cloudNoise) * cloudMask;
 
 				float3 cloudColor = _CloudColor.rgb;
-				cloudColor += _GlowColor.rgb * _CloudEclipseTint * exp(-angle * 2.5) * front;
+				cloudColor += _GlowColor.rgb * _CloudEclipseTint * exp(-angle * 2.5); // 빛무리와 같은 이유로 front 뺌
 				cloudColor += _BeamColor.rgb * beam * 0.25;
 				color = lerp(color, cloudColor, cloud * 0.85);
 

@@ -21,6 +21,7 @@ namespace BossRaid.Boss.States
             BreathState,
             FireBallState,
             HipCheckState,
+            TurnClawState,
         }
 
         [SerializeField] protected string animatorStateName;
@@ -52,8 +53,8 @@ namespace BossRaid.Boss.States
             if (animator.IsInTransition(0)) return;
 
             var currentState = animator.GetCurrentAnimatorStateInfo(0);
-            // 왼쪽/오른쪽처럼 칸이 여러 개인 상태는 칸들에 같은 Tag를 붙이고 animatorStateName에 그 Tag를 적습니다
-            if (currentState.IsName(animatorStateName) == false && currentState.IsTag(animatorStateName) == false) return;
+            bool isMyTag = string.IsNullOrEmpty(animatorStateName) == false && currentState.IsTag(animatorStateName);
+            if (currentState.IsName(animatorStateName) == false && isMyTag == false) return;
 
             if (currentState.normalizedTime > exitTime)
             {

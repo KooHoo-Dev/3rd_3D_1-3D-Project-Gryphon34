@@ -9,7 +9,7 @@ using UnityEngine.UI;
 namespace BossRaid.Tools
 {
     // 몬스터헌터 월드식 플레이어 HUD 프리팹을 만들고 열린 씬에 놓는 메뉴
-    // : 왼쪽 위 HP·스태미나 바, 오른쪽 아래 아이템 칸 두 개(회복약, 인간성 자리)
+    // : 왼쪽 위 HP·스태미나 바, 오른쪽 아래 아이템 칸 (큰 칸 = 고른 것, 작은 칸 = 휠로 바꿀 것)
     // 프리팹은 처음 한 번만 만들고, 다시 실행하면 만들어 둔 것(직접 고친 값 포함)을 씬에 놓기만 합니다.
     // 처음 모양으로 되돌리고 싶으면 Rebuild 메뉴를 쓰세요. (직접 고친 값은 사라짐)
     public static class PlayerHUDBuilder
@@ -89,14 +89,13 @@ namespace BossRaid.Tools
             RectTransform healthBar = CreateBar("HealthBar", status, new Vector2(0, 0), 18, white, HealthColor, out Image healthFill);
             RectTransform staminaBar = CreateBar("StaminaBar", status, new Vector2(0, -28), 12, white, StaminaColor, out Image staminaFill);
 
-            // 오른쪽 아래: 아이템 칸 (오른쪽이 회복약, 그 왼쪽이 인간성 자리)
+            // 오른쪽 아래: 아이템 칸. 오른쪽 큰 칸 = 고른 것(R), 그 왼쪽 작은 칸 = 휠로 바꿀 것 (색·개수는 PlayerHUD가 칸마다 바꿈)
             RectTransform items = CreateRect("Items", root.transform, new Vector2(1, 0), new Vector2(1, 0),
-                new Vector2(-70, 70), new Vector2(212, 100));
-            CanvasGroup potionSlot = CreateSlot("PotionSlot", items, new Vector2(0, 0), rounded, PotionColor, "R", "3/3",
-                out TextMeshProUGUI potionCount);
-            CanvasGroup humanitySlot = CreateSlot("HumanitySlot", items, new Vector2(-112, 0), rounded, HumanityColor, "-", "0",
-                out _);
-            humanitySlot.alpha = 0.35f; // 인간성은 아직 없음. 만들 때 PlayerHUD에 연결
+                new Vector2(-70, 70), new Vector2(176, 100));
+            CanvasGroup mainSlot = CreateSlot("MainSlot", items, new Vector2(0, 0), 100, rounded, PotionColor, "R", "3/3",
+                out Image mainIcon, out TextMeshProUGUI mainCount);
+            CanvasGroup subSlot = CreateSlot("SubSlot", items, new Vector2(-112, 0), 64, rounded, HumanityColor, null, "0",
+                out Image subIcon, out TextMeshProUGUI subCount);
 
             // PlayerHUD의 private 필드 연결
             var so = new SerializedObject(hud);
@@ -104,8 +103,12 @@ namespace BossRaid.Tools
             so.FindProperty("healthFill").objectReferenceValue = healthFill;
             so.FindProperty("staminaBar").objectReferenceValue = staminaBar;
             so.FindProperty("staminaFill").objectReferenceValue = staminaFill;
-            so.FindProperty("potionSlot").objectReferenceValue = potionSlot;
-            so.FindProperty("potionCountText").objectReferenceValue = potionCount;
+            so.FindProperty("mainSlot").objectReferenceValue = mainSlot;
+            so.FindProperty("mainIcon").objectReferenceValue = mainIcon;
+            so.FindProperty("mainCountText").objectReferenceValue = mainCount;
+            so.FindProperty("subSlot").objectReferenceValue = subSlot;
+            so.FindProperty("subIcon").objectReferenceValue = subIcon;
+            so.FindProperty("subCountText").objectReferenceValue = subCount;
             so.ApplyModifiedPropertiesWithoutUndo();
 
             return root;
@@ -131,26 +134,31 @@ namespace BossRaid.Tools
             return bar;
         }
 
-        private static CanvasGroup CreateSlot(string name, RectTransform parent, Vector2 position, Sprite rounded,
-            Color iconColor, string key, string count, out TextMeshProUGUI countText)
+        // 칸 하나: 배경 + 색 도형(아이콘 자리) + 키 글자(없으면 생략) + 개수. size는 정사각형 한 변
+        private static CanvasGroup CreateSlot(string name, RectTransform parent, Vector2 position, float size, Sprite rounded,
+            Color iconColor, string key, string count, out Image icon, out TextMeshProUGUI countText)
         {
-            RectTransform slot = CreateRect(name, parent, new Vector2(1, 0), new Vector2(1, 0), position, new Vector2(100, 100));
+            float scale = size / 100f; // 100짜리 칸 기준으로 안쪽 여백·글자 크기를 줄임
+            RectTransform slot = CreateRect(name, parent, new Vector2(1, 0), new Vector2(1, 0), position, new Vector2(size, size));
             var back = slot.gameObject.AddComponent<Image>();
             back.sprite = rounded;
             back.type = Image.Type.Sliced;
             back.color = SlotBackColor;
             var group = slot.gameObject.AddComponent<CanvasGroup>();
 
-            RectTransform iconRect = CreateStretch("Icon", slot, 24);
-            var icon = iconRect.gameObject.AddComponent<Image>();
+            RectTransform iconRect = CreateStretch("Icon", slot, 24 * scale);
+            icon = iconRect.gameObject.AddComponent<Image>();
             icon.sprite = rounded;
             icon.type = Image.Type.Sliced;
             icon.color = iconColor;
 
-            CreateText("Key", slot, key, 22, TextAlignmentOptions.TopLeft,
-                new Vector2(0, 1), new Vector2(0, 1), new Vector2(8, -4), new Vector2(40, 30));
-            countText = CreateText("Count", slot, count, 24, TextAlignmentOptions.BottomRight,
-                new Vector2(1, 0), new Vector2(1, 0), new Vector2(-8, 4), new Vector2(80, 30));
+            if (string.IsNullOrEmpty(key) == false)
+            {
+                CreateText("Key", slot, key, 22 * scale, TextAlignmentOptions.TopLeft,
+                    new Vector2(0, 1), new Vector2(0, 1), new Vector2(8, -4) * scale, new Vector2(40, 30) * scale);
+            }
+            countText = CreateText("Count", slot, count, 24 * Mathf.Max(scale, 0.75f), TextAlignmentOptions.BottomRight,
+                new Vector2(1, 0), new Vector2(1, 0), new Vector2(-8, 4) * scale, new Vector2(80, 30) * scale);
             return group;
         }
 
