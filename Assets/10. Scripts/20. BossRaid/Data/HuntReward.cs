@@ -13,7 +13,11 @@ namespace BossRaid.Data
         public void AddTo(Progress progress)
         {
             progress.souls += souls;
-            for (int i = 0; i < materials.Length; i++) progress.materials[i] += materials[i];
+            for (int i = 0; i < materials.Length; i++)
+            {
+                progress.materials[i] += materials[i];
+                if (materials[i] > 0) progress.materialFound[i] = true; // 요리 레시피 열림 조건
+            }
             progress.humanity += humanity;
         }
     }

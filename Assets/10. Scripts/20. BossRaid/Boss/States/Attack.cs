@@ -56,6 +56,12 @@ namespace BossRaid.Boss.States
             if (eventName == "RotateOn") isRotating = true;
         }
 
+        // 자식이 플레이어 쪽 회전을 다시 켜고 끔 (공중 착지 때)
+        protected void SetRotating(bool rotating)
+        {
+            isRotating = rotating;
+        }
+
         private void SetHitbox(string id, bool active)
         {
             foreach (BossHitbox hitbox in hitboxes)

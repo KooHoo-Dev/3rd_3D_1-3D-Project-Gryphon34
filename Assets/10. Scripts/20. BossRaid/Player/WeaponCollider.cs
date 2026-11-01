@@ -42,7 +42,8 @@ namespace BossRaid.Player
             if (bossHash.Contains(damageable.Owner)) return;
             bossHash.Add(damageable.Owner);
 
-            AttackInfo info = new AttackInfo(swordDamage * motionValue, motionFatigue * fatigueRate, other.transform.position);
+            float brokenPartBonus = sword != null ? sword.BrokenPartBonus : 1f;
+            AttackInfo info = new AttackInfo(swordDamage * motionValue, motionFatigue * fatigueRate, other.transform.position, HitReaction.Small, brokenPartBonus);
             damageable.TakeDamage(info);
 
             // 히트스탑: 플레이어와 맞은 보스(Owner)의 애니메이션만 잠깐 멈춤

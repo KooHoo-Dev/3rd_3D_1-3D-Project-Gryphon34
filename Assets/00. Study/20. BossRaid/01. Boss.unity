@@ -698,14 +698,22 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4737118441085315018, guid: 3498d9f5be392cd479870bb4b79b1cdd, type: 3}
+      propertyPath: playOnAwake
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4737332112673696026, guid: 3498d9f5be392cd479870bb4b79b1cdd, type: 3}
+      propertyPath: playOnAwake
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6833598422118439386, guid: 3498d9f5be392cd479870bb4b79b1cdd, type: 3}
       propertyPath: m_Name
-      value: ModularCharacters
+      value: Player
       objectReference: {fileID: 0}
-    - target: {fileID: 7191694385390462385, guid: 3498d9f5be392cd479870bb4b79b1cdd, type: 3}
-      propertyPath: lockTarget
-      value: 
-      objectReference: {fileID: 284140735}
+    - target: {fileID: 7507685990795087957, guid: 3498d9f5be392cd479870bb4b79b1cdd, type: 3}
+      propertyPath: burnTime
+      value: 10
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1374,10 +1382,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 284140735}
     m_Modifications:
-    - target: {fileID: 384308865223723162, guid: 04ece8ed263062a4d83de796aa056fdf, type: 3}
-      propertyPath: roarClip
-      value: 
-      objectReference: {fileID: 8300000, guid: 26477bb1a2e194cd9af216fc7060e933, type: 3}
     - target: {fileID: 568159442218713685, guid: 04ece8ed263062a4d83de796aa056fdf, type: 3}
       propertyPath: m_Name
       value: MountainDragon_Stylized Variant

@@ -37,13 +37,14 @@ namespace BossRaid.Boss.States
             if (eventName == "Shoot") Shoot();
         }
 
-        // 쏘는 순간의 플레이어 위치를 향해 입에서 불덩이를 만듭니다
-        private void Shoot()
+        // 쏘는 순간의 플레이어 위치를 향해 입에서 불덩이를 만듭니다. 공중 불덩이(AirFireBall)도 이걸 부름
+        public void Shoot()
         {
             Vector3 target = boss.Player.transform.position + Vector3.up * aimHeight;
             Quaternion rotation = Quaternion.LookRotation(target - shootPoint.position);
             FireBallProjectile projectile = Instantiate(projectilePrefab, shootPoint.position, rotation);
             projectile.SetTarget(boss.Player.transform, aimHeight);
+            projectile.SetOwner(boss);
             PlayShootSound();
         }
 

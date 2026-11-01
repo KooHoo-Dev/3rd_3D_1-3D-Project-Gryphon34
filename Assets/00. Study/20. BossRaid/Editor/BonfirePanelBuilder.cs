@@ -17,16 +17,16 @@ namespace BossRaid.Tools
     {
         private const string Folder = "Assets/00. Study/20. BossRaid/UI";
         private const string PrefabPath = Folder + "/BonfirePanel.prefab";
-        private const string KoreanFontPath = "Assets/99. External Assets/Font/Noto_Sans_KR/static/NotoSansKR-Regular SDF.asset";
+        internal const string KoreanFontPath = "Assets/99. External Assets/Font/Noto_Sans_KR/static/NotoSansKR-Regular SDF.asset";
 
-        private static readonly Color DimColor = new Color(0f, 0f, 0f, 0.35f);
-        private static readonly Color PanelColor = new Color(0.055f, 0.055f, 0.055f, 0.86f);
-        private static readonly Color GoldLine = new Color(0.85f, 0.7f, 0.3f, 0.55f);
-        private static readonly Color TitleColor = new Color(0.98f, 0.78f, 0.46f);
-        private static readonly Color ButtonColor = new Color(0.32f, 0.16f, 0.08f, 1f);
-        private static readonly Color CloseButtonColor = new Color(0.2f, 0.2f, 0.2f, 1f);
-        private static readonly Color ReasonColor = new Color(0.94f, 0.58f, 0.58f);
-        private static readonly Color PromptColor = new Color(0.95f, 0.92f, 0.85f);
+        internal static readonly Color DimColor = new Color(0f, 0f, 0f, 0.35f);
+        internal static readonly Color PanelColor = new Color(0.055f, 0.055f, 0.055f, 0.86f);
+        internal static readonly Color GoldLine = new Color(0.85f, 0.7f, 0.3f, 0.55f);
+        internal static readonly Color TitleColor = new Color(0.98f, 0.78f, 0.46f);
+        internal static readonly Color ButtonColor = new Color(0.32f, 0.16f, 0.08f, 1f);
+        internal static readonly Color CloseButtonColor = new Color(0.2f, 0.2f, 0.2f, 1f);
+        internal static readonly Color ReasonColor = new Color(0.94f, 0.58f, 0.58f);
+        internal static readonly Color PromptColor = new Color(0.95f, 0.92f, 0.85f);
 
         [MenuItem("BossRaid/UI/Create Bonfire Panel")]
         private static void Create()
@@ -82,7 +82,7 @@ namespace BossRaid.Tools
         }
 
         // 버튼을 마우스로 누르려면 씬에 EventSystem이 하나 있어야 함 (이 프로젝트는 Input System만 써서 InputSystemUIInputModule)
-        private static void EnsureEventSystem()
+        internal static void EnsureEventSystem()
         {
             if (Object.FindAnyObjectByType<EventSystem>() != null) return;
 
@@ -198,7 +198,7 @@ namespace BossRaid.Tools
         }
 
         // 둥근 배경 + 가운데 글자. 못 누를 때(interactable false)는 Button이 색을 어둡게 함
-        private static Button CreateButton(string name, RectTransform parent, TMP_FontAsset font, Sprite rounded, string label, Color color)
+        internal static Button CreateButton(string name, RectTransform parent, TMP_FontAsset font, Sprite rounded, string label, Color color)
         {
             var go = new GameObject(name, typeof(RectTransform));
             go.transform.SetParent(parent, false);
@@ -218,7 +218,7 @@ namespace BossRaid.Tools
             return button;
         }
 
-        private static TextMeshProUGUI CreateText(string name, RectTransform parent, TMP_FontAsset font, string text,
+        internal static TextMeshProUGUI CreateText(string name, RectTransform parent, TMP_FontAsset font, string text,
             float size, TextAlignmentOptions alignment, Color color)
         {
             var go = new GameObject(name, typeof(RectTransform));
@@ -233,7 +233,7 @@ namespace BossRaid.Tools
             return tmp;
         }
 
-        private static Image AddImage(RectTransform rect, Sprite sprite, Color color)
+        internal static Image AddImage(RectTransform rect, Sprite sprite, Color color)
         {
             var image = rect.gameObject.AddComponent<Image>();
             image.sprite = sprite;
@@ -243,14 +243,14 @@ namespace BossRaid.Tools
         }
 
         // 레이아웃 그룹 안에서의 크기 (0이면 정하지 않음)
-        private static void AddLayout(GameObject go, float width = 0, float height = 0)
+        internal static void AddLayout(GameObject go, float width = 0, float height = 0)
         {
             var element = go.AddComponent<LayoutElement>();
             if (width > 0) { element.minWidth = width; element.preferredWidth = width; }
             if (height > 0) { element.minHeight = height; element.preferredHeight = height; }
         }
 
-        private static RectTransform CreateStretch(string name, Transform parent)
+        internal static RectTransform CreateStretch(string name, Transform parent)
         {
             var go = new GameObject(name, typeof(RectTransform));
             var rect = (RectTransform)go.transform;

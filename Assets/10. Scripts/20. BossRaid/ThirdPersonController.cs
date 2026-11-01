@@ -125,6 +125,22 @@ namespace BossRaid
             transform.position += transform.forward * (CurrentSpeed * Time.deltaTime);
         }
         
+        /// <summary>
+        /// 움직이지 않고 입력 방향(카메라 기준)으로 서서히 돌기만 합니다. 가드 중에 매 프레임 호출합니다.
+        /// </summary>
+        public void RotateTowardsInput(Vector2 axis, float degreesPerSecond)
+        {
+            if (axis.sqrMagnitude < 0.01f) return;
+
+            Vector3 inputVector = new Vector3(axis.x, 0f, axis.y);
+            Quaternion yaw = Quaternion.Euler(0f, cameraTransform.eulerAngles.y, 0f);
+            Vector3 moveVector = (yaw * inputVector).normalized;
+
+            Quaternion targetRotation = Quaternion.LookRotation(moveVector);
+            transform.rotation = Quaternion.RotateTowards(
+                transform.rotation, targetRotation, degreesPerSecond * Time.deltaTime);
+        }
+
         public void UpdateDodgeRotation(Vector2 axis)
         {
             bool hasInput = axis.sqrMagnitude >= 0.01f;

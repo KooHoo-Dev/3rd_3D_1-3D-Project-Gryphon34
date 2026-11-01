@@ -14,6 +14,8 @@ namespace BossRaid.Player.States
             Owner.Health.IsInvincible = false;
             Owner.StopMovement(false);
             Owner.Movement.UpdateDodgeRotation(SimpleInput.GetMoveAxisRaw());
+            Owner.ClearComboBonus();
+            if (Owner.Burn != null) Owner.Burn.OnDodge(); // 화염 상태: 구르기 횟수
         }
 
         public override void UpdateState(AnimatorStateInfo stateInfo)

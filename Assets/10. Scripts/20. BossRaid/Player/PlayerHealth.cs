@@ -18,8 +18,10 @@ namespace BossRaid.Player
         public bool IsInvincible { get; set; }
 
         public bool IsDead => (CurrentHealth <= 0);
+        private float FireReduce => playerController.Loadout != null ? playerController.Loadout.FireReduce : 0f; // 방어구 + 요리 불 저항
         
         private bool isHuman; // 사람 상태 (Progress.isHuman을 SetMaxHealth로 받아 옴. PlayerHealth는 Progress를 모름)
+        private float damageReduce; // 방어구의 받는 피해 감소 (0.15 = 15% 덜 아픔). PlayerLoadout이 넣어 줌
 
         private Animator animator;
         private PlayerController playerController;
@@ -43,16 +45,39 @@ namespace BossRaid.Player
                 Debug.Log($"맞았지만 무적");
                 return; // 무적이면 로그 찍고 무시
             }
-            CurrentHealth -= info.Damage;
+            // 지금 상태(가드·태클) × 공격 태그로 결과를 정함. 막거나 버티면 피격 모션 없음
+            float damage = info.Damage;
+            bool isGuarded = playerController.TryGuard(info, ref damage);
+            bool isArmored = isGuarded == false && playerController.TryTackleArmor(info, ref damage);
+            damage *= 1f - damageReduce;
+            if (info.Ignite) damage *= 1f - FireReduce; // 불이 붙는 공격은 직격에도 불 저항
+            CurrentHealth -= damage;
             if(CurrentHealth <= 0)
             {
                 CurrentHealth = 0;
                 Dead();
                 return;
             }
-            animator.SetInteger(ReactionHash, (int)info.Reaction);
-            animator.SetTrigger(HitHash);
-            Debug.Log($"[Player] {info.Damage} 만큼 맞음. 현재 체력 : {CurrentHealth} / {MaxHealth}");
+            // 가드로 막으면 안 붙음. 태클로 버티면 붙음
+            if (info.Ignite && isGuarded == false && playerController.Burn != null) playerController.Burn.Ignite();
+            if (isGuarded == false && isArmored == false && info.Reaction != HitReaction.None) // None = 상쇄당한 공격. 피해만 받고 모션 없음
+            {
+                animator.SetInteger(ReactionHash, (int)info.Reaction);
+                animator.SetTrigger(HitHash);
+            }
+            Debug.Log($"[Player] {damage} 만큼 맞음 (원래 {info.Damage}). 현재 체력 : {CurrentHealth} / {MaxHealth}");
+        }
+
+        // 화염 상태의 지속 피해 (PlayerBurn이 매 프레임). 피격이 아님: 무적이어도 깎이고 모션 없음
+        public void TakeBurnDamage(float amount)
+        {
+            if (IsDead) return;
+            CurrentHealth -= amount;
+            if (CurrentHealth <= 0)
+            {
+                CurrentHealth = 0;
+                Dead();
+            }
         }
 
         public void TakeHeal(float amount)
@@ -67,6 +92,12 @@ namespace BossRaid.Player
         {
             isHuman = useHumanity;
             CurrentHealth = MaxHealth;
+        }
+
+        // 끼고 있는 방어구의 받는 피해 감소. PlayerLoadout이 씬 시작과 장비를 바꿀 때 부름
+        public void SetDamageReduce(float reduce)
+        {
+            damageReduce = reduce;
         }
 
         private void Dead()

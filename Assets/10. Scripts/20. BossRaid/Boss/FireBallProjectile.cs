@@ -25,6 +25,7 @@ namespace BossRaid.Boss
         private float aimHeight;
         private float currentLifeTime = 0f;
         private bool isExploded = false;
+        private Boss owner;
 
         private void Awake()
         {
@@ -38,6 +39,12 @@ namespace BossRaid.Boss
         {
             this.target = target;
             this.aimHeight = aimHeight;
+        }
+
+        // 쏜 보스. 폭발 히트박스에 넘겨서 단계 공격력 배율을 받게 함
+        public void SetOwner(Boss owner)
+        {
+            this.owner = owner;
         }
 
         private void FixedUpdate()
@@ -81,6 +88,7 @@ namespace BossRaid.Boss
             }
 
             BossHitbox explosionHitbox = Instantiate(explosionHitboxPrefab, transform.position, Quaternion.identity);
+            explosionHitbox.SetBoss(owner);
             Destroy(explosionHitbox.gameObject, explosionHitTime);
 
             float destroyDelay = effectFadeTime;

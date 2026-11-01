@@ -22,6 +22,8 @@ namespace BossRaid.Boss.States
             FireBallState,
             HipCheckState,
             TurnClawState,
+            AirFireBallState,
+            AirSpreadFireState,
         }
 
         [SerializeField] protected string animatorStateName;

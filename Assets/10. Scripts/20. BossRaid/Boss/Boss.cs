@@ -15,9 +15,8 @@ namespace BossRaid.Boss
 {
     public class Boss : MonoBehaviour
     {
-        [SerializeField] private float maxHp = 100;
-        [SerializeField] private float maxFatigue = 30;
-        [SerializeField] private float exhaustTime = 3f; // 지쳤을 때 대기(IdleState)에서 쉬는 시간. 공격 중에 지치면 그 공격이 끝난 뒤부터 셈
+        [SerializeField] private StageValue[] stages; // 0번 = 1단계. HuntManager가 SetStage로 고름
+        [SerializeField] private float exhaustTime = 3f; // 지쳤을 때 대기(IdleState)에서 쉬는 시간. 대기에 들어온 순간부터 셈
         [SerializeField] private float drinkReactRange = 20f;
 
         [Header("소리 (크기·피치·2D/3D는 AudioSource에서)")]
@@ -35,10 +34,16 @@ namespace BossRaid.Boss
         [SerializeField] private Transform TailPosition; // 크기를 0으로 만들 뼈 (MountainDragon_ Tail5). 이 뼈부터 꼬리 끝까지 안 보임
         [SerializeField] private BossPart TailPart;      // 꼬리 부위 (MountainDragon_ Tail). IsBroken으로 잘렸는지 봄
 
+        [Header("근접 불 (단계 rageFireHpRate 아래, 비어 있으면 이펙트 안 함)")]
+        [SerializeField] private ParticleSystem[] rageFireEffects; // 넘는 순간 켜서 계속 켜 둠 (양손·입 등)
+
         public float CurrentHp { get; private set; }
-        public float MaxHp => maxHp;
+        public StageValue Stage { get; private set; } // 지금 단계의 값
+        public float MaxHp => Stage.MaxHp;
+        public float AttackRate => Stage.AttackRate;
         public float CurrentFatigue { get; private set; }
         public bool IsExhausted { get; private set; }
+        public bool IsRageFire { get; private set; } // 근접(rageFire 히트박스)에도 불이 붙음
         public float ExhaustTime => exhaustTime;
         public bool IsDiscovered { get; private set; }
         public bool IsAIPaused { get; private set; } // 임시: P 키. 켜져 있으면 Idle에서 Decide로 안 감
@@ -50,7 +55,10 @@ namespace BossRaid.Boss
         private Hurtbox[] hurtboxes;
         private AnimStateEventListener listener;
         private static readonly int FlashColorId = Shader.PropertyToID("_FlashColor");
+        private SkinnedMeshRenderer bodyRenderer;
+        private Material originalMaterial; // 프리팹 머티리얼 (단계에 머티리얼이 없으면 이걸로)
         private Material bodyMaterial; // renderer.material = 이 용만 쓰는 복사본 (에셋은 안 바뀜)
+        private bool isRageRoarReserved; // 근접 불이 켜진 뒤 다음 대기에서 한 번 포효
 
         public BossStates CurrentState { get; private set; }
         public BossStates PreviousState { get; private set; } // 바로 전 상태 (IdleState가 공격 뒤 대기 시간을 읽음)
@@ -65,15 +73,37 @@ namespace BossRaid.Boss
             Animator = GetComponent<Animator>();
             listener = GetComponent<AnimStateEventListener>();
             hurtboxes = GetComponentsInChildren<Hurtbox>();
-            bodyMaterial = GetComponentInChildren<SkinnedMeshRenderer>().material;
-            CurrentHp = maxHp;
-            CurrentFatigue = maxFatigue;
+            bodyRenderer = GetComponentInChildren<SkinnedMeshRenderer>();
+            originalMaterial = bodyRenderer.sharedMaterial;
+            SetStage(1); // HuntManager가 없는 씬에서도 1단계로 돌게
         }
 
         private void OnDestroy()
         {
             bodyMaterial.DOKill();
             Destroy(bodyMaterial); // .material로 만든 복사본은 직접 지워야 함
+        }
+
+        // 사냥할 단계(1부터)의 HP·피로·공격력 배율·머티리얼로 바꿈. 투기장 시작 때 HuntManager가 부름
+        public void SetStage(int stage)
+        {
+            int index = Mathf.Clamp(stage - 1, 0, stages.Length - 1);
+            if (index != stage - 1) Debug.LogWarning($"[보스] {stage}단계 값이 없어서 {index + 1}단계로 합니다");
+            Stage = stages[index];
+
+            CurrentHp = Stage.MaxHp;
+            CurrentFatigue = Stage.MaxFatigue;
+            IsRageFire = false;
+            isRageRoarReserved = false;
+
+            // 머티리얼을 바꾸고 번쩍임용 복사본을 다시 만듦 (이전 복사본은 지움)
+            if (bodyMaterial != null)
+            {
+                bodyMaterial.DOKill();
+                Destroy(bodyMaterial);
+            }
+            bodyRenderer.sharedMaterial = Stage.BodyMaterial != null ? Stage.BodyMaterial : originalMaterial;
+            bodyMaterial = bodyRenderer.material;
         }
 
         // 꼬리가 잘렸으면 매 프레임 TailPosition 크기 0. Animator가 Update 뒤에 뼈를 애니메이션 값(1)으로 덮어써서 LateUpdate에서 함
@@ -153,6 +183,7 @@ namespace BossRaid.Boss
             if (IsDead) return;
 
             float calculateDamage = info.Damage * part.CurrentMagnitude;
+            if (part.IsBroken) calculateDamage *= info.BrokenPartBonus; // 용뿔 대검: 깨진 부위에 더 아픔
             
             CurrentHp -= calculateDamage;
             if (IsExhausted == false) CurrentFatigue -= info.Fatigue; 
@@ -185,14 +216,34 @@ namespace BossRaid.Boss
                 Dead();
                 return;
             }
-            
+
+            if (IsRageFire == false && Stage.RageFireHpRate > 0 && CurrentHp <= MaxHp * Stage.RageFireHpRate) StartRageFire();
+
             if (CurrentFatigue <= 0 && IsExhausted == false)
             {
                 Exhausted();
             }
             
             Debug.Log($"{gameObject.name} hit! HP: {CurrentHp}");
-            Debug.Log($"{gameObject.name} hit! Fatigue: {CurrentFatigue}");
+            Debug.Log($"{gameObject.name} hit! Fatigue: {CurrentFatigue}{(IsExhausted ? " (지침 중 → 안 깎음, 쉬고 나면 회복)" : "")}");
+        }
+
+        // HP가 단계 비율 아래로 처음 내려감: 근접에도 불, 이펙트 켬, 다음 대기에서 포효 (하던 공격은 안 끊음)
+        private void StartRageFire()
+        {
+            IsRageFire = true;
+            isRageRoarReserved = true;
+            if (rageFireEffects != null)
+                foreach (ParticleSystem effect in rageFireEffects) effect.Play();
+            Debug.Log($"[보스] HP {Stage.RageFireHpRate * 100}% 아래 → 근접에 불");
+        }
+
+        // IdleState가 Decide로 가기 전에 부름. 예약된 포효가 있으면 true (한 번만)
+        public bool ConsumeRageRoar()
+        {
+            if (isRageRoarReserved == false) return false;
+            isRageRoarReserved = false;
+            return true;
         }
 
         public void SetPlayer(PlayerController player)
@@ -254,7 +305,7 @@ namespace BossRaid.Boss
             CurrentState.ReceiveAnimEvent(eventName, parameter);
         }
 
-        // 지침: 공격 중이면 그 공격만 끝까지 (끝나면 OnAnimationEnd → IdleState), 아니면 바로 IdleState
+        // 지침: 공격 중이어도 끊고 바로 IdleState
         // 쉬는 시간은 IdleState가 들어온 순간부터 exhaustTime만큼 세고, 다 세면 HealFatigue를 부름
         private void Exhausted()
         {
@@ -264,15 +315,27 @@ namespace BossRaid.Boss
             Debug.Log("Exhausted!");
 
             // 쓰러지는 애니메이션(Exhausted 트리거)은 IdleState.Enter가 냄
-            if (CurrentState is not Attack) ChangeState(BossStates.StateName.IdleState);
+            ChangeState(BossStates.StateName.IdleState);
+        }
+
+        // 상쇄당함: 피로만 깎음 (HP·부위는 같은 상자의 WeaponCollider가 몸에 닿을 때 ApplyHit으로). 0이면 공격을 끊고 쓰러짐
+        public void Countered(float amount)
+        {
+            if (IsDead || IsExhausted) return;
+
+            CurrentFatigue -= amount;
+            if (CurrentFatigue <= 0) CurrentFatigue = 0;
+            Debug.Log($"{gameObject.name} 상쇄당함! Fatigue: {CurrentFatigue}");
+
+            if (CurrentFatigue <= 0) Exhausted();
         }
 
         public void HealFatigue()
         {
             IsExhausted = false;
-            CurrentFatigue = maxFatigue;
+            CurrentFatigue = Stage.MaxFatigue;
             if (exhaustedEffect != null) exhaustedEffect.Stop();
-            Debug.Log("피로도 회복");
+            Debug.Log($"피로도 회복 → Fatigue: {CurrentFatigue}");
         }
         
         private void Dead()
@@ -299,11 +362,11 @@ namespace BossRaid.Boss
 
             // 임시: 기즈모 부채꼴 색 안내 (Game 창에서 어느 색이 무슨 패턴인지)
             var decide = GetComponentInChildren<DecideState>(true);
-            if (decide == null || decide.Patterns == null) return;
+            if (decide == null) return;
             var legendStyle = new GUIStyle(GUI.skin.label) { fontSize = 18 };
             var shown = new HashSet<BossStates.StateName>();
             float y = 100f;
-            foreach (var pattern in decide.Patterns)
+            foreach (var pattern in decide.AllPatterns)
             {
                 if (shown.Add(pattern.PatternName) == false) continue;
                 legendStyle.normal.textColor = PatternColor(pattern.PatternName);
@@ -338,9 +401,9 @@ namespace BossRaid.Boss
         private void OnDrawGizmos()
         {
             var decide = GetComponentInChildren<DecideState>(true);
-            if (decide == null || decide.Patterns == null) return;
+            if (decide == null) return;
 
-            foreach (var pattern in decide.Patterns)
+            foreach (var pattern in decide.AllPatterns)
             {
                 Gizmos.color = PatternColor(pattern.PatternName);
                 DrawGroundSector(pattern.MinDistance, pattern.MaxDistance, pattern.MinAngle, pattern.MaxAngle);

@@ -30,7 +30,21 @@ namespace BossRaid.Boss.States
         private StateName lastState;
         
         public Pattern[] Patterns => patterns;
-        
+
+        // 기본 패턴 + 지금 단계의 추가 패턴 (플레이 전 기즈모에선 기본만)
+        public IEnumerable<Pattern> AllPatterns
+        {
+            get
+            {
+                if (patterns != null)
+                    foreach (Pattern pattern in patterns) yield return pattern;
+
+                Pattern[] extra = boss != null && boss.Stage != null ? boss.Stage.ExtraPatterns : null;
+                if (extra != null)
+                    foreach (Pattern pattern in extra) yield return pattern;
+            }
+        }
+
         
         public override StateName Name => StateName.DecideState;
         
@@ -58,7 +72,7 @@ namespace BossRaid.Boss.States
             List<Pattern> patternList = new List<Pattern>();
             List<Pattern> tempPatternList = new List<Pattern>();
 
-            foreach (Pattern pattern in patterns)
+            foreach (Pattern pattern in AllPatterns)
             {
                 if (IsInRange(pattern, distance, angle)) patternList.Add(pattern);
             }
@@ -92,7 +106,7 @@ namespace BossRaid.Boss.States
         public bool CanAttack()
         {
             GetInfo(out float distance, out float angle);
-            foreach (Pattern p in patterns)
+            foreach (Pattern p in AllPatterns)
             {
                 if (IsInRange(p, distance, angle))
                     return true;

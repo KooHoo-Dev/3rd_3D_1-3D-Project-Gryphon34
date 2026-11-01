@@ -23,6 +23,16 @@ namespace BossRaid.Player
             return result;
         }
 
+        // 이 단계가 시작되는 시간 (없으면 0)
+        public float GetTime(int level)
+        {
+            foreach (ChargeValue value in defs)
+            {
+                if (value.Level == level) return value.Time;
+            }
+            return 0f;
+        }
+
         public void Load()
         {
             defs.Clear();

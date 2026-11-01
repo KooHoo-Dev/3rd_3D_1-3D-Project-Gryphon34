@@ -23,6 +23,14 @@ namespace BossRaid.Weapon
         [SerializeField] private GameObject hitEffectPrefab;
         [SerializeField] private float hitEffectLifeTime = 2f;
 
+        [Header("상쇄 성공 (비어 있으면 안 함)")]
+        [SerializeField] private GameObject counterEffectPrefab;
+        [SerializeField] private AudioClip[] counterSounds;
+
+        [Header("퍼펙트 가드 (비어 있으면 안 함)")]
+        [SerializeField] private GameObject perfectGuardEffectPrefab;
+        [SerializeField] private AudioClip[] perfectGuardSounds;
+
         [Header("카메라 흔들림 (맞힌 순간)")]
         [SerializeField] private float shakeStrength = 0.15f;
         [SerializeField] private float shakeTime = 0.2f;
@@ -49,12 +57,44 @@ namespace BossRaid.Weapon
         public float ShakeStrength => shakeStrength;
         public float ShakeTime => shakeTime;
 
+        private float weaponAttackRate = 1f; // 끼고 있는 무기의 공격력 배율 (기본 attackPower에 곱함). PlayerLoadout이 넣어 줌
+        private float brokenPartBonus = 1f;  // 깨진 부위에 더 곱하는 배율 (용뿔 대검). PlayerLoadout이 넣어 줌
+        private float chargeTimeRate = 1f;   // 차지 단계까지 걸리는 시간 배율 (0.8 = 20% 빨리, 요리). PlayerLoadout이 넣어 줌
+
+        public float BaseAttackPower => attackPower; // 무기 배율을 곱하기 전 (대장간 화면에서 실제 공격력을 보여 줄 때)
+        public float BrokenPartBonus => brokenPartBonus;
+
+        /// <summary>
+        /// 끼고 있는 무기의 값으로 바꿉니다 (attackPower는 그대로, 배율만). PlayerLoadout이 부릅니다.
+        /// </summary>
+        public void SetWeapon(float attackRate, float brokenPartBonus)
+        {
+            weaponAttackRate = attackRate;
+            this.brokenPartBonus = brokenPartBonus;
+        }
+
+        /// <summary>
+        /// 차지 단계까지 걸리는 시간 배율 (1 = 그대로). PlayerLoadout이 부릅니다.
+        /// </summary>
+        public void SetChargeTimeRate(float rate)
+        {
+            chargeTimeRate = rate;
+        }
+
         /// <summary>
         /// 모은 시간이 몇 단계인지 (0~3). ChargeState가 매 프레임 단계가 올랐는지 볼 때 씁니다.
         /// </summary>
         public int GetChargeLevel(float time)
         {
-            return chargeTable.Get(time).Level;
+            return chargeTable.Get(time / chargeTimeRate).Level; // 0.8배면 0.8초 모은 게 표의 1초
+        }
+
+        /// <summary>
+        /// 이 단계가 시작되는 차지 시간. 상쇄 보너스로 차지를 그 단계부터 셀 때 씁니다.
+        /// </summary>
+        public float GetChargeTime(int level)
+        {
+            return chargeTable.GetTime(level) * chargeTimeRate;
         }
 
         /// <summary>
@@ -185,6 +225,37 @@ namespace BossRaid.Weapon
             }
         }
 
+        /// <summary>
+        /// 상쇄가 맞부딪친 자리에 불꽃 + 금속음을 냅니다. CounterCollider가 상쇄에 성공한 순간 부릅니다.
+        /// 소리는 이 칼의 AudioSource로 (상쇄 상자는 클립이 꺼서, 거기 붙이면 소리가 끊김)
+        /// </summary>
+        public void PlayCounterEffect(Vector3 point)
+        {
+            PlayRandomSound(counterSounds);
+
+            if (counterEffectPrefab != null)
+            {
+                GameObject effect = Instantiate(counterEffectPrefab, point, Quaternion.identity);
+                foreach (ParticleSystem particle in effect.GetComponentsInChildren<ParticleSystem>()) particle.Play();
+                Destroy(effect, hitEffectLifeTime);
+            }
+        }
+
+        /// <summary>
+        /// 퍼펙트 가드 자리에 불꽃 + 금속음을 냅니다. PlayerController.TryGuard가 퍼펙트로 막은 순간 부릅니다.
+        /// </summary>
+        public void PlayPerfectGuardEffect(Vector3 point)
+        {
+            PlayRandomSound(perfectGuardSounds);
+
+            if (perfectGuardEffectPrefab != null)
+            {
+                GameObject effect = Instantiate(perfectGuardEffectPrefab, point, Quaternion.identity);
+                foreach (ParticleSystem particle in effect.GetComponentsInChildren<ParticleSystem>()) particle.Play();
+                Destroy(effect, hitEffectLifeTime);
+            }
+        }
+
         private ChargeTable chargeTable;
 
         private void Awake()
@@ -213,10 +284,10 @@ namespace BossRaid.Weapon
         /// </summary>
         public void ApplyCharge(float time)
         {
-            ChargeValue value = chargeTable.Get(time);
+            ChargeValue value = chargeTable.Get(time / chargeTimeRate);
 
             // 필드(attackPower)는 건드리지 않고 지역 변수로 계산한다
-            float damage = attackPower * value.Damage;
+            float damage = attackPower * weaponAttackRate * value.Damage;
 
             foreach (WeaponCollider weaponCollider in weaponColliders)
             {

@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 namespace BossRaid.Data
 {
@@ -25,5 +26,30 @@ namespace BossRaid.Data
         // 인간성: 태우면 회복약 최대 개수 +1 (최대 5), 사용하면 사람 상태 (최대 HP +25, 죽으면 끔)
         public int currentMaxPotion = 3;
         public bool isHuman;
+
+        // 소재를 한 번이라도 얻은 적 있는지 (MaterialType 칸 번호). 요리 레시피 열림 조건 (꼬리 고기, 화룡 심장)
+        public bool[] materialFound = new bool[Enum.GetValues(typeof(MaterialType)).Length];
+
+        // 대장간: 첫 사망 때 열림 (HuntManager.Finish). 냄비는 stage1Cleared(2단계 해금)로 열림
+        public bool forgeUnlocked;
+
+        // 가진 장비 (id + 강화 단계)와 끼고 있는 장비 id. id는 ForgeTable의 Id 칸
+        public List<GearLevel> weapons = new() { new GearLevel("Iron", 0) };
+        public List<GearLevel> armors = new() { new GearLevel("Rags", 0) };
+        public string equippedWeapon = "Iron";
+        public string equippedArmor = "Rags";
+
+        // 지금 먹은 요리 id ("" = 안 먹음). 사냥 한 번이 끝나면(처치든 사망이든) 비움
+        public string meal = "";
+
+        // 그 장비를 몇 단계로 가지고 있는지 (없으면 -1)
+        public static int GetLevel(List<GearLevel> list, string id)
+        {
+            foreach (GearLevel gear in list)
+            {
+                if (gear.id == id) return gear.level;
+            }
+            return -1;
+        }
     }
 }

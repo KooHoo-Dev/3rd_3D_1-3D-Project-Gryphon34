@@ -44,6 +44,7 @@ namespace BossRaid.Flow
             player.Health.OnDeath += PlayerDied;
             player.Potion.OnHumanityUsed += HandleHumanityUsed;
             boss.SetPlayer(player);
+            boss.SetStage(GameData.Current.currentStage); // 안개문에서 고른 단계 (HP·공격력 배율·머티리얼·추가 패턴)
             player.Health.SetMaxHealth(GameData.Current.isHuman); // 씬을 넘어 남은 사람 상태를 새 플레이어에게
             player.Potion.SetMaxPotionCount(GameData.Current.currentMaxPotion); // 태운 만큼 늘어난 회복약 최대 개수
             player.Potion.SetHumanityCount(GameData.Current.humanity);
@@ -107,6 +108,7 @@ namespace BossRaid.Flow
             {
                 DropSouls(); // 가진 소울을 먼저 떨어뜨림 (사망 소울을 먼저 더하면 그것까지 떨어짐)
                 GameData.Current.isHuman = false; // 죽으면 사람 상태만 잃음 (가진 인간성은 그대로). 마을 Bonfire.Start가 이걸 읽어 SetMaxHealth(false)
+                GameData.Current.forgeUnlocked = true; // 첫 사망에 대장간이 열림 (GDD §9)
                 int deathSouls = CalculateDeathSouls();
                 currentHuntReward.souls += deathSouls;
                 Debug.Log($"[사냥] 사망... 준 피해만큼 소울 +{deathSouls}");
@@ -115,6 +117,7 @@ namespace BossRaid.Flow
             // 처치든 사망이든 이번 판에 모은 것(부위 소재 포함)을 한 번에 더함 = 부위 소재는 죽어도 받음
             Data.Progress progress = GameData.Current; // UniTask에도 Progress가 있어서 어느 쪽인지 적어 줌
             currentHuntReward.AddTo(progress);
+            progress.meal = ""; // 식사는 사냥 한 번 (이기든 지든 끝). 마을 PlayerLoadout.Start가 효과 없이 다시 적용
             Debug.Log($"[사냥] 이번 판 소울 +{currentHuntReward.souls}, 인간성 +{currentHuntReward.humanity}" +
                       $" → 가진 소울 {progress.souls}, 인간성 {progress.humanity}");
 

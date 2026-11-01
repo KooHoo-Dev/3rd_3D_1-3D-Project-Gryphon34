@@ -50,6 +50,12 @@ namespace BossRaid.Boss.States
             if (currentIdleTime < waitTime) return;
 
             if (boss.IsExhausted) boss.HealFatigue(); // 지침 시간을 다 쉼 → 회복
+            // 근접 불이 막 켜졌으면 한 번 포효 (끝나면 RoarState가 Decide로)
+            if (boss.ConsumeRageRoar())
+            {
+                boss.ChangeState(StateName.RoarState);
+                return;
+            }
             boss.ChangeState(StateName.DecideState);
         }
 

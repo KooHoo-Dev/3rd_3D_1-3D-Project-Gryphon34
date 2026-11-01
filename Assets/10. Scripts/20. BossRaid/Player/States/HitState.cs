@@ -9,6 +9,7 @@ namespace BossRaid.Player.States
         public override void Enter()
         {
             Owner.StopMovement(true);
+            Owner.ClearComboBonus();
         }
 
         public override void UpdateState(AnimatorStateInfo stateInfo)

@@ -12,6 +12,7 @@ namespace BossRaid.Player.States
         {
             Owner.StopMovement(true);
             Owner.Health.IsInvincible = true;
+            Owner.ClearComboBonus();
         }
 
         public override void UpdateState(AnimatorStateInfo stateInfo)
@@ -21,7 +22,8 @@ namespace BossRaid.Player.States
 
             bool isMoving = SimpleInput.GetMoveAxisRaw() != Vector2.zero;
             bool isDodge = SimpleInput.GetKeyDown(Key.Space);
-            if (isMoving || isDodge)
+            bool quickStandUp = Owner.Loadout != null && Owner.Loadout.QuickStandUp; // 요리(꼬리 고기 스튜): 입력 없이 바로 기상
+            if (isMoving || isDodge || quickStandUp)
                 Animator.SetTrigger(PlayerController.StandUpHash);
         }
 
