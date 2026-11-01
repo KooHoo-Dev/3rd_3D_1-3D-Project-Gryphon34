@@ -17,6 +17,8 @@ namespace BossRaid.Boss
         [SerializeField] private float explosionHitTime = 0.1f; // 폭발 판정이 켜져 있는 시간
         [SerializeField] private ParticleSystem fireballEffect;
         [SerializeField] private float effectFadeTime = 3f; // 폭발 뒤 남은 꼬리가 사라질 때까지 기다리는 시간
+        [SerializeField] private AudioSource explosionSource; // 불덩이 프리팹에 붙인 AudioSource (3D면 터진 자리에서 들림)
+        [SerializeField] private AudioClip explosionClip;
 
         private Rigidbody projectileRigidbody;
         private Transform target;
@@ -81,9 +83,17 @@ namespace BossRaid.Boss
             BossHitbox explosionHitbox = Instantiate(explosionHitboxPrefab, transform.position, Quaternion.identity);
             Destroy(explosionHitbox.gameObject, explosionHitTime);
 
+            float destroyDelay = effectFadeTime;
+            if (explosionSource != null && explosionClip != null)
+            {
+                explosionSource.PlayOneShot(explosionClip);
+                // 오브젝트가 지워지면 소리도 끊기므로, 소리가 꼬리보다 길면 소리가 끝날 때까지 남겨 둡니다
+                destroyDelay = Mathf.Max(destroyDelay, explosionClip.length);
+            }
+
             // 바로 지우면 자식 파티클(꼬리)도 같이 사라지므로, 새 입자만 멈추고 남은 입자가 사라진 뒤 지웁니다
             if (fireballEffect != null) fireballEffect.Stop();
-            Destroy(gameObject, effectFadeTime);
+            Destroy(gameObject, destroyDelay);
         }
     }
 }

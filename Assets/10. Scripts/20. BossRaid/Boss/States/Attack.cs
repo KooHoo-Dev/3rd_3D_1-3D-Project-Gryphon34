@@ -7,6 +7,9 @@ namespace BossRaid.Boss.States
     public abstract class Attack : BossStates
     {
         [SerializeField] private float rotationSpeed = 120.0f;
+        [SerializeField] private float recoveryTime = 2.5f; // 이 공격이 끝난 뒤 IdleState에서 기다리는 시간 (큰 공격일수록 길게)
+
+        public float RecoveryTime => recoveryTime;
 
         private BossHitbox[] hitboxes;
         private bool isRotating = false;

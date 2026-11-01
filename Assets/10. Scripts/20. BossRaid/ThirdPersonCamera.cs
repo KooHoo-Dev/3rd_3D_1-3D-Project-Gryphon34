@@ -1,3 +1,5 @@
+using BossRaid.Combat;
+using DG.Tweening;
 using Study.Utilities;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -46,7 +48,32 @@ namespace BossRaid
 
         private Vector3 followVelocity;
 
+        // 흔들림: cameraTransform 위치는 매 프레임 거리로 덮어쓰므로, 흔들림 값을 따로 두고 그 위치에 더합니다
+        private Vector3 shakeOffset;
+        private Tweener shakeTween;
+
         public bool IsTargeting { get; private set; }
+
+        private void OnEnable()
+        {
+            CameraShake.OnShakeRequested += HandleShakeRequested;
+        }
+
+        private void OnDisable()
+        {
+            CameraShake.OnShakeRequested -= HandleShakeRequested;
+            shakeTween?.Kill();
+            shakeOffset = Vector3.zero;
+        }
+
+        // 연달아 맞으면 앞의 흔들림을 끊고 새로 (안 끊으면 둘이 같은 값을 번갈아 씀)
+        private void HandleShakeRequested(float strength, float duration)
+        {
+            shakeTween?.Kill();
+            shakeOffset = Vector3.zero;
+            shakeTween = DOTween.Shake(() => shakeOffset, x => shakeOffset = x, duration, strength)
+                .OnComplete(() => shakeOffset = Vector3.zero);
+        }
 
         private void Start()
         {
@@ -137,7 +164,7 @@ namespace BossRaid
                 currentDistance = Mathf.Lerp(currentDistance, targetDistance, distanceReturnSpeed * Time.deltaTime);
             }
 
-            cameraTransform.localPosition = new Vector3(0f, 0f, -currentDistance);
+            cameraTransform.localPosition = new Vector3(0f, 0f, -currentDistance) + shakeOffset;
         }
 
         // 피벗에서 카메라 방향으로 구를 쏴서 벽에 막히는 거리를 구합니다.

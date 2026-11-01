@@ -1,6 +1,5 @@
 namespace BossRaid.Data
 {
-    // RewardTable.tsv 한 줄 = 한 단계의 보상. 필드 이름 = 열 이름 (ChargeValue와 같은 방식)
     [System.Serializable]
     public class RewardValue
     {

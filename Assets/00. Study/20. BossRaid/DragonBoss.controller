@@ -14,10 +14,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::BossRaid.AnimStateEventSender
   events:
   - name: HitboxOn
-    time: 0.238
+    time: 0.333
     parameter: R_Hand
   - name: HitboxOff
-    time: 0.634
+    time: 0.58
     parameter: R_Hand
 --- !u!1102 &-9150615909355294631
 AnimatorState:
@@ -119,7 +119,7 @@ AnimatorStateTransition:
   serializedVersion: 3
   m_TransitionDuration: 0.25
   m_TransitionOffset: 0
-  m_ExitTime: 0.85
+  m_ExitTime: 0.95
   m_HasExitTime: 1
   m_HasFixedDuration: 1
   m_InterruptionSource: 0
@@ -159,6 +159,12 @@ AnimatorStateMachine:
   m_PrefabAsset: {fileID: 0}
   m_Name: Base Layer
   m_ChildStates:
+  - serializedVersion: 1
+    m_State: {fileID: 7300000000000009201}
+    m_Position: {x: 520, y: 170, z: 0}
+  - serializedVersion: 1
+    m_State: {fileID: 7300000000000009202}
+    m_Position: {x: 520, y: 260, z: 0}
   - serializedVersion: 1
     m_State: {fileID: 6285105092256042282}
     m_Position: {x: 290, y: 170, z: 0}
@@ -203,16 +209,16 @@ AnimatorStateMachine:
     m_Position: {x: 140, y: 490, z: 0}
   - serializedVersion: 1
     m_State: {fileID: -2581998512657772518}
-    m_Position: {x: -410, y: 480, z: 0}
+    m_Position: {x: -420, y: 480, z: 0}
   - serializedVersion: 1
     m_State: {fileID: 4961351640852837431}
-    m_Position: {x: -410, y: 610, z: 0}
+    m_Position: {x: -420, y: 610, z: 0}
   - serializedVersion: 1
     m_State: {fileID: 692032803640133811}
-    m_Position: {x: -410, y: 550, z: 0}
+    m_Position: {x: -420, y: 550, z: 0}
   - serializedVersion: 1
     m_State: {fileID: 8004816739194052051}
-    m_Position: {x: -410, y: 420, z: 0}
+    m_Position: {x: -420, y: 420, z: 0}
   - serializedVersion: 1
     m_State: {fileID: 7300000000000000000}
     m_Position: {x: -700, y: 420, z: 0}
@@ -249,6 +255,7 @@ AnimatorStateMachine:
   - {fileID: 8992237723948869327}
   - {fileID: 7300000000000006666}
   - {fileID: 7300000000000007777}
+  - {fileID: 7300000000000009203}
   m_EntryTransitions: []
   m_StateMachineTransitions: {}
   m_StateMachineBehaviours: []
@@ -298,7 +305,7 @@ AnimatorStateTransition:
   serializedVersion: 3
   m_TransitionDuration: 0.25
   m_TransitionOffset: 0
-  m_ExitTime: 0.90625
+  m_ExitTime: 0.95
   m_HasExitTime: 1
   m_HasFixedDuration: 1
   m_InterruptionSource: 0
@@ -418,7 +425,8 @@ AnimatorState:
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions: []
-  m_StateMachineBehaviours: []
+  m_StateMachineBehaviours:
+  - {fileID: 4719386520173948261}
   m_Position: {x: 50, y: 50, z: 0}
   m_IKOnFeet: 0
   m_WriteDefaultValues: 1
@@ -449,7 +457,7 @@ AnimatorStateTransition:
   serializedVersion: 3
   m_TransitionDuration: 0.25
   m_TransitionOffset: 0
-  m_ExitTime: 0.8125
+  m_ExitTime: 0.95
   m_HasExitTime: 1
   m_HasFixedDuration: 1
   m_InterruptionSource: 0
@@ -577,7 +585,7 @@ AnimatorStateTransition:
   serializedVersion: 3
   m_TransitionDuration: 0.25
   m_TransitionOffset: 0
-  m_ExitTime: 0.75
+  m_ExitTime: 0.95
   m_HasExitTime: 1
   m_HasFixedDuration: 1
   m_InterruptionSource: 0
@@ -599,7 +607,7 @@ AnimatorStateTransition:
   serializedVersion: 3
   m_TransitionDuration: 0.25
   m_TransitionOffset: 0
-  m_ExitTime: 0.8125
+  m_ExitTime: 0.95
   m_HasExitTime: 1
   m_HasFixedDuration: 1
   m_InterruptionSource: 0
@@ -647,10 +655,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::BossRaid.AnimStateEventSender
   events:
   - name: HitboxOn
-    time: 0.238
+    time: 0.333
     parameter: L_Hand
   - name: HitboxOff
-    time: 0.634
+    time: 0.58
     parameter: L_Hand
 --- !u!1102 &-2053121635872591784
 AnimatorState:
@@ -696,7 +704,7 @@ AnimatorStateTransition:
   serializedVersion: 3
   m_TransitionDuration: 0.25
   m_TransitionOffset: 0
-  m_ExitTime: 0.75
+  m_ExitTime: 0.95
   m_HasExitTime: 1
   m_HasFixedDuration: 1
   m_InterruptionSource: 0
@@ -785,7 +793,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::BossRaid.AnimStateEventSender
   events:
   - name: HitboxOn
-    time: 0.163
+    time: 0.248
     parameter: Bite
   - name: HitboxOff
     time: 0.352
@@ -850,6 +858,18 @@ AnimatorController:
   m_Name: DragonBoss
   serializedVersion: 5
   m_AnimatorParameters:
+  - m_Name: Exhausted
+    m_Type: 9
+    m_DefaultFloat: 0
+    m_DefaultInt: 0
+    m_DefaultBool: 0
+    m_Controller: {fileID: 9100000}
+  - m_Name: GetUp
+    m_Type: 9
+    m_DefaultFloat: 0
+    m_DefaultInt: 0
+    m_DefaultBool: 0
+    m_Controller: {fileID: 9100000}
   - m_Name: Death
     m_Type: 9
     m_DefaultFloat: 0
@@ -1109,7 +1129,7 @@ AnimatorStateTransition:
   serializedVersion: 3
   m_TransitionDuration: 0.25
   m_TransitionOffset: 0
-  m_ExitTime: 0.925
+  m_ExitTime: 0.95
   m_HasExitTime: 1
   m_HasFixedDuration: 1
   m_InterruptionSource: 0
@@ -1131,7 +1151,7 @@ AnimatorStateTransition:
   serializedVersion: 3
   m_TransitionDuration: 0.25
   m_TransitionOffset: 0
-  m_ExitTime: 0.85
+  m_ExitTime: 0.95
   m_HasExitTime: 1
   m_HasFixedDuration: 1
   m_InterruptionSource: 0
@@ -1154,7 +1174,7 @@ MonoBehaviour:
     time: 0.01
     parameter: HipCheck
   - name: HitboxOff
-    time: 0.6
+    time: 0.7
     parameter: HipCheck
 --- !u!114 &2880560306071949927
 MonoBehaviour:
@@ -1173,7 +1193,7 @@ MonoBehaviour:
     time: 0.01
     parameter: HipCheck
   - name: HitboxOff
-    time: 0.6
+    time: 0.7
     parameter: HipCheck
 --- !u!1101 &3243028454753453181
 AnimatorStateTransition:
@@ -1200,6 +1220,22 @@ AnimatorStateTransition:
   m_InterruptionSource: 0
   m_OrderedInterruption: 1
   m_CanTransitionToSelf: 1
+--- !u!114 &4719386520173948261
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d77fb9c32aa3468c8316e5b907d1ee76, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BossRaid.AnimStateEventSender
+  events:
+  - name: Roar
+    time: 0
+    parameter: 
 --- !u!1102 &4961351640852837431
 AnimatorState:
   serializedVersion: 6
@@ -1348,7 +1384,7 @@ AnimatorStateTransition:
   serializedVersion: 3
   m_TransitionDuration: 0.25
   m_TransitionOffset: 0
-  m_ExitTime: 0.75
+  m_ExitTime: 0.95
   m_HasExitTime: 1
   m_HasFixedDuration: 1
   m_InterruptionSource: 0
@@ -1608,6 +1644,109 @@ AnimatorStateTransition:
   m_InterruptionSource: 0
   m_OrderedInterruption: 1
   m_CanTransitionToSelf: 1
+--- !u!1102 &7300000000000009201
+AnimatorState:
+  serializedVersion: 6
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: ExhaustedDown
+  m_Speed: 1
+  m_CycleOffset: 0
+  m_Transitions:
+  - {fileID: 7300000000000009204}
+  m_StateMachineBehaviours: []
+  m_Position: {x: 50, y: 50, z: 0}
+  m_IKOnFeet: 0
+  m_WriteDefaultValues: 1
+  m_Mirror: 0
+  m_SpeedParameterActive: 0
+  m_MirrorParameterActive: 0
+  m_CycleOffsetParameterActive: 0
+  m_TimeParameterActive: 0
+  m_Motion: {fileID: 7400000, guid: aa7c274edaa07da4982cb0ad2d84ef05, type: 3}
+  m_Tag: 
+  m_SpeedParameter: 
+  m_MirrorParameter: 
+  m_CycleOffsetParameter: 
+  m_TimeParameter: 
+--- !u!1102 &7300000000000009202
+AnimatorState:
+  serializedVersion: 6
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: ExhaustedGetUp
+  m_Speed: -0.37
+  m_CycleOffset: 0
+  m_Transitions: []
+  m_StateMachineBehaviours: []
+  m_Position: {x: 50, y: 50, z: 0}
+  m_IKOnFeet: 0
+  m_WriteDefaultValues: 1
+  m_Mirror: 0
+  m_SpeedParameterActive: 0
+  m_MirrorParameterActive: 0
+  m_CycleOffsetParameterActive: 0
+  m_TimeParameterActive: 0
+  m_Motion: {fileID: 7400000, guid: aa7c274edaa07da4982cb0ad2d84ef05, type: 3}
+  m_Tag: 
+  m_SpeedParameter: 
+  m_MirrorParameter: 
+  m_CycleOffsetParameter: 
+  m_TimeParameter: 
+--- !u!1101 &7300000000000009203
+AnimatorStateTransition:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: 
+  m_Conditions:
+  - m_ConditionMode: 1
+    m_ConditionEvent: Exhausted
+    m_EventTreshold: 0
+  m_DstStateMachine: {fileID: 0}
+  m_DstState: {fileID: 7300000000000009201}
+  m_Solo: 0
+  m_Mute: 0
+  m_IsExit: 0
+  serializedVersion: 3
+  m_TransitionDuration: 0.25
+  m_TransitionOffset: 0
+  m_ExitTime: 0.75
+  m_HasExitTime: 0
+  m_HasFixedDuration: 1
+  m_InterruptionSource: 0
+  m_OrderedInterruption: 1
+  m_CanTransitionToSelf: 0
+--- !u!1101 &7300000000000009204
+AnimatorStateTransition:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: 
+  m_Conditions:
+  - m_ConditionMode: 1
+    m_ConditionEvent: GetUp
+    m_EventTreshold: 0
+  m_DstStateMachine: {fileID: 0}
+  m_DstState: {fileID: 7300000000000009202}
+  m_Solo: 0
+  m_Mute: 0
+  m_IsExit: 0
+  serializedVersion: 3
+  m_TransitionDuration: 0.25
+  m_TransitionOffset: 0.9
+  m_ExitTime: 0.75
+  m_HasExitTime: 0
+  m_HasFixedDuration: 1
+  m_InterruptionSource: 0
+  m_OrderedInterruption: 1
+  m_CanTransitionToSelf: 0
 --- !u!1101 &7300000000000009999
 AnimatorStateTransition:
   m_ObjectHideFlags: 1
@@ -1646,7 +1785,7 @@ AnimatorStateTransition:
   serializedVersion: 3
   m_TransitionDuration: 0.25
   m_TransitionOffset: 0
-  m_ExitTime: 0.85
+  m_ExitTime: 0.95
   m_HasExitTime: 1
   m_HasFixedDuration: 1
   m_InterruptionSource: 0
@@ -1712,7 +1851,7 @@ AnimatorStateTransition:
   serializedVersion: 3
   m_TransitionDuration: 0.25
   m_TransitionOffset: 0
-  m_ExitTime: 0.85
+  m_ExitTime: 0.95
   m_HasExitTime: 1
   m_HasFixedDuration: 1
   m_InterruptionSource: 0
@@ -1751,10 +1890,10 @@ MonoBehaviour:
     time: 0
     parameter: 
   - name: HitboxOn
-    time: 0.238
+    time: 0.333
     parameter: L_Hand
   - name: HitboxOff
-    time: 0.634
+    time: 0.58
     parameter: L_Hand
 --- !u!114 &7300000000000017776
 MonoBehaviour:
@@ -1789,10 +1928,10 @@ MonoBehaviour:
     time: 0
     parameter: 
   - name: HitboxOn
-    time: 0.238
+    time: 0.333
     parameter: R_Hand
   - name: HitboxOff
-    time: 0.634
+    time: 0.58
     parameter: R_Hand
 --- !u!1101 &7459365769815874823
 AnimatorStateTransition:
@@ -1833,16 +1972,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::BossRaid.AnimStateEventSender
   events:
   - name: HitboxOn
-    time: 0.139
+    time: 0.211
     parameter: R_Hand
   - name: HitboxOff
-    time: 0.333
+    time: 0.3
     parameter: R_Hand
   - name: HitboxOn
-    time: 0.515
+    time: 0.59
     parameter: L_Hand
   - name: HitboxOff
-    time: 0.709
+    time: 0.72
     parameter: L_Hand
 --- !u!1101 &7529109884235869426
 AnimatorStateTransition:

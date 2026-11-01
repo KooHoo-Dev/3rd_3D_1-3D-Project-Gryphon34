@@ -13,6 +13,8 @@ namespace BossRaid.Boss.States
         [SerializeField] private float speedBreath = 0.5f;
         [SerializeField] private CapsuleCollider flameCollider;
         [SerializeField] private float flameGrowSpeed = 25f;
+        [SerializeField] private AudioSource breathSource; // Boss.audioSource를 빌리지 않고 이 오브젝트의 AudioSource로
+        [SerializeField] private AudioClip breathClip;
 
         private bool isStretch = false;
         private float flameMaxLength;
@@ -57,6 +59,7 @@ namespace BossRaid.Boss.States
                 {
                     animator.SetFloat("SpeedBreath", 1f);
                     isStretch = true;
+                    PlayBreathSound();
                 }
                 effect.Play();
             }
@@ -75,6 +78,12 @@ namespace BossRaid.Boss.States
             if (id == "Ember") return ember;
             if (id == "Flame") return flame;
             return null;
+        }
+
+        private void PlayBreathSound()
+        {
+            if (breathSource == null || breathClip == null) return;
+            breathSource.PlayOneShot(breathClip);
         }
 
         private void SetFlameLength(float length)

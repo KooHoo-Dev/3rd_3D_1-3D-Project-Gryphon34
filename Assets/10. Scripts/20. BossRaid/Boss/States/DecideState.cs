@@ -43,6 +43,13 @@ namespace BossRaid.Boss.States
                 return;
             }
 
+            // 지쳤으면 공격 안 고름 (물약 반응·돌기 뒤에 와도) → 대기에서 쉼
+            if (boss.IsExhausted)
+            {
+                boss.ChangeState(StateName.IdleState);
+                return;
+            }
+
             Debug.Log("Entered DecideState");
             GetInfo(out float distance, out float angle);
             Debug.Log($"Distance: {distance}");

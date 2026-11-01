@@ -4,7 +4,6 @@ using UnityEngine;
 
 namespace BossRaid.Data
 {
-    // StreamingAssets/RewardTable/RewardTable.tsv를 읽어 단계별 보상을 돌려줍니다 (ChargeTable과 같은 방식)
     public class RewardTable
     {
         private const string TableName = "RewardTable/RewardTable.tsv";

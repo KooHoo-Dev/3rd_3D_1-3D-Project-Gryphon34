@@ -3,8 +3,6 @@ using UnityEngine;
 
 namespace BossRaid.Boss
 {
-    // 논리적인 부위 하나(머리, 왼날개, 꼬리 …)의 정보입니다. 부위마다 하나만 둡니다.
-    // 직접 맞지 않고, 그 부위의 Hurtbox들이 맞으면 TakeDamage로 넘겨받습니다.
     public class BossPart : MonoBehaviour
     {
         [SerializeField] private string partName;

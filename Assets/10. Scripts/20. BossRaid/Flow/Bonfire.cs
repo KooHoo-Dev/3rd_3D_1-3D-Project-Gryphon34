@@ -7,22 +7,19 @@ using UnityEngine.InputSystem;
 
 namespace BossRaid.Flow
 {
-    // 마을 씬의 화톳불입니다. 가까이에서 [E]를 누르면 화톳불 메뉴(BonfirePanel)를 열고 닫습니다.
-    // 규칙(인간성 태우기)은 여기에 있고, 패널은 보여 주기만 합니다 (HuntManager ↔ ResultPanel과 같은 나눔)
     public class Bonfire : MonoBehaviour
     {
         public PlayerController player;
         [SerializeField] private BonfirePanel panel;
-        [SerializeField] private float interactDistance = 3f; // 이 거리 안이면 [E]로 열 수 있음
-        [SerializeField] private int maxPotionLimit = 5;      // 태워서 늘릴 수 있는 회복약 최대 개수 (GDD: 3 → 최대 5)
+        [SerializeField] private float interactDistance = 3f;
+        [SerializeField] private int maxPotionLimit = 5;
 
         public int MaxPotionLimit => maxPotionLimit;
-        // 인간성이 있고, 회복약 최대가 아직 끝이 아닐 때만 태울 수 있음
+        
         public bool CanBurnHumanity => GameData.Current.humanity > 0 && GameData.Current.currentMaxPotion < maxPotionLimit;
 
         private void Start()
         {
-            // 씬을 넘어 남은 사람 상태를 새로 만들어진 플레이어에게 넘겨줌 (죽고 오면 HuntManager가 false로 해 둠)
             player.Health.SetMaxHealth(GameData.Current.isHuman);
             player.Potion.SetMaxPotionCount(GameData.Current.currentMaxPotion);
             player.Potion.SetHumanityCount(GameData.Current.humanity);
@@ -49,7 +46,6 @@ namespace BossRaid.Flow
             if (player != null) player.Potion.OnHumanityUsed -= HandleHumanityUsed;
         }
 
-        // 마을에서 인간성을 마심: 개수 −1, 사람 상태 (최대 HP +25, HP 전부 회복). 투기장에서는 HuntManager가 같은 일을 함
         private void HandleHumanityUsed()
         {
             Progress progress = GameData.Current;
@@ -72,7 +68,6 @@ namespace BossRaid.Flow
             else if (isNear) panel.Open(this);
         }
 
-        // 인간성 1개 → 회복약 최대 +1 (영구). 바로 늘어나게 플레이어에게도 넘겨줌
         public void BurnHumanity()
         {
             if (CanBurnHumanity == false) return;
