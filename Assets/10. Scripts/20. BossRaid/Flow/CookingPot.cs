@@ -33,7 +33,7 @@ namespace BossRaid.Flow
 
             if (SimpleInput.GetKeyDown(Key.E) == false) return;
             if (panel.IsOpen) panel.Close();
-            else if (isNear) panel.Open(this);
+            else if (isNear && player.enabled) panel.Open(this); // 다른 메뉴(헌터북 등)가 열려 있으면 플레이어가 꺼져 있음
         }
 
         // Unlock 칸이 비었으면 처음부터, 아니면 그 소재를 한 번이라도 얻었으면 열림

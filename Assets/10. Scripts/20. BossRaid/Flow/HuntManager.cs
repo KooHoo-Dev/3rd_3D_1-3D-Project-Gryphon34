@@ -49,9 +49,9 @@ namespace BossRaid.Flow
             player.Potion.SetMaxPotionCount(GameData.Current.currentMaxPotion); // 태운 만큼 늘어난 회복약 최대 개수
             player.Potion.SetHumanityCount(GameData.Current.humanity);
 
-            // 떨어진 소울이 있으면 죽은 자리에 만듦. 지난 판 결과(처치/사망)와는 상관없음
+            // 떨어진 소울이 있고 죽은 단계와 같으면 죽은 자리에 만듦. 지난 판 결과(처치/사망)와는 상관없음
             DroppedSoul drop = GameData.Current.droppedSoul;
-            if (drop.amount > 0)
+            if (drop.amount > 0 && drop.stage == GameData.Current.currentStage)
             {
                 Instantiate(SoulsPrefab, new Vector3(drop.x, drop.y, drop.z), Quaternion.identity);
                 Debug.Log($"[소울] 떨어진 소울 {drop.amount} 생성 ({drop.x:0.0}, {drop.y:0.0}, {drop.z:0.0})");
@@ -137,6 +137,7 @@ namespace BossRaid.Flow
             drop.x = pos.x;
             drop.y = pos.y;
             drop.z = pos.z;
+            drop.stage = progress.currentStage;
             progress.souls = 0;
 
             currentHuntReward.souls += oldAmount / 2; // 못 줍고 또 죽으면 절반은 화톳불로 (GDD §6-6)

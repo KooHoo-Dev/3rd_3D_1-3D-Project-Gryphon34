@@ -114,7 +114,7 @@ namespace BossRaid.UI
                 float attack = forge.player.Sword.BaseAttackPower * weapon.AttackRate; // 실제 공격력 = 기본 × 배율
                 parts.Add($"공격력 {attack:0} (×{weapon.AttackRate})");
                 if (weapon.BrokenPartBonus != 1f) parts.Add($"깨진 부위 ×{weapon.BrokenPartBonus}");
-                if (weapon.GuardBonus > 0f) parts.Add($"가드 +{weapon.GuardBonus}");
+                if (weapon.GuardBonus > 0f) parts.Add($"가드 스태미나 −{weapon.GuardBonus * 100:0}%");
             }
             else if (value is ArmorValue armor)
             {

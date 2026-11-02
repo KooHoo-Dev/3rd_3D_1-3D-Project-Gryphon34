@@ -2,6 +2,7 @@ using UnityEngine;
 
 namespace BossRaid.Player.States
 {
+    // 안 씀 (상쇄는 11/02 뺌. PlayerController.RegisterCounterTackleStates에서만 등록)
     // 상쇄 베기 (애니메이터 Tag "Counter"). 제자리에 서서 벱니다
     public class CounterState : PlayerStatesBase
     {

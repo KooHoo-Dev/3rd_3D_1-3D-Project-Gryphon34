@@ -34,16 +34,34 @@ namespace BossRaid.Boss
         [SerializeField] private Transform TailPosition; // 크기를 0으로 만들 뼈 (MountainDragon_ Tail5). 이 뼈부터 꼬리 끝까지 안 보임
         [SerializeField] private BossPart TailPart;      // 꼬리 부위 (MountainDragon_ Tail). IsBroken으로 잘렸는지 봄
 
+        [Header("날개 (전부 깨지면 needWings 패턴 안 나옴)")]
+        [SerializeField] private BossPart[] wingParts; // Wing_L, Wing_R
+
         [Header("근접 불 (단계 rageFireHpRate 아래, 비어 있으면 이펙트 안 함)")]
         [SerializeField] private ParticleSystem[] rageFireEffects; // 넘는 순간 켜서 계속 켜 둠 (양손·입 등)
 
         public float CurrentHp { get; private set; }
         public StageValue Stage { get; private set; } // 지금 단계의 값
+        public int StageNumber { get; private set; }  // 지금 단계 (1부터). DecideState가 패턴의 fromStage와 비교
         public float MaxHp => Stage.MaxHp;
         public float AttackRate => Stage.AttackRate;
         public float CurrentFatigue { get; private set; }
         public bool IsExhausted { get; private set; }
         public bool IsRageFire { get; private set; } // 근접(rageFire 히트박스)에도 불이 붙음
+
+        // 날개가 하나라도 안 깨졌으면 날 수 있음 (wingParts가 비어 있어도 true). DecideState가 needWings 줄을 거를 때 봄
+        public bool CanFly
+        {
+            get
+            {
+                if (wingParts == null || wingParts.Length == 0) return true;
+                foreach (BossPart wing in wingParts)
+                {
+                    if (wing != null && wing.IsBroken == false) return true;
+                }
+                return false;
+            }
+        }
         public float ExhaustTime => exhaustTime;
         public bool IsDiscovered { get; private set; }
         public bool IsAIPaused { get; private set; } // 임시: P 키. 켜져 있으면 Idle에서 Decide로 안 감
@@ -67,6 +85,7 @@ namespace BossRaid.Boss
         public event Action OnDeath;
         public event Action<BossPart> OnPartBroken; // 부위가 깨진 순간 (한 판에 부위마다 한 번)
         public event Action OnHpReduce; // 맞아서 HP가 깎인 순간 (체력 구간은 듣는 쪽이 CurrentHp / MaxHp로 계산)
+        public event Action OnDiscovered; // 플레이어를 처음 발견한 순간 (한 판에 한 번). MusicPlayer가 전투 음악으로 바꿈
 
         private void Awake()
         {
@@ -90,6 +109,7 @@ namespace BossRaid.Boss
             int index = Mathf.Clamp(stage - 1, 0, stages.Length - 1);
             if (index != stage - 1) Debug.LogWarning($"[보스] {stage}단계 값이 없어서 {index + 1}단계로 합니다");
             Stage = stages[index];
+            StageNumber = index + 1;
 
             CurrentHp = Stage.MaxHp;
             CurrentFatigue = Stage.MaxFatigue;
@@ -162,7 +182,7 @@ namespace BossRaid.Boss
             {
                 foreach (BossPart part in GetComponentsInChildren<BossPart>())
                 {
-                    if (part.CanBroken == false || part.IsBroken) continue;
+                    if (part.CanBreakAt(StageNumber) == false || part.IsBroken) continue;
                     if (part.ReduceDurability(part.CurrentDurability))
                     {
                         OnPartBroken?.Invoke(part);
@@ -188,7 +208,7 @@ namespace BossRaid.Boss
             CurrentHp -= calculateDamage;
             if (IsExhausted == false) CurrentFatigue -= info.Fatigue; 
 
-            if (part.CanBroken)
+            if (part.CanBreakAt(StageNumber)) // 날개처럼 2단계부터 깨지는 부위는 1단계에선 내구도가 안 깎임
             {
                 if (part.IsBroken == false)
                 {
@@ -267,7 +287,9 @@ namespace BossRaid.Boss
 
         public void SetDiscover()
         {
+            if (IsDiscovered) return; // IdleState가 범위 안에서 매 프레임 부름 → 처음 한 번만
             IsDiscovered = true;
+            OnDiscovered?.Invoke();
         }
 
         public void ChangeState(BossStates.StateName stateName)
@@ -318,14 +340,14 @@ namespace BossRaid.Boss
             ChangeState(BossStates.StateName.IdleState);
         }
 
-        // 상쇄당함: 피로만 깎음 (HP·부위는 같은 상자의 WeaponCollider가 몸에 닿을 때 ApplyHit으로). 0이면 공격을 끊고 쓰러짐
-        public void Countered(float amount)
+        // 퍼펙트 가드(상쇄도 썼음): 피로만 깎음 (HP·부위는 안 깎음). 0이면 공격을 끊고 쓰러짐
+        public void ReduceFatigue(float amount)
         {
             if (IsDead || IsExhausted) return;
 
             CurrentFatigue -= amount;
             if (CurrentFatigue <= 0) CurrentFatigue = 0;
-            Debug.Log($"{gameObject.name} 상쇄당함! Fatigue: {CurrentFatigue}");
+            Debug.Log($"{gameObject.name} 피로 -{amount} → Fatigue: {CurrentFatigue}");
 
             if (CurrentFatigue <= 0) Exhausted();
         }

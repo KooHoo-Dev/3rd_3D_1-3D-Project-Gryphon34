@@ -5,6 +5,7 @@ using UnityEngine;
 
 namespace BossRaid.Player
 {
+    // 안 씀 (상쇄는 11/02 뺌. 상자는 상쇄 클립만 켜서 입력을 막으면 안 켜짐)
     // 상쇄 상자. 같은 오브젝트의 WeaponCollider가 보스 몸(Hurtbox)을 약하게 때리고, 이건 보스 히트박스만 봅니다
     public class CounterCollider : MonoBehaviour
     {
@@ -41,7 +42,7 @@ namespace BossRaid.Player
 
             // BossRaid.Player 안이라 그냥 Boss라고 쓰면 BossRaid.Boss 네임스페이스로 읽힘
             BossRaid.Boss.Boss boss = hitbox.GetComponentInParent<BossRaid.Boss.Boss>();
-            if (boss != null) boss.Countered(counterFatigue);
+            if (boss != null) boss.ReduceFatigue(counterFatigue);
 
             // 히트스탑: 플레이어와 보스 애니메이션만 잠깐 멈춤 (WeaponCollider와 같은 방식)
             HitStop.Play(playerAnimator, boss != null ? boss.Animator : null, hitStopTime);

@@ -13,8 +13,6 @@ namespace BossRaid.Player.States
         
         public override bool BlocksStaminaRegen => false;
 
-        private float rightClickTime = float.NegativeInfinity; // 대기에서 우클릭을 누른 시각 (상쇄 입력)
-
         public override void Enter()
         {
             Animator.SetBool(PlayerController.IsAttackHash, false);
@@ -44,6 +42,27 @@ namespace BossRaid.Player.States
                     Animator.SetTrigger(PlayerController.DrinkHash);
             }
 
+            // 상쇄·태클은 뺌 (11/02). 다시 쓰려면 이 블록 대신 아래 #region의 UpdateAttackInputWithCounter()
+            if (SimpleInput.GetMouseButtonDown(SimpleInput.MouseButton.Left)
+                && Owner.Stamina.CanUseStamina(Owner.AttackStamina))
+            {
+                Animator.SetBool(PlayerController.IsAttackHash, true);
+            }
+
+            if (SimpleInput.GetKeyDown(Key.Space))
+            {
+                if(Owner.Stamina.TryUseStamina(Owner.DodgeStamina))
+                    Animator.SetTrigger(PlayerController.DodgeHash);
+            }
+        }
+
+        #region 안 쓰는 것 (상쇄·태클, 11/02 뺌)
+
+        private float rightClickTime = float.NegativeInfinity; // 대기에서 우클릭을 누른 시각 (상쇄 입력)
+
+        // 원래 좌클릭 처리: 우클릭 먼저 → 0.1초 안 좌클릭 = 상쇄, 태클 뒤 시간 안이면 다음 타 Start
+        private void UpdateAttackInputWithCounter()
+        {
             // 우클릭을 좌클릭보다 먼저 봄 → 같은 프레임에 둘 다 눌러도 상쇄
             if (SimpleInput.GetMouseButtonDown(SimpleInput.MouseButton.Right))
                 rightClickTime = Time.time;
@@ -67,12 +86,8 @@ namespace BossRaid.Player.States
                         Owner.MarkIdleAttack();
                 }
             }
-
-            if (SimpleInput.GetKeyDown(Key.Space))
-            {
-                if(Owner.Stamina.TryUseStamina(Owner.DodgeStamina)) 
-                    Animator.SetTrigger(PlayerController.DodgeHash);
-            }
         }
+
+        #endregion
     }
 }

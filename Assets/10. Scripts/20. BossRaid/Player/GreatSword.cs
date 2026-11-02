@@ -19,17 +19,30 @@ namespace BossRaid.Weapon
         [SerializeField, FormerlySerializedAs("hitSounds")]
         private AudioClip[] attackSounds;
         [SerializeField] private AudioClip[] impactSounds;
-        [SerializeField] private TrailRenderer slashTrail;
         [SerializeField] private GameObject hitEffectPrefab;
         [SerializeField] private float hitEffectLifeTime = 2f;
 
-        [Header("상쇄 성공 (비어 있으면 안 함)")]
-        [SerializeField] private GameObject counterEffectPrefab;
-        [SerializeField] private AudioClip[] counterSounds;
+        // 슬래시 하나 = 이름 + 프리팹 + 플레이어 기준 위치·회전. 공격 칸의 이벤트 Slash가 파라미터(이름)로 고름
+        [System.Serializable]
+        public class SlashSetting
+        {
+            public string name;
+            public GameObject prefab;
+            public Vector3 position; // 플레이어 기준 (0, 1, 1) = 앞 1m, 위 1m
+            public Vector3 rotation; // 플레이어 기준 각도 (Euler)
+        }
+
+        [Header("칼 슬래시 (칸 이벤트 Slash, 파라미터 = 이름)")]
+        [SerializeField] private SlashSetting[] slashes;
+        [SerializeField] private float slashLifeTime = 1f;
 
         [Header("퍼펙트 가드 (비어 있으면 안 함)")]
         [SerializeField] private GameObject perfectGuardEffectPrefab;
         [SerializeField] private AudioClip[] perfectGuardSounds;
+
+        [Header("일반 가드 (비어 있으면 안 함, 불 공격도 같은 것)")]
+        [SerializeField] private GameObject guardEffectPrefab;
+        [SerializeField] private AudioClip[] guardSounds;
 
         [Header("카메라 흔들림 (맞힌 순간)")]
         [SerializeField] private float shakeStrength = 0.15f;
@@ -52,6 +65,8 @@ namespace BossRaid.Weapon
         private Material outlineInstance;
         private Renderer[] glowRenderers;
         private Material[][] originalMaterials;
+        private AnimStateEventListener animEventListener; // 공격 칸의 Slash 이벤트를 받음
+        private Transform slashRoot;                      // 슬래시 위치·회전의 기준 (플레이어)
 
         public float HitStopTime => hitStopTime;
         public float ShakeStrength => shakeStrength;
@@ -190,22 +205,40 @@ namespace BossRaid.Weapon
             PlayRandomSound(attackSounds);
         }
 
-        /// <summary>
-        /// 칼끝 잔상을 그리기 시작합니다. AttackState.Enter에서 부릅니다.
-        /// </summary>
-        public void StartTrail()
+        private void OnEnable()
         {
-            if (slashTrail == null) return;
-            slashTrail.Clear(); // 지난 공격에서 남은 잔상 지우기 (안 지우면 자세 잡을 때 칼이 움직인 길까지 이어져 그려짐)
-            slashTrail.emitting = true;
+            if (animEventListener != null) animEventListener.OnOccursAnimStateEvent += HandleAnimStateEvent;
+        }
+
+        private void OnDisable()
+        {
+            if (animEventListener != null) animEventListener.OnOccursAnimStateEvent -= HandleAnimStateEvent;
+        }
+
+        private void HandleAnimStateEvent(string eventName, string parameter)
+        {
+            if (eventName == "Slash") PlaySlash(parameter);
         }
 
         /// <summary>
-        /// 칼끝 잔상을 그만 그립니다 (이미 그린 건 Time 동안 서서히 사라짐). AttackState.Exit에서 부릅니다.
+        /// 이름이 같은 슬래시를 플레이어 기준 위치·회전에 만듭니다 (월드에 남음). 공격 칸의 이벤트 Slash가 부릅니다.
+        /// 값은 매번 목록에서 읽어서, 플레이 중에 고치면 다음 공격부터 바로 보입니다
         /// </summary>
-        public void StopTrail()
+        private void PlaySlash(string slashName)
         {
-            if (slashTrail != null) slashTrail.emitting = false;
+            foreach (SlashSetting slash in slashes)
+            {
+                if (slash.name != slashName) continue;
+                if (slash.prefab == null) return;
+
+                Vector3 position = slashRoot.TransformPoint(slash.position);
+                Quaternion rotation = slashRoot.rotation * Quaternion.Euler(slash.rotation);
+                GameObject effect = Instantiate(slash.prefab, position, rotation);
+                foreach (ParticleSystem particle in effect.GetComponentsInChildren<ParticleSystem>()) particle.Play();
+                Destroy(effect, slashLifeTime);
+                return;
+            }
+            Debug.LogWarning($"[GreatSword] 슬래시 '{slashName}'가 목록에 없습니다");
         }
 
         /// <summary>
@@ -226,34 +259,31 @@ namespace BossRaid.Weapon
         }
 
         /// <summary>
-        /// 상쇄가 맞부딪친 자리에 불꽃 + 금속음을 냅니다. CounterCollider가 상쇄에 성공한 순간 부릅니다.
-        /// 소리는 이 칼의 AudioSource로 (상쇄 상자는 클립이 꺼서, 거기 붙이면 소리가 끊김)
-        /// </summary>
-        public void PlayCounterEffect(Vector3 point)
-        {
-            PlayRandomSound(counterSounds);
-
-            if (counterEffectPrefab != null)
-            {
-                GameObject effect = Instantiate(counterEffectPrefab, point, Quaternion.identity);
-                foreach (ParticleSystem particle in effect.GetComponentsInChildren<ParticleSystem>()) particle.Play();
-                Destroy(effect, hitEffectLifeTime);
-            }
-        }
-
-        /// <summary>
         /// 퍼펙트 가드 자리에 불꽃 + 금속음을 냅니다. PlayerController.TryGuard가 퍼펙트로 막은 순간 부릅니다.
         /// </summary>
         public void PlayPerfectGuardEffect(Vector3 point)
         {
             PlayRandomSound(perfectGuardSounds);
+            SpawnEffect(perfectGuardEffectPrefab, point);
+        }
 
-            if (perfectGuardEffectPrefab != null)
-            {
-                GameObject effect = Instantiate(perfectGuardEffectPrefab, point, Quaternion.identity);
-                foreach (ParticleSystem particle in effect.GetComponentsInChildren<ParticleSystem>()) particle.Play();
-                Destroy(effect, hitEffectLifeTime);
-            }
+        /// <summary>
+        /// 일반 가드 자리에 작은 불꽃 + 막는 소리를 냅니다. PlayerController.TryGuard가 퍼펙트가 아니게 막은 순간 부릅니다.
+        /// </summary>
+        public void PlayGuardEffect(Vector3 point)
+        {
+            PlayRandomSound(guardSounds);
+            SpawnEffect(guardEffectPrefab, point);
+        }
+
+        // 가드 이펙트를 월드에 만들고 재생, hitEffectLifeTime 뒤 지움. 프리팹이 비어 있으면 안 함
+        private void SpawnEffect(GameObject prefab, Vector3 point)
+        {
+            if (prefab == null) return;
+
+            GameObject effect = Instantiate(prefab, point, Quaternion.identity);
+            foreach (ParticleSystem particle in effect.GetComponentsInChildren<ParticleSystem>()) particle.Play();
+            Destroy(effect, hitEffectLifeTime);
         }
 
         private ChargeTable chargeTable;
@@ -276,7 +306,10 @@ namespace BossRaid.Weapon
                 bodyRoot = playerAnimator != null ? playerAnimator.transform : transform;
             }
             if (chargeOutlineMaterial != null) outlineInstance = new Material(chargeOutlineMaterial);
-            StopTrail(); // 걸어다닐 때는 안 그림
+
+            animEventListener = GetComponentInParent<AnimStateEventListener>();
+            PlayerController player = GetComponentInParent<PlayerController>();
+            slashRoot = player != null ? player.transform : transform;
         }
 
         /// <summary>
@@ -307,5 +340,29 @@ namespace BossRaid.Weapon
                 weaponCollider.ResetHash();
             }
         }
+
+        #region 안 쓰는 것 (상쇄, 11/02 뺌)
+
+        [Header("상쇄 성공 (안 씀, 비어 있으면 안 함)")]
+        [SerializeField] private GameObject counterEffectPrefab;
+        [SerializeField] private AudioClip[] counterSounds;
+
+        /// <summary>
+        /// 상쇄가 맞부딪친 자리에 불꽃 + 금속음을 냅니다. CounterCollider가 상쇄에 성공한 순간 부릅니다.
+        /// 소리는 이 칼의 AudioSource로 (상쇄 상자는 클립이 꺼서, 거기 붙이면 소리가 끊김)
+        /// </summary>
+        public void PlayCounterEffect(Vector3 point)
+        {
+            PlayRandomSound(counterSounds);
+
+            if (counterEffectPrefab != null)
+            {
+                GameObject effect = Instantiate(counterEffectPrefab, point, Quaternion.identity);
+                foreach (ParticleSystem particle in effect.GetComponentsInChildren<ParticleSystem>()) particle.Play();
+                Destroy(effect, hitEffectLifeTime);
+            }
+        }
+
+        #endregion
     }
 }

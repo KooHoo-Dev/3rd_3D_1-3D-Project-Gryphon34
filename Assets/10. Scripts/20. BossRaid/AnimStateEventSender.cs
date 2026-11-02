@@ -34,7 +34,11 @@ namespace BossRaid
         [Header("상태 진행률(0~1)에 맞춰 보낼 신호")]
         [SerializeField] private AnimStateEvent[] events;
 
+        [Tooltip("켜면 칸이 한 바퀴 돌 때마다 신호를 다시 보냄 (반복 클립·블렌드 트리. 예: 발소리)")]
+        [SerializeField] private bool repeatEveryLoop;
+
         private AnimStateEventListener eventListener;
+        private int currentLoop; // 지금 몇 바퀴째인지 (normalizedTime의 정수 부분)
 
         public override void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
         {
@@ -43,17 +47,42 @@ namespace BossRaid
             {
                 events[i].IsComplete = false;
             }
+            currentLoop = Mathf.FloorToInt(stateInfo.normalizedTime);
 
             if (eventListener == null) eventListener = animator.GetComponent<AnimStateEventListener>();
         }
 
         public override void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
         {
+            float time = stateInfo.normalizedTime;
+
+            if (repeatEveryLoop)
+            {
+                int loop = Mathf.FloorToInt(time);
+                if (loop != currentLoop)
+                {
+                    // 바퀴가 넘어감: 프레임이 경계를 건너뛰어 지난 바퀴에서 못 보낸 것을 먼저 보내고 기록을 지움
+                    SendPassedEvents(1f);
+                    for (int i = 0; i < events.Length; i++)
+                    {
+                        events[i].IsComplete = false;
+                    }
+                    currentLoop = loop;
+                }
+                time -= loop; // 이번 바퀴 안에서의 진행률 (0~1)
+            }
+
+            SendPassedEvents(time);
+        }
+
+        // 진행률이 time을 지났는데 아직 안 보낸 신호를 보냅니다
+        private void SendPassedEvents(float time)
+        {
             for (int i = 0; i < events.Length; i++)
             {
                 var eventData = events[i];
                 if (eventData.IsComplete) continue;
-                if (eventData.NormalizedTime > stateInfo.normalizedTime) continue; // 아직 보낼 시점이 아님
+                if (eventData.NormalizedTime > time) continue; // 아직 보낼 시점이 아님
 
                 eventData.IsComplete = true;
                 eventListener.OccursAnimStateEvent(eventData.Name, eventData.Parameter);

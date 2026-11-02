@@ -10,7 +10,6 @@ namespace BossRaid.Player.States
         {
             Owner.Sword.ResetHash();
             Owner.Sword.PlayAttackSound();
-            Owner.Sword.StartTrail();
         }
 
         public override void UpdateState(AnimatorStateInfo stateInfo)
@@ -19,7 +18,6 @@ namespace BossRaid.Player.States
 
         public override void Exit()
         {
-            Owner.Sword.StopTrail();
         }
 
     }

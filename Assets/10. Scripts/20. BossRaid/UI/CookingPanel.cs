@@ -98,7 +98,7 @@ namespace BossRaid.UI
             if (recipe.StaminaRegen > 0f) parts.Add($"스태미나 회복 +{recipe.StaminaRegen * 100:0}%");
             if (recipe.ChargeTimeReduce > 0f) parts.Add($"차지 시간 −{recipe.ChargeTimeReduce * 100:0}%");
             if (recipe.QuickStandUp) parts.Add("넘어지면 바로 기상");
-            if (recipe.TackleReduce > 0f) parts.Add($"태클 중 받는 피해 −{recipe.TackleReduce * 100:0}%");
+            if (recipe.PerfectGuardFatigue > 0f) parts.Add($"퍼펙트 가드 때 보스 피로 +{recipe.PerfectGuardFatigue}");
             if (recipe.FireReduce > 0f) parts.Add($"불 피해 −{recipe.FireReduce * 100:0}%");
             if (recipe.GuardStaminaReduce > 0f) parts.Add($"가드 스태미나 −{recipe.GuardStaminaReduce * 100:0}%");
             return parts.Count > 0 ? string.Join(", ", parts) : "효과 없음";

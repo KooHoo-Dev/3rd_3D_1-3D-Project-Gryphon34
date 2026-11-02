@@ -9,6 +9,7 @@ namespace BossRaid.Boss
         [SerializeField] private float maxDurability = 30;
         [SerializeField] private float magnitude = 1.2f;
         [SerializeField] private bool canBroken;
+        [SerializeField] private int fromStage; // 이 단계부터 깨짐 (0·1 = 1단계부터, 2 = 2단계부터). 그 전 단계에선 내구도가 안 깎임
 
         private Boss boss;
         public object Owner => boss;
@@ -16,6 +17,7 @@ namespace BossRaid.Boss
         public float CurrentDurability { get; private set; }
         public bool IsBroken { get; private set; }
         public bool CanBroken => canBroken;
+        public bool CanBreakAt(int stage) => canBroken && fromStage <= stage; // 지금 단계(Boss.StageNumber)에서 깰 수 있나
         public float CurrentMagnitude => IsBroken ? magnitude : 1;
         
         

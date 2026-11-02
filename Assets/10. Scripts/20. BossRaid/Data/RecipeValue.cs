@@ -12,8 +12,9 @@ namespace BossRaid.Data
         public float StaminaRegen;       // 스태미나 회복 속도 + (0.15 = 15%)
         public float ChargeTimeReduce;   // 차지 단계 도달 시간 − (0.2 = 20% 빨리)
         public bool QuickStandUp;        // 넘어지면 바로 기상
-        public float TackleReduce;       // 태클 중 받는 피해 감소. 태클이 생기면 연결
-        public float FireReduce;         // 불 피해 감소. 화염이 생기면 연결
-        public float GuardStaminaReduce; // 가드 시 스태미나 소모 감소. 가드가 생기면 연결
+        public float TackleReduce;       // 태클 중 받는 피해 감소. 태클을 빼서(11/02) 안 씀 (안 쓰는 태클 코드가 읽어서 칸만 남김)
+        public float PerfectGuardFatigue; // 퍼펙트 가드 때 보스 피로를 더 깎는 양 (꼬리 고기 스튜, 11/02)
+        public float FireReduce;         // 불 피해 감소
+        public float GuardStaminaReduce; // 가드 시 스태미나 소모 감소
     }
 }

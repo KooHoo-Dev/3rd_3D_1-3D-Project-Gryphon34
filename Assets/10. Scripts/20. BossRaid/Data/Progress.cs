@@ -42,6 +42,9 @@ namespace BossRaid.Data
         // 지금 먹은 요리 id ("" = 안 먹음). 사냥 한 번이 끝나면(처치든 사망이든) 비움
         public string meal = "";
 
+        // 헌터북에서 읽은 페이지 id (HunterBookPanel.Page.id). 열렸는데 여기 없으면 NEW + 마을 도착 알림
+        public List<string> readPages = new();
+
         // 그 장비를 몇 단계로 가지고 있는지 (없으면 -1)
         public static int GetLevel(List<GearLevel> list, string id)
         {

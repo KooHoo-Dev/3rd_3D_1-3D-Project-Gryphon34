@@ -275,78 +275,120 @@ MonoBehaviour:
     minAngle: 33
     maxAngle: 70
     farDistancePattern: 0
+    fromStage: 0
+    needWings: 0
   - patternName: 1
     minDistance: 2.4
     maxDistance: 7.5
     minAngle: -70
     maxAngle: -33
     farDistancePattern: 0
+    fromStage: 0
+    needWings: 0
   - patternName: 7
     minDistance: 2.4
     maxDistance: 7.5
     minAngle: -35
     maxAngle: 35
     farDistancePattern: 0
+    fromStage: 0
+    needWings: 0
   - patternName: 15
     minDistance: 2.4
     maxDistance: 6.5
     minAngle: 110
     maxAngle: 180
     farDistancePattern: 0
+    fromStage: 0
+    needWings: 0
   - patternName: 15
     minDistance: 2.4
     maxDistance: 6.5
     minAngle: -180
     maxAngle: -110
     farDistancePattern: 0
+    fromStage: 0
+    needWings: 0
   - patternName: 10
     minDistance: 5
     maxDistance: 9
     minAngle: -40
     maxAngle: 40
     farDistancePattern: 0
+    fromStage: 0
+    needWings: 0
   - patternName: 11
     minDistance: 10
     maxDistance: 15
     minAngle: -40
     maxAngle: 40
     farDistancePattern: 0
+    fromStage: 0
+    needWings: 0
   - patternName: 12
     minDistance: 10
     maxDistance: 21
     minAngle: -30
     maxAngle: 30
     farDistancePattern: 0
+    fromStage: 0
+    needWings: 0
   - patternName: 13
     minDistance: 20
     maxDistance: 45
     minAngle: -60
     maxAngle: 60
     farDistancePattern: 1
+    fromStage: 0
+    needWings: 0
   - patternName: 14
     minDistance: 0
     maxDistance: 7
     minAngle: 60
     maxAngle: 110
     farDistancePattern: 0
+    fromStage: 0
+    needWings: 0
   - patternName: 14
     minDistance: 0
     maxDistance: 7
     minAngle: -110
     maxAngle: -60
     farDistancePattern: 0
+    fromStage: 0
+    needWings: 0
   - patternName: 9
     minDistance: 10
     maxDistance: 15
     minAngle: 45
     maxAngle: 110
     farDistancePattern: 0
+    fromStage: 0
+    needWings: 0
   - patternName: 8
     minDistance: 10
     maxDistance: 15
     minAngle: -110
     maxAngle: -45
     farDistancePattern: 0
+    fromStage: 0
+    needWings: 0
+  - patternName: 16
+    minDistance: 15
+    maxDistance: 21
+    minAngle: -40
+    maxAngle: 40
+    farDistancePattern: 0
+    fromStage: 2
+    needWings: 1
+  - patternName: 17
+    minDistance: 10
+    maxDistance: 21
+    minAngle: -40
+    maxAngle: 40
+    farDistancePattern: 0
+    fromStage: 2
+    needWings: 1
   detect: {fileID: 9130749582332164904}
 --- !u!1 &999157473226690486
 GameObject:
@@ -423,6 +465,66 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 2.1834576, y: 3.01, z: 7.597492}
   m_Center: {x: 0, y: -0.87, z: 0}
+--- !u!1 &1351630728051288225
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2725338783095861212}
+  - component: {fileID: 1620552959141872858}
+  m_Layer: 0
+  m_Name: WingL_Decal
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2725338783095861212
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1351630728051288225}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -5.49, y: -3.56, z: -1.32}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 7576178979467707643}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1620552959141872858
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1351630728051288225}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0777d029ed3dffa4692f417d4aba19ca, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.RenderPipelines.Universal.Runtime::UnityEngine.Rendering.Universal.DecalProjector
+  m_Material: {fileID: 2100000, guid: 8ba97b54daf832f4fac613fe8e2af2a4, type: 2}
+  m_DrawDistance: 1000
+  m_FadeScale: 0.9
+  m_StartAngleFade: 180
+  m_EndAngleFade: 180
+  m_UVScale: {x: 3, y: 3}
+  m_UVBias: {x: 0, y: 0}
+  m_RenderingLayerMask:
+    serializedVersion: 0
+    m_Bits: 1
+  m_ScaleMode: 0
+  m_Offset: {x: 0, y: 0, z: 1}
+  m_Size: {x: 7, y: 7, z: 2}
+  m_FadeFactor: 0.35
+  version: 1
+  m_DecalLayerMask: 1
 --- !u!1 &1483102349439503224
 GameObject:
   m_ObjectHideFlags: 0
@@ -454,6 +556,114 @@ Transform:
   m_Children: []
   m_Father: {fileID: 3391411504446831221}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1580470640858645405
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5214637310189861060}
+  m_Layer: 0
+  m_Name: AirLand
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5214637310189861060
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1580470640858645405}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 3908744260580038545}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1772942783852950340
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 279729452807709500}
+  - component: {fileID: 5014109601763759736}
+  - component: {fileID: 7137894936460305022}
+  m_Layer: 10
+  m_Name: AirFlame
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &279729452807709500
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1772942783852950340}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0.60838944, y: 0.3603593, z: 0.60839605, w: 0.3603576}
+  m_LocalPosition: {x: 0.075, y: -0.078, z: -0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 3391411504446831221}
+  m_LocalEulerAnglesHint: {x: -118.722, y: 90.001, z: 0}
+--- !u!114 &5014109601763759736
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1772942783852950340}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1f5d895eadaed47499160c259c454ee8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: '::'
+  mask:
+    serializedVersion: 2
+    m_Bits: 2048
+  damage: 20
+  id: AirFlame
+  reaction: 2
+  counterable: 0
+  attackTag: 3
+  rageFire: 0
+--- !u!136 &7137894936460305022
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1772942783852950340}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.82
+  m_Height: 9.61
+  m_Direction: 2
+  m_Center: {x: 0, y: 0.03, z: 6.25}
 --- !u!1 &1861737760988724117
 GameObject:
   m_ObjectHideFlags: 0
@@ -579,6 +789,7 @@ MonoBehaviour:
   exitTime: 0.92
   rotationSpeed: 0
   recoveryTime: 4
+  windupSpeed: 1
   waitTime: 0.5
   waitSpeed: 0.1
   slowDownTime: 0.2
@@ -782,7 +993,9 @@ Transform:
   - {fileID: 7403320570600602169}
   - {fileID: 5483044620038161327}
   - {fileID: 7300000000000100002}
-  - {fileID: 4356015565341966163}
+  - {fileID: 8028554864234640691}
+  - {fileID: 4773876430613376613}
+  - {fileID: 5214637310189861060}
   - {fileID: 7310000000000000002}
   m_Father: {fileID: 5856249170217965408}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -834,6 +1047,7 @@ MonoBehaviour:
   exitTime: 0.92
   rotationSpeed: 120
   recoveryTime: 2.5
+  windupSpeed: 1
   projectilePrefab: {fileID: 5859001189135049002, guid: 1bf41b16a37875f418b4ef48bbb9a44b, type: 3}
   shootPoint: {fileID: 6585710959377102703}
   aimHeight: 1
@@ -890,6 +1104,7 @@ MonoBehaviour:
   exitTime: 0.92
   rotationSpeed: 120
   recoveryTime: 3.5
+  windupSpeed: 0.55
 --- !u!1 &3334133951459244820
 GameObject:
   m_ObjectHideFlags: 0
@@ -984,6 +1199,7 @@ MonoBehaviour:
   exitTime: 0.92
   rotationSpeed: 150
   recoveryTime: 4
+  windupSpeed: 0.7
 --- !u!1 &3609357633102640743
 GameObject:
   m_ObjectHideFlags: 0
@@ -1020,6 +1236,66 @@ Transform:
   - {fileID: 5991142322681430418}
   m_Father: {fileID: 5856249170217965408}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &4301896589387916325
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5126295066057324272}
+  - component: {fileID: 7673445207946757092}
+  m_Layer: 0
+  m_Name: WingR_Decal
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5126295066057324272
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4301896589387916325}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -6.24, y: 2.14, z: -1.27}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 7097908539957321149}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7673445207946757092
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4301896589387916325}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0777d029ed3dffa4692f417d4aba19ca, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.RenderPipelines.Universal.Runtime::UnityEngine.Rendering.Universal.DecalProjector
+  m_Material: {fileID: 2100000, guid: 8ba97b54daf832f4fac613fe8e2af2a4, type: 2}
+  m_DrawDistance: 1000
+  m_FadeScale: 0.9
+  m_StartAngleFade: 180
+  m_EndAngleFade: 180
+  m_UVScale: {x: 3, y: 3}
+  m_UVBias: {x: 0, y: 0}
+  m_RenderingLayerMask:
+    serializedVersion: 0
+    m_Bits: 1
+  m_ScaleMode: 0
+  m_Offset: {x: 0, y: 0, z: 1}
+  m_Size: {x: 7, y: 7, z: 2}
+  m_FadeFactor: 0.35
+  version: 1
+  m_DecalLayerMask: 1
 --- !u!1 &4704899678583217586
 GameObject:
   m_ObjectHideFlags: 0
@@ -1147,6 +1423,60 @@ MonoBehaviour:
   m_ShadowLayerMask: 1
   m_RenderingLayers: 1
   m_ShadowRenderingLayers: 1
+--- !u!1 &4967173204977107352
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8028554864234640691}
+  - component: {fileID: 1269056807765516440}
+  m_Layer: 0
+  m_Name: AirFireBallState
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8028554864234640691
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4967173204977107352}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 3908744260580038545}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1269056807765516440
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4967173204977107352}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 15704d67339cf5246b82fa694560c37a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BossRaid.Boss.States.AirFireBall
+  animatorStateName: AirLand
+  exitTime: 0.92
+  rotationSpeed: 120
+  recoveryTime: 2.5
+  windupSpeed: 1
+  hoverTime: 2
+  attackCount: 1
+  landMoveTime: 1.3
+  maxLandDistance: 15
+  fireBall: {fileID: 3478891208091202784}
 --- !u!1 &5033370589759035685
 GameObject:
   m_ObjectHideFlags: 0
@@ -1241,6 +1571,7 @@ MonoBehaviour:
   exitTime: 0.92
   rotationSpeed: 50
   recoveryTime: 3
+  windupSpeed: 1
   flame: {fileID: 4395141839344280807}
   ember: {fileID: 3995311740219342524}
   speedBreath: 0.7
@@ -1248,6 +1579,63 @@ MonoBehaviour:
   flameGrowSpeed: 25
   breathSource: {fileID: 4855476391258079857}
   breathClip: {fileID: 8300000, guid: aebff1bac88674b6dade0cc6ce04364c, type: 3}
+--- !u!1 &6357786055898183007
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4773876430613376613}
+  - component: {fileID: 5901653767057234561}
+  m_Layer: 0
+  m_Name: AirSpreadFireState
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4773876430613376613
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6357786055898183007}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 3908744260580038545}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &5901653767057234561
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6357786055898183007}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2725347797ccf544abc90045f14fdee8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BossRaid.Boss.States.AirSpreadFire
+  animatorStateName: AirLand
+  exitTime: 0.92
+  rotationSpeed: 50
+  recoveryTime: 2.5
+  windupSpeed: 1
+  hoverTime: 2
+  attackCount: 1
+  landMoveTime: 1.3
+  maxLandDistance: 15
+  fireFieldPrefab: {fileID: 8394107495272279342, guid: 277d0f81aefbeee478324c12e25e3367, type: 3}
+  flame: {fileID: 4395141839344280807}
+  flameSource: {fileID: 4855476391258079857}
+  flameClip: {fileID: 8300000, guid: aebff1bac88674b6dade0cc6ce04364c, type: 3}
 --- !u!1 &6416804110267395486
 GameObject:
   m_ObjectHideFlags: 0
@@ -1296,6 +1684,7 @@ MonoBehaviour:
   exitTime: 0.92
   rotationSpeed: 120
   recoveryTime: 4
+  windupSpeed: 1
 --- !u!1 &6457002331657011501
 GameObject:
   m_ObjectHideFlags: 0
@@ -1748,6 +2137,7 @@ MonoBehaviour:
   exitTime: 0.92
   rotationSpeed: 120
   recoveryTime: 3.5
+  windupSpeed: 1
 --- !u!1 &7310000000000000001
 GameObject:
   m_ObjectHideFlags: 0
@@ -2304,37 +2694,6 @@ MonoBehaviour:
   m_FadeFactor: 1
   version: 1
   m_DecalLayerMask: 1
---- !u!1 &8020278526041028176
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 4356015565341966163}
-  m_Layer: 0
-  m_Name: AirFireBallState(AirFireBall)
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &4356015565341966163
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8020278526041028176}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 3908744260580038545}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &8041483929696295126
 GameObject:
   m_ObjectHideFlags: 0
@@ -2645,6 +3004,7 @@ MonoBehaviour:
   exitTime: 0.92
   rotationSpeed: 120
   recoveryTime: 2.5
+  windupSpeed: 0.7
 --- !u!1001 &1065623945945396496
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -4593,6 +4953,9 @@ PrefabInstance:
       insertIndex: 1
       addedObject: {fileID: 6624416060328428673}
     - targetCorrespondingSourceObject: {fileID: 5908108915104206259, guid: c2f0a1dbbf1021740a45118816c67b1b, type: 3}
+      insertIndex: 2
+      addedObject: {fileID: 279729452807709500}
+    - targetCorrespondingSourceObject: {fileID: 5908108915104206259, guid: c2f0a1dbbf1021740a45118816c67b1b, type: 3}
       insertIndex: -1
       addedObject: {fileID: 4490343785673110493}
     - targetCorrespondingSourceObject: {fileID: 5908108915104206259, guid: c2f0a1dbbf1021740a45118816c67b1b, type: 3}
@@ -4610,6 +4973,12 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 1523892308493165803, guid: c2f0a1dbbf1021740a45118816c67b1b, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1064629495113920904}
+    - targetCorrespondingSourceObject: {fileID: 1715477481673683773, guid: c2f0a1dbbf1021740a45118816c67b1b, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2725338783095861212}
+    - targetCorrespondingSourceObject: {fileID: 2048488293808286331, guid: c2f0a1dbbf1021740a45118816c67b1b, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 5126295066057324272}
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 8723442837097035155, guid: c2f0a1dbbf1021740a45118816c67b1b, type: 3}
       insertIndex: -1
@@ -4928,6 +5297,7 @@ MonoBehaviour:
   maxDurability: 30
   magnitude: 1.2
   canBroken: 1
+  fromStage: 0
 --- !u!114 &5665109260796848326
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5002,25 +5372,11 @@ MonoBehaviour:
     maxFatigue: 30
     attackRate: 1
     bodyMaterial: {fileID: 0}
-    extraPatterns: []
     rageFireHpRate: 0
   - maxHp: 800
     maxFatigue: 100
     attackRate: 1.3
     bodyMaterial: {fileID: 2100000, guid: a75b9f14691d3514c86f133b1a2a5bf1, type: 2}
-    extraPatterns:
-    - patternName: 16
-      minDistance: 0
-      maxDistance: 0
-      minAngle: 0
-      maxAngle: 0
-      farDistancePattern: 0
-    - patternName: 17
-      minDistance: 0
-      maxDistance: 0
-      minAngle: 0
-      maxAngle: 0
-      farDistancePattern: 0
     rageFireHpRate: 0.5
   exhaustTime: 10
   drinkReactRange: 20
@@ -5031,6 +5387,9 @@ MonoBehaviour:
   flashDuration: 0.2
   TailPosition: {fileID: 5649890653570954854}
   TailPart: {fileID: 3187249816031826479}
+  wingParts:
+  - {fileID: 8116082621494693248}
+  - {fileID: 7656192719995378369}
   rageFireEffects:
   - {fileID: 8435470398009382724}
   - {fileID: 867164183820857326}
@@ -5104,6 +5463,10 @@ MonoBehaviour:
     decal: {fileID: 4484115446435546239}
   - part: {fileID: 1277345000095239401}
     decal: {fileID: 309198976561387808}
+  - part: {fileID: 8116082621494693248}
+    decal: {fileID: 1620552959141872858}
+  - part: {fileID: 7656192719995378369}
+    decal: {fileID: 7673445207946757092}
 --- !u!82 &6813250799798664682
 AudioSource:
   m_ObjectHideFlags: 0
@@ -5334,8 +5697,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::BossRaid.Boss.BossPart
   partName: Wing_R
   maxDurability: 30
-  magnitude: 1
-  canBroken: 0
+  magnitude: 1.3
+  canBroken: 1
+  fromStage: 2
 --- !u!114 &8290744470296494631
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5602,6 +5966,7 @@ MonoBehaviour:
   maxDurability: 30
   magnitude: 1
   canBroken: 0
+  fromStage: 0
 --- !u!114 &6384841969554446259
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5659,6 +6024,7 @@ MonoBehaviour:
   maxDurability: 30
   magnitude: 1.2
   canBroken: 1
+  fromStage: 0
 --- !u!114 &1053771364203698995
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5813,8 +6179,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::BossRaid.Boss.BossPart
   partName: Wing_L
   maxDurability: 30
-  magnitude: 1
-  canBroken: 0
+  magnitude: 1.3
+  canBroken: 1
+  fromStage: 2
 --- !u!114 &336247001062482976
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5872,6 +6239,7 @@ MonoBehaviour:
   maxDurability: 30
   magnitude: 1
   canBroken: 0
+  fromStage: 0
 --- !u!114 &7930101798353997672
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6401,6 +6769,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BossRaid.Boss.Hurtbox
   part: {fileID: 7656192719995378369}
+--- !u!4 &7097908539957321149 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 2048488293808286331, guid: c2f0a1dbbf1021740a45118816c67b1b, type: 3}
+  m_PrefabInstance: {fileID: 9146079710950930374}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &7169690741998890147 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 2130973056068426597, guid: c2f0a1dbbf1021740a45118816c67b1b, type: 3}
@@ -6440,6 +6813,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BossRaid.Boss.Hurtbox
   part: {fileID: 8116082621494693248}
+--- !u!4 &7576178979467707643 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 1715477481673683773, guid: c2f0a1dbbf1021740a45118816c67b1b, type: 3}
+  m_PrefabInstance: {fileID: 9146079710950930374}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &7693710748046526176 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 1452668318275612966, guid: c2f0a1dbbf1021740a45118816c67b1b, type: 3}
@@ -6608,6 +6986,7 @@ MonoBehaviour:
   maxDurability: 30
   magnitude: 1.2
   canBroken: 1
+  fromStage: 0
 --- !u!114 &6594056608237601175
 MonoBehaviour:
   m_ObjectHideFlags: 0

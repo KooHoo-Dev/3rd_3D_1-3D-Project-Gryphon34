@@ -7,7 +7,7 @@ namespace BossRaid.Player
 {
     // 끼고 있는 무기·방어구와 먹은 요리(GameData.Current)를 표에서 찾아 플레이어에 넣어 줍니다
     // 씬이 시작될 때(마을·투기장) 한 번, 대장간에서 장비를 바꾸거나 냄비에서 요리를 먹을 때 Apply를 다시 부릅니다
-    // 아직 받는 쪽이 없는 효과(불 피해, 가드, 태클)는 값만 들고 있다가 그 기능이 생기면 여기서 읽어 갑니다
+    // 불 피해·가드·퍼펙트 가드 효과는 값만 들고 있고, 그 기능(PlayerHealth·PlayerBurn·PlayerController)이 여기서 읽어 갑니다
     public class PlayerLoadout : MonoBehaviour
     {
         [Serializable]
@@ -30,11 +30,10 @@ namespace BossRaid.Player
         public ForgeTable ForgeTable { get; private set; }
         public RecipeTable RecipeTable { get; private set; }
 
-        // 아직 연결 안 된 효과 (방어구 + 요리를 더한 값)
-        public float FireReduce { get; private set; }
-        public float GuardStaminaReduce { get; private set; }
-        public float GuardBonus { get; private set; }
-        public float TackleReduce { get; private set; }
+        public float FireReduce { get; private set; }          // 방어구 + 요리를 더한 값. PlayerHealth·PlayerBurn이 읽음
+        public float GuardStaminaRate { get; private set; } = 1f; // 가드 스태미나에 곱함 = (1 − 방어구)(1 − 요리)(1 − 철 대검). 곱해서 아무리 쌓여도 0이 안 됨
+        public float PerfectGuardFatigue { get; private set; } // 퍼펙트 가드 때 보스 피로를 더 깎는 양 (요리). PlayerController가 인스펙터 값에 더함
+        public float TackleReduce { get; private set; }        // 안 씀 (태클 뺌, 11/02). 안 쓰는 태클 코드가 읽어서 남김
 
         public bool QuickStandUp { get; private set; } // KnockDownState가 읽음
 
@@ -79,8 +78,10 @@ namespace BossRaid.Player
             stamina.SetBonus(meal != null ? meal.MaxStamina : 0f, meal != null ? meal.StaminaRegen : 0f);
 
             FireReduce = (armor != null ? armor.FireReduce : 0f) + (meal != null ? meal.FireReduce : 0f);
-            GuardStaminaReduce = (armor != null ? armor.GuardStaminaReduce : 0f) + (meal != null ? meal.GuardStaminaReduce : 0f);
-            GuardBonus = weapon != null ? weapon.GuardBonus : 0f;
+            GuardStaminaRate = (1f - (armor != null ? armor.GuardStaminaReduce : 0f))
+                               * (1f - (meal != null ? meal.GuardStaminaReduce : 0f))
+                               * (1f - (weapon != null ? weapon.GuardBonus : 0f));
+            PerfectGuardFatigue = meal != null ? meal.PerfectGuardFatigue : 0f;
             TackleReduce = meal != null ? meal.TackleReduce : 0f;
             QuickStandUp = meal != null && meal.QuickStandUp;
 

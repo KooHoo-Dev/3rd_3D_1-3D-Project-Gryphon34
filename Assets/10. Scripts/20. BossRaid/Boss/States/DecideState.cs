@@ -16,13 +16,17 @@ namespace BossRaid.Boss.States
             [SerializeField] private float minAngle;
             [SerializeField] private float maxAngle;
             [SerializeField] private bool farDistancePattern;
-            
+            [SerializeField] private int fromStage; // 이 단계부터 나옴 (0·1 = 1단계부터, 2 = 2단계부터)
+            [SerializeField] private bool needWings; // 날아야 하는 패턴 (날개가 전부 깨지면 안 나옴)
+
             public StateName PatternName => patternName;
             public float MinDistance => minDistance;
             public float MaxDistance => maxDistance;
             public float MinAngle => minAngle;
             public float MaxAngle => maxAngle;
             public bool FarDistancePattern => farDistancePattern;
+            public int FromStage => fromStage;
+            public bool NeedWings => needWings;
         }
         
         [SerializeField] private Pattern[] patterns;
@@ -31,17 +35,17 @@ namespace BossRaid.Boss.States
         
         public Pattern[] Patterns => patterns;
 
-        // 기본 패턴 + 지금 단계의 추가 패턴 (플레이 전 기즈모에선 기본만)
+        // 지금 나오는 패턴 (fromStage가 지금 단계 이하 + 날개가 필요하면 날 수 있을 때). 플레이 전 기즈모에선 전부
         public IEnumerable<Pattern> AllPatterns
         {
             get
             {
-                if (patterns != null)
-                    foreach (Pattern pattern in patterns) yield return pattern;
-
-                Pattern[] extra = boss != null && boss.Stage != null ? boss.Stage.ExtraPatterns : null;
-                if (extra != null)
-                    foreach (Pattern pattern in extra) yield return pattern;
+                if (patterns == null) yield break;
+                foreach (Pattern pattern in patterns)
+                {
+                    if (boss == null) yield return pattern;
+                    else if (pattern.FromStage <= boss.StageNumber && (pattern.NeedWings == false || boss.CanFly)) yield return pattern;
+                }
             }
         }
 
