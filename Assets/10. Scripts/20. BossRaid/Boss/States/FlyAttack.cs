@@ -1,3 +1,4 @@
+using DG.Tweening;
 using UnityEngine;
 
 namespace BossRaid.Boss.States
@@ -11,6 +12,7 @@ namespace BossRaid.Boss.States
         [SerializeField] private int attackCount = 1;         // 공중 공격 횟수 (자식이 CountAttack으로 셈)
         [SerializeField] private float landMoveTime = 1f;     // 착지 칸에서 목표 자리까지 미끄러지는 시간
         [SerializeField] private float maxLandDistance = 15f; // 착지 칸에 들어간 순간 플레이어가 더 멀면 이 거리까지만
+        [SerializeField] private Ease landEase = Ease.Linear; // 미끄러지는 빠르기 변화 (Linear = 늘 같은 속도, InQuad = 점점 빨라짐, OutQuad = 점점 느려짐)
 
         public override string AnimatorTrigger => "TakeOff";
         protected abstract string AttackTrigger { get; } // 제자리 비행 → 이 공격 칸
@@ -77,7 +79,8 @@ namespace BossRaid.Boss.States
             if (landTime >= landMoveTime) return;
             landTime += Time.deltaTime;
             float rate = landMoveTime > 0f ? Mathf.Clamp01(landTime / landMoveTime) : 1f;
-            boss.transform.position = Vector3.Lerp(landStart, landTarget, rate);
+            float easedRate = DOVirtual.EasedValue(0f, 1f, rate, landEase);
+            boss.transform.position = Vector3.LerpUnclamped(landStart, landTarget, easedRate); // Unclamped: OutBack 같은 넘쳤다 돌아오는 곡선도 그대로
         }
 
         public override void Exit()

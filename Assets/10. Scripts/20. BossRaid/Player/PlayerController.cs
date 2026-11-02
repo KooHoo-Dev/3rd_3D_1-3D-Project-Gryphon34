@@ -65,6 +65,11 @@ namespace BossRaid.Player
         [SerializeField] private float perfectGuardFatigue;         // 퍼펙트 가드 때 보스 피로를 깎는 양 (상쇄 대신, 11/02). 0이면 안 깎음
         public float GuardTurnSpeed => guardTurnSpeed;
 
+        [Header("Attack Cancel")]
+        [SerializeField] private float attackCancelTime = 0f; // _End 칸 진행률이 이 값 이상이면 구르기·가드로 후딜을 끊을 수 있음 (0 = 들어가자마자)
+        public float AttackCancelTime => attackCancelTime;
+        public bool IsInGuardState => currentState is GuardState; // 가드 칸에 있는지 (GuardHandIK가 읽음). 애니메이터 파라미터 IsGuarding과 다름
+
         private int comboBonusLevel; // 퍼펙트 가드 성공 → 다음 한 타의 차지 시작 단계 (0 = 없음). 구르거나 맞으면 사라짐
 
         private float guardPressTime = float.NegativeInfinity; // Ctrl을 누른 시각 (퍼펙트 가드 판정). 누를 때마다 다시 셈

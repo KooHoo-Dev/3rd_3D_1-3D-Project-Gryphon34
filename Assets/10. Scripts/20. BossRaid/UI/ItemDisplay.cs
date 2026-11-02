@@ -7,6 +7,7 @@ namespace BossRaid.UI
     // 아이콘 그림이 생기기 전까지는 이 색의 도형을 아이콘 자리에 씁니다
     public static class ItemDisplay
     {
+        public const string PotionName = "회복약";
         public const string SoulName = "소울";
         public const string HumanityName = "인간성";
         public static readonly Color SoulColor = new Color(0.55f, 0.75f, 0.95f);

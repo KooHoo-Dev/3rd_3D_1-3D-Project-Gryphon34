@@ -19,6 +19,10 @@ namespace BossRaid.UI
         [SerializeField] private MenuRow rowTemplate;   // 꺼 둔 줄 하나. 레시피마다 복제합니다 (sub 버튼은 안 씀)
         [SerializeField] private Button closeButton;
 
+        [Header("소리 (2D, 비어 있으면 안 냄)")]
+        [SerializeField] private AudioSource audioSource;
+        [SerializeField] private AudioClip[] eatSounds; // 요리를 먹었을 때
+
         public bool IsOpen { get; private set; }
 
         private CookingPot pot;
@@ -83,7 +87,9 @@ namespace BossRaid.UI
             string label = pot.IsEating(recipe) ? "먹는 중" : "요리";
             row.SetMain(label, pot.CanCook(recipe), () =>
             {
+                bool canCook = pot.CanCook(recipe);
                 pot.Cook(recipe);
+                if (canCook) PlayRandomSound(eatSounds);
                 Refresh();
             });
             row.SetSub("", false, null);
@@ -102,6 +108,14 @@ namespace BossRaid.UI
             if (recipe.FireReduce > 0f) parts.Add($"불 피해 −{recipe.FireReduce * 100:0}%");
             if (recipe.GuardStaminaReduce > 0f) parts.Add($"가드 스태미나 −{recipe.GuardStaminaReduce * 100:0}%");
             return parts.Count > 0 ? string.Join(", ", parts) : "효과 없음";
+        }
+
+        private void PlayRandomSound(AudioClip[] clips)
+        {
+            if (audioSource == null || clips == null || clips.Length == 0) return;
+
+            AudioClip clip = clips[Random.Range(0, clips.Length)];
+            if (clip != null) audioSource.PlayOneShot(clip);
         }
 
         private void SetWindowVisible(bool visible)

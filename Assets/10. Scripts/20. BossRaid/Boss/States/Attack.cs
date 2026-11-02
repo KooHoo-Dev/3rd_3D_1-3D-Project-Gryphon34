@@ -1,14 +1,39 @@
-﻿using Study.Utilities;
-using UnityEngine;
+﻿using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace BossRaid.Boss.States
 {
     // 공격 공통: 히트박스 전까지 플레이어 쪽으로 회전, parameter와 같은 id의 히트박스를 켜고 끕니다
     public abstract class Attack : BossStates
     {
-        [SerializeField] private float rotationSpeed = 120.0f;
+        [SerializeField, FormerlySerializedAs("rotationSpeed")]
+        private float minRotationSpeed = 120.0f; // 거의 마주볼 때 회전 속도 (예전 rotationSpeed 값 그대로)
+        [SerializeField] private float maxRotationSpeed; // 등 뒤(180도)일 때 회전 속도. minRotationSpeed보다 작으면(0) 늘 min 속도
         [SerializeField] private float recoveryTime = 2.5f; // 이 공격이 끝난 뒤 IdleState에서 기다리는 시간 (큰 공격일수록 길게)
         [SerializeField] private float windupSpeed = 1f;    // 시작 ~ 첫 HitboxOn까지 애니메이터 AttackSpeed (1 = 안 바꿈). 칸 Speed Multiplier가 AttackSpeed여야 느려짐
+
+        // 칸 이벤트 Sound(이름) → 같은 이름의 클립 중 하나를 무작위로
+        [System.Serializable]
+        private class AttackSound
+        {
+            public string name;
+            public AudioClip[] clips;
+        }
+
+        // 칸 이벤트 Effect(이름) → 같은 이름의 파티클을 Play (자리는 놓아 둔 그대로)
+        [System.Serializable]
+        private class AttackEffect
+        {
+            public string name;
+            public ParticleSystem effect; // 상태 오브젝트 자식 말고 보스 루트·뼈 아래 (상태가 꺼지면 같이 꺼짐)
+        }
+
+        [Header("소리 (크기·피치·2D/3D는 AudioSource에서)")]
+        [SerializeField] private AudioSource attackSource; // 항상 켜진 오브젝트의 AudioSource (상태 오브젝트는 꺼지면 소리가 끊김)
+        [SerializeField] private AttackSound[] sounds;
+
+        [Header("이펙트")]
+        [SerializeField] private AttackEffect[] effects;
 
         public float RecoveryTime => recoveryTime;
 
@@ -25,13 +50,7 @@ namespace BossRaid.Boss.States
         protected override void Update()
         {
             base.Update();
-            if (isRotating)
-            {
-                boss.transform.rotation =
-                    Quaternion.RotateTowards(boss.transform.rotation,
-                        boss.transform.FlatRotationTo(boss.Player.transform),
-                        rotationSpeed * Time.deltaTime);
-            }
+            if (isRotating) RotateToPlayer(minRotationSpeed, maxRotationSpeed);
         }
 
         public override void Initialize(Boss boss)
@@ -59,6 +78,34 @@ namespace BossRaid.Boss.States
             if(eventName == "HitboxOff") SetHitbox(parameter, false);
             if (eventName == "RotateOff") isRotating = false;
             if (eventName == "RotateOn") isRotating = true;
+            if (eventName == "Sound") PlaySound(parameter);
+            if (eventName == "Effect") PlayEffect(parameter);
+        }
+
+        // Sound 이벤트 말고 코드에서도 부름 (브레스·불덩이·불줄기)
+        protected void PlaySound(string soundName)
+        {
+            foreach (AttackSound sound in sounds)
+            {
+                if (sound.name != soundName) continue;
+                if (attackSource == null || sound.clips == null || sound.clips.Length == 0) return;
+
+                AudioClip clip = sound.clips[Random.Range(0, sound.clips.Length)];
+                if (clip != null) attackSource.PlayOneShot(clip);
+                return;
+            }
+            Debug.LogWarning($"[Boss] {name}: 소리 목록에 '{soundName}' 없음");
+        }
+
+        private void PlayEffect(string effectName)
+        {
+            foreach (AttackEffect entry in effects)
+            {
+                if (entry.name != effectName) continue;
+                if (entry.effect != null) entry.effect.Play();
+                return;
+            }
+            Debug.LogWarning($"[Boss] {name}: 이펙트 목록에 '{effectName}' 없음");
         }
 
         // 예비동작만 느리게 (브레스 SpeedBreath, 철산고 HipWaitSpeed와 같은 방식). windupSpeed 1인 공격은 파라미터를 안 건드림

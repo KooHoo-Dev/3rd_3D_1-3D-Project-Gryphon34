@@ -20,6 +20,11 @@ namespace BossRaid.UI
         [SerializeField] private MenuRow rowTemplate;   // 꺼 둔 줄 하나. 장비마다 복제합니다
         [SerializeField] private Button closeButton;
 
+        [Header("소리 (2D, 비어 있으면 안 냄)")]
+        [SerializeField] private AudioSource audioSource;
+        [SerializeField] private AudioClip[] forgeSounds; // 제작·강화
+        [SerializeField] private AudioClip[] equipSounds; // 장착
+
         public bool IsOpen { get; private set; }
 
         private Forge forge;
@@ -91,7 +96,9 @@ namespace BossRaid.UI
             string mainLabel = next == null ? "최대" : level < 0 ? "제작" : "강화";
             row.SetMain(mainLabel, forge.CanForge(kind, id), () =>
             {
+                bool canForge = forge.CanForge(kind, id);
                 forge.CraftOrUpgrade(kind, id);
+                if (canForge) PlayRandomSound(forgeSounds);
                 Refresh();
             });
 
@@ -100,6 +107,7 @@ namespace BossRaid.UI
             row.SetSub(subLabel, level >= 0 && equipped == false, () =>
             {
                 forge.Equip(kind, id);
+                PlayRandomSound(equipSounds);
                 Refresh();
             });
 
@@ -138,6 +146,14 @@ namespace BossRaid.UI
                 first = false;
             }
             return text.ToString();
+        }
+
+        private void PlayRandomSound(AudioClip[] clips)
+        {
+            if (audioSource == null || clips == null || clips.Length == 0) return;
+
+            AudioClip clip = clips[Random.Range(0, clips.Length)];
+            if (clip != null) audioSource.PlayOneShot(clip);
         }
 
         private void SetWindowVisible(bool visible)

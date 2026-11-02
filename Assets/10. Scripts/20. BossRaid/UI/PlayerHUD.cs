@@ -23,9 +23,13 @@ namespace BossRaid.UI
         [SerializeField] private CanvasGroup mainSlot;
         [SerializeField] private Image mainIcon;
         [SerializeField] private TMP_Text mainCountText;
+        [SerializeField] private TMP_Text mainNameText; // 비우면 이름을 안 씀
         [SerializeField] private CanvasGroup subSlot;
         [SerializeField] private Image subIcon;
         [SerializeField] private TMP_Text subCountText;
+        [SerializeField] private TMP_Text subNameText;  // 비우면 이름을 안 씀
+        [SerializeField] private Sprite potionSprite;   // 넣으면 그림 그대로(흰색), 비우면 아래 색만
+        [SerializeField] private Sprite humanitySprite;
         [SerializeField] private Color potionColor = new Color(0.8f, 0.2f, 0.25f);
         [SerializeField] private Color humanityColor = new Color(0.85f, 0.7f, 0.3f); // ItemDisplay.HumanityColor와 같은 색
         [SerializeField, Range(0f, 1f)] private float emptySlotAlpha = 0.35f; // 0개일 때 칸 투명도
@@ -84,25 +88,41 @@ namespace BossRaid.UI
                 shownPotionCount = potion.CurrentCount;
                 shownPotionMax = potion.MaxCount;
                 shownHumanity = potion.HumanityCount;
-                DrawSlot(mainIcon, mainCountText, selected);
-                DrawSlot(subIcon, subCountText, other);
+                DrawSlot(mainIcon, mainCountText, mainNameText, selected);
+                DrawSlot(subIcon, subCountText, subNameText, other);
             }
 
             mainSlot.alpha = CanUse(selected) ? 1f : emptySlotAlpha;
             subSlot.alpha = CanUse(other) ? 1f : emptySlotAlpha;
         }
 
-        private void DrawSlot(Image icon, TMP_Text countText, int index)
+        private void DrawSlot(Image icon, TMP_Text countText, TMP_Text nameText, int index)
         {
             if (index == 0)
             {
-                icon.color = potionColor;
+                DrawIcon(icon, potionSprite, potionColor);
                 countText.text = $"{potion.CurrentCount}/{potion.MaxCount}";
+                if (nameText != null) nameText.text = ItemDisplay.PotionName;
             }
             else
             {
-                icon.color = humanityColor;
+                DrawIcon(icon, humanitySprite, humanityColor);
                 countText.text = potion.HumanityCount.ToString();
+                if (nameText != null) nameText.text = ItemDisplay.HumanityName;
+            }
+        }
+
+        // 그림이 있으면 그 그림을 원래 색(흰색)으로, 없으면 지금 그림에 색만 입힘 (아이콘 그림이 생기기 전 임시)
+        private void DrawIcon(Image icon, Sprite sprite, Color fallbackColor)
+        {
+            if (sprite != null)
+            {
+                icon.sprite = sprite;
+                icon.color = Color.white;
+            }
+            else
+            {
+                icon.color = fallbackColor;
             }
         }
 

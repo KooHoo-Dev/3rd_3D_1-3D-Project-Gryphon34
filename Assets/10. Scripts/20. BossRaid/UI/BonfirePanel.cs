@@ -20,6 +20,10 @@ namespace BossRaid.UI
         [SerializeField] private TMP_Text reasonText;   // 태우기를 못 할 때 이유
         [SerializeField] private Button closeButton;
 
+        [Header("소리 (2D, 비어 있으면 안 냄)")]
+        [SerializeField] private AudioSource audioSource;
+        [SerializeField] private AudioClip[] burnSounds; // 인간성을 태웠을 때
+
         public bool IsOpen { get; private set; }
 
         private Bonfire bonfire;
@@ -59,8 +63,18 @@ namespace BossRaid.UI
 
         private void HandleBurnClicked()
         {
+            bool canBurn = bonfire.CanBurnHumanity;
             bonfire.BurnHumanity();
+            if (canBurn) PlayRandomSound(burnSounds);
             Refresh();
+        }
+
+        private void PlayRandomSound(AudioClip[] clips)
+        {
+            if (audioSource == null || clips == null || clips.Length == 0) return;
+
+            AudioClip clip = clips[Random.Range(0, clips.Length)];
+            if (clip != null) audioSource.PlayOneShot(clip);
         }
 
         // 지금 값으로 글자·버튼을 다시 그림

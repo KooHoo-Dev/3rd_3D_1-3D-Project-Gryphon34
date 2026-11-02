@@ -47,6 +47,10 @@ namespace BossRaid.UI
         [SerializeField] private ScrollRect bodyScroll; // 본문이 길 때 (비어 있으면 안 씀). 페이지를 바꾸면 맨 위로
         [SerializeField] private Button closeButton;
 
+        [Header("소리 (2D, 비어 있으면 안 냄)")]
+        [SerializeField] private AudioSource audioSource;
+        [SerializeField] private AudioClip[] openSounds; // 책을 펼칠 때
+
         private const string NewMark = "  <color=#FFC040>NEW</color>";
 
         public bool IsOpen { get; private set; }
@@ -84,6 +88,7 @@ namespace BossRaid.UI
             noticeText.gameObject.SetActive(false);
             noticeTimer = 0;
             MenuLock.Set(player, true);
+            PlayRandomSound(openSounds);
 
             // 안 읽은 페이지가 있으면 그것부터, 없으면 첫 페이지
             Page first = null;
@@ -198,6 +203,14 @@ namespace BossRaid.UI
         private static bool IsRead(Page page)
         {
             return GameData.Current.readPages.Contains(page.id);
+        }
+
+        private void PlayRandomSound(AudioClip[] clips)
+        {
+            if (audioSource == null || clips == null || clips.Length == 0) return;
+
+            AudioClip clip = clips[UnityEngine.Random.Range(0, clips.Length)];
+            if (clip != null) audioSource.PlayOneShot(clip);
         }
 
         private void SetWindowVisible(bool visible)

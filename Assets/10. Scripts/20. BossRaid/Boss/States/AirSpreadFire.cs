@@ -10,9 +10,7 @@ namespace BossRaid.Boss.States
         protected override string AttackTrigger => "AirSpreadFire";
 
         [SerializeField] private FireField fireFieldPrefab;
-        [SerializeField] private ParticleSystem flame;    // 불줄기 (EffectOn/EffectOff)
-        [SerializeField] private AudioSource flameSource; // 항상 켜진 오브젝트의 AudioSource (상태 오브젝트는 꺼지면 소리가 끊김)
-        [SerializeField] private AudioClip flameClip;
+        [SerializeField] private ParticleSystem flame; // 불줄기 (EffectOn/EffectOff)
 
         public override void ReceiveAnimEvent(string eventName, string parameter)
         {
@@ -21,7 +19,7 @@ namespace BossRaid.Boss.States
             if (eventName == "EffectOn")
             {
                 if (flame != null) flame.Play();
-                if (flameSource != null && flameClip != null) flameSource.PlayOneShot(flameClip);
+                PlaySound("Flame"); // Sounds 목록의 이름
             }
             if (eventName == "EffectOff" && flame != null) flame.Stop();
 

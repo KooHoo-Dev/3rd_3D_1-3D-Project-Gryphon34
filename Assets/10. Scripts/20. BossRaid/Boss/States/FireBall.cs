@@ -11,8 +11,6 @@ namespace BossRaid.Boss.States
         [SerializeField] private FireBallProjectile projectilePrefab;
         [SerializeField] private Transform shootPoint;
         [SerializeField] private float aimHeight = 1f; // 발밑 대신 몸통을 노림
-        [SerializeField] private AudioSource shootSource; // Boss.audioSource를 빌리지 않고 이 오브젝트의 AudioSource로
-        [SerializeField] private AudioClip shootClip;
 
         // 쏜 뒤: 다음 패턴 사거리 안까지 Chase로 따라가서 다음 패턴 (불덩이 → 점프 물기)
         [SerializeField] private ChaseState chaseState;
@@ -45,13 +43,7 @@ namespace BossRaid.Boss.States
             FireBallProjectile projectile = Instantiate(projectilePrefab, shootPoint.position, rotation);
             projectile.SetTarget(boss.Player.transform, aimHeight);
             projectile.SetOwner(boss);
-            PlayShootSound();
-        }
-
-        private void PlayShootSound()
-        {
-            if (shootSource == null || shootClip == null) return;
-            shootSource.PlayOneShot(shootClip);
+            PlaySound("Shoot"); // 이 상태(FireBall)의 Sounds 목록. 공중 불덩이도 여기 것을 씀
         }
     }
 }

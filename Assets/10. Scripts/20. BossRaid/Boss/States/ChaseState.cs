@@ -1,12 +1,15 @@
 using Study.Utilities;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace BossRaid.Boss.States
 {
     public class ChaseState : BossStates
     {
         [SerializeField] private DecideState decideState;
-        [SerializeField] private float rotateSpeed = 120f;
+        [SerializeField, FormerlySerializedAs("rotateSpeed")]
+        private float minRotateSpeed = 120f; // 거의 마주볼 때 회전 속도 (예전 rotateSpeed 값 그대로)
+        [SerializeField] private float maxRotateSpeed; // 등 뒤(180도)일 때 회전 속도. minRotateSpeed보다 작으면(0) 늘 min 속도
         public override StateName Name => StateName.ChaseState;
 
         public override string AnimatorTrigger => "Walk";
@@ -26,10 +29,7 @@ namespace BossRaid.Boss.States
         protected override void Update()
         {
             base.Update();
-            boss.transform.rotation =
-                Quaternion.RotateTowards(boss.transform.rotation,
-                    boss.transform.FlatRotationTo(boss.Player.transform),
-                    rotateSpeed * Time.deltaTime);
+            RotateToPlayer(minRotateSpeed, maxRotateSpeed);
 
             // 예약이 있으면 Decide보다 먼저: 사거리 안에 들어오면 예약한 패턴 (20m에 브레스 줄이 있어서 순서가 중요)
             if (hasReserve)

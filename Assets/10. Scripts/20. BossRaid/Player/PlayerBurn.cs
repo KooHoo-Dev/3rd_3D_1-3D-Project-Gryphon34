@@ -14,22 +14,25 @@ namespace BossRaid.Player
         public bool IsBurning { get; private set; }
 
         private PlayerController player;
+        private PlayerHealth playerHealth;
         private float remainTime;
         private int dodgeCount;
 
         private void Awake()
         {
             player = GetComponent<PlayerController>();
+            playerHealth = GetComponent<PlayerHealth>();
         }
 
+        // player.Health는 PlayerController.Awake에서 채워져서 컴포넌트 순서에 따라 아직 null일 수 있음 → 직접 가져온 것으로
         private void OnEnable()
         {
-            player.Health.OnDeath += Extinguish;
+            playerHealth.OnDeath += Extinguish;
         }
 
         private void OnDisable()
         {
-            player.Health.OnDeath -= Extinguish;
+            playerHealth.OnDeath -= Extinguish;
         }
 
         // 불이 붙음. 이미 타고 있으면 시간·구르기 횟수를 처음부터 (화염 장판 위에선 매 프레임 불림)

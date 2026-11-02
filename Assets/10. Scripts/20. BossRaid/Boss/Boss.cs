@@ -6,7 +6,6 @@ using BossRaid.Player;
 using DG.Tweening;
 using Study.Utilities;
 using UnityEngine;
-using UnityEngine.InputSystem;
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
@@ -154,50 +153,6 @@ namespace BossRaid.Boss
             ChangeState(BossStates.StateName.IdleState);
         }
 
-        private void Update()
-        {
-            // 임시: 브레스 테스트용. B 키로 바로 브레스. 브레스를 패턴 목록에 넣은 뒤 지웁니다
-            if (Keyboard.current.bKey.wasPressedThisFrame) ChangeState(BossStates.StateName.BreathState);
-            // 임시: 불덩이 테스트용. F 키
-            if (Keyboard.current.fKey.wasPressedThisFrame) ChangeState(BossStates.StateName.FireBallState);
-            // 임시: 철산고 테스트용. H 키
-            if (Keyboard.current.hKey.wasPressedThisFrame) ChangeState(BossStates.StateName.HipCheckState);
-            // 임시: 점프 물기 사거리 재기용. P 키 = AI 멈춤 켜기/끄기, J 키 = 점프 물기
-            if (Keyboard.current.pKey.wasPressedThisFrame) IsAIPaused = !IsAIPaused;
-            if (Keyboard.current.jKey.wasPressedThisFrame) ChangeState(BossStates.StateName.JumpBiteState);
-            // 임시: 지침 테스트용. N 키 = 피로 0 → 바로 지침 (ApplyHit에서 0이 될 때와 같음)
-            if (Keyboard.current.nKey.wasPressedThisFrame && IsDead == false && IsExhausted == false)
-            {
-                CurrentFatigue = 0;
-                Exhausted();
-            }
-            // 임시: 처치 보상 테스트용. K 키 = 바로 처치 (HP 0 → Dead → OnDeath → HuntManager 보상)
-            if (Keyboard.current.kKey.wasPressedThisFrame && IsDead == false)
-            {
-                CurrentHp = 0;
-                Dead();
-            }
-            // 임시: 부위 소재 테스트용. L 키 = 깰 수 있는 부위 중 아직 안 깨진 것 하나를 바로 깸 (HP는 안 깎음, 알림은 ApplyHit과 같음)
-            if (Keyboard.current.lKey.wasPressedThisFrame && IsDead == false)
-            {
-                foreach (BossPart part in GetComponentsInChildren<BossPart>())
-                {
-                    if (part.CanBreakAt(StageNumber) == false || part.IsBroken) continue;
-                    if (part.ReduceDurability(part.CurrentDurability))
-                    {
-                        OnPartBroken?.Invoke(part);
-                        HitEffect();
-                        if (part.PartName == "Tail" && TailPosition != null)
-                        {
-                            foreach (Collider tailCollider in TailPosition.GetComponentsInChildren<Collider>()) tailCollider.enabled = false;
-                        }
-                    }
-                    break;
-                }
-            }
-        }
-        
-        
         public void ApplyHit(AttackInfo info, BossPart part)
         {
             if (IsDead) return;
@@ -369,34 +324,6 @@ namespace BossRaid.Boss
         }
         
         #region GUI
-        // 임시: 보스 AI 거리 테스트용. 패턴 거리 값을 정한 뒤 지웁니다
-        private void OnGUI()
-        {
-            var style = new GUIStyle(GUI.skin.label) { fontSize = 24 };
-            string stateName = CurrentState != null ? CurrentState.Name.ToString() : "-";
-            string distanceText = Player != null
-                ? transform.FlatDistanceTo(Player.transform).ToString("F2")
-                : "Player 없음";
-            string angleText = Player != null
-                ? Vector3.SignedAngle(transform.forward, transform.FlatDirectionTo(Player.transform), Vector3.up).ToString("F0")
-                : "-";
-            GUI.Label(new Rect(Screen.width * 0.5f - 350f, 20f, 700f, 40f), $"Boss: {stateName} / 거리: {distanceText} / 각도: {angleText}{(IsAIPaused ? " / AI 멈춤" : "")}{(IsExhausted ? " / 지침" : "")}", style);
-
-            // 임시: 기즈모 부채꼴 색 안내 (Game 창에서 어느 색이 무슨 패턴인지)
-            var decide = GetComponentInChildren<DecideState>(true);
-            if (decide == null) return;
-            var legendStyle = new GUIStyle(GUI.skin.label) { fontSize = 18 };
-            var shown = new HashSet<BossStates.StateName>();
-            float y = 100f;
-            foreach (var pattern in decide.AllPatterns)
-            {
-                if (shown.Add(pattern.PatternName) == false) continue;
-                legendStyle.normal.textColor = PatternColor(pattern.PatternName);
-                GUI.Label(new Rect(20f, y, 300f, 26f), pattern.PatternName.ToString(), legendStyle);
-                y += 24f;
-            }
-        }
-
         // 임시: 패턴마다 기즈모 색 (왼쪽·오른쪽 줄은 같은 색)
         private static Color PatternColor(BossStates.StateName name)
         {

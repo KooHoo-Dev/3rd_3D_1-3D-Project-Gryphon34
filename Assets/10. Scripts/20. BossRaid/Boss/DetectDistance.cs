@@ -49,13 +49,5 @@ namespace BossRaid.Boss
         {
             currentFarTime = 0f;
         }
-
-        // 임시: 멀어지는 중 판정 테스트용. Decide 연결 확인 뒤 지웁니다
-        private void OnGUI()
-        {
-            var style = new GUIStyle(GUI.skin.label) { fontSize = 24 };
-            GUI.Label(new Rect(Screen.width * 0.5f - 350f, 60f, 700f, 40f),
-                $"멀어진 시간: {currentFarTime:F2} / {farTime} / 멀어지는 중: {IsPlayerMovingAway}", style);
-        }
     }
 }
