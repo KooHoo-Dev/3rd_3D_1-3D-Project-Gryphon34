@@ -13,6 +13,10 @@ namespace BossRaid.Player
 
         [SerializeField] private float maxHealth = 100f;
 
+        [Header("소리 (크기·피치·2D/3D는 AudioSource에서)")]
+        [SerializeField] private AudioSource audioSource; // 플레이어 루트처럼 항상 켜진 오브젝트 (꺼지면 소리가 끊김)
+        [SerializeField] private AudioClip[] hitSounds;   // 가드·태클 없이 맞은 순간 + 죽는 순간
+
         public float MaxHealth => maxHealth + (isHuman ? 25 : 0); // 사람 상태면 +25. maxHealth(인스펙터)는 안 바꿈 → 몇 번 불러도 안 쌓임
         public float CurrentHealth { get; private set; }
         public bool IsInvincible { get; set; }
@@ -27,7 +31,8 @@ namespace BossRaid.Player
         private PlayerController playerController;
         private Rigidbody playerRigidbody;
         public event Action OnDeath;
-        
+        public event Action OnHitTaken; // 가드·태클 없이 맞은 순간 (죽은 때는 빼고). TutorialHint가 셈
+
         private void Awake()
         {
             CurrentHealth = MaxHealth;
@@ -57,6 +62,11 @@ namespace BossRaid.Player
                 CurrentHealth = 0;
                 Dead();
                 return;
+            }
+            if (isGuarded == false && isArmored == false)
+            {
+                OnHitTaken?.Invoke();
+                PlayRandomSound(hitSounds);
             }
             // 가드로 막으면 안 붙음. 태클로 버티면 붙음
             if (info.Ignite && isGuarded == false && playerController.Burn != null) playerController.Burn.Ignite();
@@ -106,8 +116,17 @@ namespace BossRaid.Player
             playerController.enabled = false;
             playerRigidbody.isKinematic = true;
             animator.SetTrigger(Die);
+            PlayRandomSound(hitSounds); // 죽는 한 방은 위에서 return 해서 피격음 줄까지 안 감 → 여기서 냄 (화염으로 죽어도 남)
             OnDeath?.Invoke();
             Debug.Log($"[Player] 플레이어 is dead");
+        }
+
+        private void PlayRandomSound(AudioClip[] clips)
+        {
+            if (audioSource == null || clips == null || clips.Length == 0) return;
+
+            AudioClip clip = clips[UnityEngine.Random.Range(0, clips.Length)];
+            if (clip != null) audioSource.PlayOneShot(clip);
         }
 
         [ContextMenu("Test Player Hit")]

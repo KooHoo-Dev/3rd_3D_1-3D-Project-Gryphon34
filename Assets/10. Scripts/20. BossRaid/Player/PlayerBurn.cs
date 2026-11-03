@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 namespace BossRaid.Player
@@ -12,6 +13,8 @@ namespace BossRaid.Player
         [SerializeField] private ParticleSystem burnEffect;   // 타는 동안 켜 둠 (비면 안 함)
 
         public bool IsBurning { get; private set; }
+        public int DodgesToExtinguish => dodgesToExtinguish;
+        public event Action OnIgnited; // 꺼져 있다가 불이 붙은 순간만 (장판 위에서 매 프레임 다시 붙는 건 안 셈). TutorialHint가 봄
 
         private PlayerController player;
         private PlayerHealth playerHealth;
@@ -39,11 +42,13 @@ namespace BossRaid.Player
         public void Ignite()
         {
             if (player.Health.IsDead) return;
-            if (IsBurning == false) Debug.Log($"[화염] 불이 붙음 ({burnTime}초, 구르기 {dodgesToExtinguish}번)");
+            bool wasBurning = IsBurning;
+            if (wasBurning == false) Debug.Log($"[화염] 불이 붙음 ({burnTime}초, 구르기 {dodgesToExtinguish}번)");
             IsBurning = true;
             remainTime = burnTime;
             dodgeCount = 0;
             if (burnEffect != null) burnEffect.Play();
+            if (wasBurning == false) OnIgnited?.Invoke();
         }
 
         // 구르기를 시작할 때 DodgeState가 부름

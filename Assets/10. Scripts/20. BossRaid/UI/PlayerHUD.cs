@@ -1,3 +1,4 @@
+using BossRaid.Data;
 using BossRaid.Player;
 using TMPro;
 using UnityEngine;
@@ -5,9 +6,10 @@ using UnityEngine.UI;
 
 namespace BossRaid.UI
 {
-    // 몬스터헌터 월드식 플레이어 HUD입니다.
+    // 다크소울식 플레이어 HUD입니다.
     // - 왼쪽 위: HP 바, 그 아래 스태미나 바. 바 길이는 최대치에 비례합니다 (최대 HP +25 같은 버프가 붙으면 바가 길어짐)
-    // - 오른쪽 아래: 아이템 칸. 큰 칸 = 지금 고른 것(R로 씀), 옆 작은 칸 = 휠로 바꿀 것 (다크소울식)
+    // - 왼쪽 아래: 아이템 칸. 큰 칸 = 지금 고른 것(R로 씀), 옆 작은 칸 = 휠로 바꿀 것
+    // - 오른쪽 아래: 가진 소울 (GameData.Current.souls). 늘면 위에 +N을 띄우고 잠깐 뒤 주르륵 더함 (다크소울처럼). 줄면 바로
     // 값은 매 프레임 플레이어에게서 읽어 옵니다. 플레이어는 이 HUD를 모릅니다.
     // 화면 구성은 BossRaid/UI/Create Player HUD 메뉴(PlayerHUDBuilder)가 만듭니다.
     public class PlayerHUD : MonoBehaviour
@@ -34,6 +36,12 @@ namespace BossRaid.UI
         [SerializeField] private Color humanityColor = new Color(0.85f, 0.7f, 0.3f); // ItemDisplay.HumanityColor와 같은 색
         [SerializeField, Range(0f, 1f)] private float emptySlotAlpha = 0.35f; // 0개일 때 칸 투명도
 
+        [Header("소울 (비우면 안 씀)")]
+        [SerializeField] private TMP_Text soulsText;
+        [SerializeField] private TMP_Text soulsGainText;       // 소울 칸 위 +N. 비우면 주르륵 없이 바로 바뀜
+        [SerializeField] private float soulsCountDelay = 0.8f; // +N을 보여 준 뒤 세기 시작할 때까지
+        [SerializeField] private float soulsCountTime = 1f;    // 다 세는 데 걸리는 시간 (양이 많아도 같음)
+
         private PlayerHealth health;
         private PlayerStamina stamina;
         private PlayerPotion potion;
@@ -43,6 +51,14 @@ namespace BossRaid.UI
         private int shownPotionCount = -1;
         private int shownPotionMax = -1;
         private int shownHumanity = -1;
+        private int shownSouls = -1;
+        private int shownGain = -1;
+
+        // 소울 주르륵: 화면 숫자(countingSouls)가 목표(countTarget)까지 countSpeed로 올라감
+        private float countingSouls = -1f;
+        private int countTarget;
+        private float countSpeed;
+        private float countWaitTimer;
 
         private void Start()
         {
@@ -66,6 +82,47 @@ namespace BossRaid.UI
             UpdateBar(healthBar, healthFill, health.CurrentHealth, health.MaxHealth);
             UpdateBar(staminaBar, staminaFill, stamina.CurrentStamina, stamina.MaxStamina);
             UpdateItemSlots();
+            UpdateSouls();
+        }
+
+        private void UpdateSouls()
+        {
+            if (soulsText == null) return;
+            int souls = GameData.Current.souls;
+
+            // 씬 처음, 소울을 씀(대장간·냄비), +N 글자가 없음 → 바로 바꿈
+            if (countingSouls < 0f || souls < countingSouls || soulsGainText == null)
+            {
+                countingSouls = souls;
+                countTarget = souls;
+            }
+            else if (souls != countTarget) // 새로 들어옴 (주움, 사냥 결과) → +N을 보여 주고 잠깐 기다림. 세는 중에 또 들어오면 합쳐서 다시
+            {
+                countTarget = souls;
+                countWaitTimer = soulsCountDelay;
+                countSpeed = (souls - countingSouls) / soulsCountTime;
+            }
+
+            // 히트스톱·슬로모션 중에도 같은 속도로 세게 unscaled 시간
+            if (countingSouls < countTarget)
+            {
+                if (countWaitTimer > 0f) countWaitTimer -= Time.unscaledDeltaTime;
+                else countingSouls = Mathf.MoveTowards(countingSouls, countTarget, countSpeed * Time.unscaledDeltaTime);
+            }
+
+            int shown = (int)countingSouls;
+            if (shown != shownSouls)
+            {
+                shownSouls = shown;
+                soulsText.text = shown.ToString();
+            }
+
+            if (soulsGainText == null) return;
+            int gain = countTarget - shown; // 세는 만큼 +N이 줄어듦
+            if (gain == shownGain) return;
+            shownGain = gain;
+            soulsGainText.enabled = gain > 0;
+            soulsGainText.text = $"+{gain}";
         }
 
         private void UpdateBar(RectTransform bar, Image fill, float current, float max)

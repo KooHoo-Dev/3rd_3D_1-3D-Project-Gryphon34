@@ -45,6 +45,9 @@ namespace BossRaid.Data
         // 헌터북에서 읽은 페이지 id (HunterBookPanel.Page.id). 열렸는데 여기 없으면 NEW + 마을 도착 알림
         public List<string> readPages = new();
 
+        // 이미 본 튜토리얼 안내 id (TutorialHint의 GuardId 등). 여기 있으면 다시 안 띄움
+        public List<string> seenTips = new();
+
         // 그 장비를 몇 단계로 가지고 있는지 (없으면 -1)
         public static int GetLevel(List<GearLevel> list, string id)
         {

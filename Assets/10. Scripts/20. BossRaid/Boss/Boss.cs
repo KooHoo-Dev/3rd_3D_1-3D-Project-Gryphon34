@@ -85,6 +85,9 @@ namespace BossRaid.Boss
         public event Action<BossPart> OnPartBroken; // 부위가 깨진 순간 (한 판에 부위마다 한 번)
         public event Action OnHpReduce; // 맞아서 HP가 깎인 순간 (체력 구간은 듣는 쪽이 CurrentHp / MaxHp로 계산)
         public event Action OnDiscovered; // 플레이어를 처음 발견한 순간 (한 판에 한 번). MusicPlayer가 전투 음악으로 바꿈
+        public event Action<BossStates> OnStateChanged; // 상태가 바뀐 순간 (Enter 뒤). TutorialHint가 첫 공격을 봄
+        public event Action<string, string> OnAnimEvent; // 칸 이벤트 (이름, parameter). 상태에 넘긴 뒤 부름. TutorialHint가 Cue를 봄
+        public event Action OnExhausted; // 피로가 다 닳아 지친 순간. TutorialHint가 처음 한 번 알려 줌
 
         private void Awake()
         {
@@ -264,6 +267,7 @@ namespace BossRaid.Boss
             
             target.gameObject.SetActive(true);
             target.Enter();
+            OnStateChanged?.Invoke(target);
         }
 
         private void OnEnable()
@@ -280,9 +284,10 @@ namespace BossRaid.Boss
         private void HandleAnimEvent(string eventName, string parameter)
         {
             CurrentState.ReceiveAnimEvent(eventName, parameter);
+            OnAnimEvent?.Invoke(eventName, parameter);
         }
 
-        // 지침: 공격 중이어도 끊고 바로 IdleState
+        // 지침: 공격 중이어도 끊고 바로 IdleStRate
         // 쉬는 시간은 IdleState가 들어온 순간부터 exhaustTime만큼 세고, 다 세면 HealFatigue를 부름
         private void Exhausted()
         {
@@ -293,6 +298,7 @@ namespace BossRaid.Boss
 
             // 쓰러지는 애니메이션(Exhausted 트리거)은 IdleState.Enter가 냄
             ChangeState(BossStates.StateName.IdleState);
+            OnExhausted?.Invoke();
         }
 
         // 퍼펙트 가드(상쇄도 썼음): 피로만 깎음 (HP·부위는 안 깎음). 0이면 공격을 끊고 쓰러짐

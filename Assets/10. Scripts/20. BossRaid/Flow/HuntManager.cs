@@ -27,6 +27,7 @@ namespace BossRaid.Flow
 
         public float ReturnDelay => returnDelay;
         public event Action<HuntResult, HuntReward> OnHuntFinished; // 결과가 난 순간 (처치/사망 + 이번 판에 받은 것)
+        public event Action<MaterialType, int> OnMaterialGained;    // 사냥 도중 소재를 얻은 순간 (부위 파괴·체력 구간). 화면 알림(MaterialToast)용
         
         private bool isFinished; // 처치 직후 플레이어가 죽는 식으로 결과가 두 번 들어오는 것을 막습니다
 
@@ -163,6 +164,7 @@ namespace BossRaid.Flow
             foreach (PartRewardValue row in partRewardTable.Get(stage, part.PartName))
             {
                 currentHuntReward.materials[(int)row.Material] += row.Count;
+                OnMaterialGained?.Invoke(row.Material, row.Count);
                 Debug.Log($"[사냥] {part.PartName} 파괴! {row.Material} +{row.Count}");
             }
 
@@ -191,6 +193,7 @@ namespace BossRaid.Flow
             {
                 givenHpCount++;
                 currentHuntReward.materials[(int)reward.RewardPart] += reward.HpRateReward;
+                OnMaterialGained?.Invoke(reward.RewardPart, reward.HpRateReward);
                 Debug.Log($"[사냥] 체력 구간 {givenHpCount}/{maxCount}! {reward.RewardPart} +{reward.HpRateReward}");
             }
         }

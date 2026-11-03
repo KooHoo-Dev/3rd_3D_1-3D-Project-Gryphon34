@@ -10,7 +10,7 @@ namespace BossRaid.Boss.States
 
         [SerializeField] private ParticleSystem flame;
         [SerializeField] private ParticleSystem ember;
-        [SerializeField] private float speedBreath = 0.5f;
+        [SerializeField] private float speedBreath = 0.4f;
         [SerializeField] private CapsuleCollider flameCollider;
         [SerializeField] private float flameGrowSpeed = 25f;
 

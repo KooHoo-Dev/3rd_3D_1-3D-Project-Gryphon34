@@ -86,6 +86,8 @@ namespace BossRaid.Player
         public PlayerLoadout Loadout { get; private set; } // 장비·요리 (대장간·냄비가 Apply를 부름)
         public PlayerBurn Burn { get; private set; } // 화염 상태
 
+        public event System.Action<bool> OnGuarded; // 막은 순간 (true = 퍼펙트). TutorialHint가 들음
+
 
         private readonly Dictionary<int, PlayerStatesBase> stateDic = new Dictionary<int, PlayerStatesBase>();
         private PlayerStatesBase defaultState; // Tag가 등록되지 않은 상태일 때 쓰는 기본 상태
@@ -295,6 +297,7 @@ namespace BossRaid.Player
             }
 
             Debug.Log($"[Player] {(isPerfect ? "퍼펙트 " : "")}가드 (막음 {blocked}, 스태미나 -{stamina})");
+            OnGuarded?.Invoke(isPerfect);
             return true;
         }
 

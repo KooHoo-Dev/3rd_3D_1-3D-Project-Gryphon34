@@ -53541,7 +53541,7 @@ MonoBehaviour:
   runStamina: 10
   guardAngle: 70
   guardDamageReduce: 0.8
-  guardStaminaRate: 1
+  guardStaminaRate: 1.5
   fireGuardStaminaRate: 1.5
   guardTurnSpeed: 30
   guardPushDistance: 1.5
@@ -53597,7 +53597,7 @@ MonoBehaviour:
     position: {x: 0, y: 1, z: 0}
     rotation: {x: 30, y: -90, z: 0}
   slashLifeTime: 1
-  perfectGuardEffectPrefab: {fileID: 1564113897876802, guid: 97c1573e9ad079345b1f409cbf4e40c8, type: 3}
+  perfectGuardEffectPrefab: {fileID: 1564113897876802, guid: 1266c198d7eec644482b3fc485d039d3, type: 3}
   perfectGuardSounds:
   - {fileID: 8300000, guid: c71e80c7f60014632a0fd083f09984df, type: 3}
   guardEffectPrefab: {fileID: 1876434087134254, guid: 0ab1512bca508474988328505f3d7685, type: 3}
@@ -53641,6 +53641,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BossRaid.Player.PlayerHealth
   maxHealth: 100
+  audioSource: {fileID: 6724699413295454079}
+  hitSounds:
+  - {fileID: 8300000, guid: c655b647ce62a4553a69a246debd5f74, type: 3}
 --- !u!114 &5601841124536291836
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -53653,9 +53656,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b8c705b2f32e426da2cf7b528e505a57, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BossRaid.Player.PlayerStamina
-  waitTime: 2
-  maxStamina: 1000
-  staminaRegenRate: 35
+  waitTime: 1
+  maxStamina: 100
+  staminaRegenRate: 30
 --- !u!114 &5528195382553310315
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -53852,8 +53855,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e219e730cd09aeb44bf341b11f7e76f0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BossRaid.Player.PlayerBurn
-  burnDamagePerSecond: 4
-  burnTime: 10
+  burnDamagePerSecond: 6
+  burnTime: 8
   dodgesToExtinguish: 3
   burnEffect: {fileID: 4737118441085315018}
 --- !u!114 &7960393420191918103
