@@ -21,11 +21,13 @@ namespace BossRaid.Flow
         [SerializeField] private string villageSceneName = "00. Village";
         [SerializeField] private float returnDelay = 3f; // 결과가 난 뒤 마을로 돌아가기까지 기다리는 시간
         [SerializeField] private PickupSouls SoulsPrefab; // 떨어진 소울. 투기장 시작 때 죽은 자리에 만듦
+        [SerializeField] private int maxRetry = 3; // 체크포인트에서 다시 싸울 수 있는 횟수. 이만큼 죽고 한 번 더 죽으면 처음부터
 
         public Boss.Boss boss;
         public PlayerController player;
 
         public float ReturnDelay => returnDelay;
+        public int RetriesLeft { get; private set; } // 사망 뒤 남은 다시 싸우기 (0 = 다음엔 처음부터). 결과 패널용
         public event Action<HuntResult, HuntReward> OnHuntFinished; // 결과가 난 순간 (처치/사망 + 이번 판에 받은 것)
         public event Action<MaterialType, int> OnMaterialGained;    // 사냥 도중 소재를 얻은 순간 (부위 파괴·체력 구간). 화면 알림(MaterialToast)용
         
@@ -36,7 +38,8 @@ namespace BossRaid.Flow
 
         // 이번 판에 받은 것. 사냥 도중(부위파괴)과 처치 때 여기에 모았다가 Finish에서 GameData에 한 번에 더합니다
         private readonly HuntReward currentHuntReward = new();
-        private int givenHpCount; // 이번 판에 이미 준 체력 구간 수 (0.25면 0~3)
+        private int givenHpCount; // 이번 판에 이미 준 체력 구간 수 (0.25면 0~3). 체크포인트면 거기서 시작
+        private float startHp;    // 이번 판 시작 때 보스 HP (체크포인트면 그 HP). 사망 소울은 여기서 깎은 만큼만
 
         private void Start()
         {
@@ -46,6 +49,7 @@ namespace BossRaid.Flow
             player.Potion.OnHumanityUsed += HandleHumanityUsed;
             boss.SetPlayer(player);
             boss.SetStage(GameData.Current.currentStage); // 안개문에서 고른 단계 (HP·공격력 배율·머티리얼·추가 패턴)
+            ApplyCheckpoint(); // SetStage가 HP를 채운 뒤에 덮어씀
             player.Health.SetMaxHealth(GameData.Current.isHuman); // 씬을 넘어 남은 사람 상태를 새 플레이어에게
             player.Potion.SetMaxPotionCount(GameData.Current.currentMaxPotion); // 태운 만큼 늘어난 회복약 최대 개수
             player.Potion.SetHumanityCount(GameData.Current.humanity);
@@ -73,6 +77,52 @@ namespace BossRaid.Flow
             boss.OnHpReduce -= HandleHpReduce;
             player.Health.OnDeath -= PlayerDied;
             player.Potion.OnHumanityUsed -= HandleHumanityUsed;
+        }
+
+        // 체크포인트가 이 단계 것이면 넘은 구간의 HP + 부서진 부위로 시작. 다른 단계 것이면 버림
+        private void ApplyCheckpoint()
+        {
+            BossCheckpoint checkpoint = GameData.Current.checkpoint;
+            if (checkpoint.IsActive && checkpoint.stage != GameData.Current.currentStage)
+            {
+                Debug.Log($"[체크포인트] {checkpoint.stage}단계 것이라 버림");
+                checkpoint.Clear();
+            }
+
+            if (checkpoint.IsActive)
+            {
+                RewardValue reward = rewardTable.Get(GameData.Current.currentStage);
+                float hpRate = reward != null ? reward.HpRate : 0f;
+                givenHpCount = checkpoint.hpCount; // 넘은 구간 보상을 또 주지 않게
+                boss.RestoreCheckpoint(boss.MaxHp * (1f - checkpoint.hpCount * hpRate), checkpoint.brokenParts);
+                Debug.Log($"[체크포인트] 구간 {checkpoint.hpCount}에서 시작, 다시 싸우기 {checkpoint.deathCount}/{maxRetry}번째");
+            }
+
+            startHp = boss.CurrentHp;
+        }
+
+        // 죽었을 때: 다시 싸우기가 남았으면 지금 구간·부서진 부위를 적고, 다 썼으면 비움 (다음엔 처음부터)
+        private void SaveCheckpoint()
+        {
+            BossCheckpoint checkpoint = GameData.Current.checkpoint;
+            checkpoint.deathCount++;
+            if (checkpoint.deathCount > maxRetry)
+            {
+                checkpoint.Clear();
+                RetriesLeft = 0;
+                Debug.Log("[체크포인트] 기회를 다 써서 처음부터");
+                return;
+            }
+
+            checkpoint.stage = GameData.Current.currentStage;
+            checkpoint.hpCount = givenHpCount;
+            checkpoint.brokenParts.Clear();
+            foreach (Boss.BossPart part in boss.GetComponentsInChildren<Boss.BossPart>(true))
+            {
+                if (part.IsBroken) checkpoint.brokenParts.Add(part.PartName);
+            }
+            RetriesLeft = maxRetry - checkpoint.deathCount + 1; // 방금 죽은 것까지 쳐서 남은 다시 싸우기 (1번째 사망 → 3)
+            Debug.Log($"[체크포인트] 구간 {givenHpCount} 저장, 남은 기회 {RetriesLeft}");
         }
 
         // 투기장에서 인간성을 마심: 개수 −1, 사람 상태 (최대 HP +25, HP 전부 회복). 마을에서는 Bonfire가 같은 일을 함
@@ -104,9 +154,13 @@ namespace BossRaid.Flow
             LastResult = result;
 
             if (result == HuntResult.Killed)
+            {
                 GiveKillReward();
+                GameData.Current.checkpoint.Clear(); // 잡았으면 다음 판은 처음부터
+            }
             else
             {
+                SaveCheckpoint();
                 DropSouls(); // 가진 소울을 먼저 떨어뜨림 (사망 소울을 먼저 더하면 그것까지 떨어짐)
                 GameData.Current.isHuman = false; // 죽으면 사람 상태만 잃음 (가진 인간성은 그대로). 마을 Bonfire.Start가 이걸 읽어 SetMaxHealth(false)
                 GameData.Current.forgeUnlocked = true; // 첫 사망에 대장간이 열림 (GDD §9)
@@ -145,13 +199,13 @@ namespace BossRaid.Flow
             Debug.Log($"[사냥] 소울 {drop.amount} 떨어뜨림 ({pos}), 지난번 것 {oldAmount} → 절반 {oldAmount / 2} 돌려받음");
         }
 
-        // 사망 소울 = 처치 소울 × 준 피해 비율 × DeathRatio (D1 ①)
+        // 사망 소울 = 처치 소울 × 이번 판에 준 피해 비율 × DeathRatio (D1 ①)
         private int CalculateDeathSouls()
         {
             RewardValue reward = rewardTable.Get(GameData.Current.currentStage);
             if (reward == null) return 0;
 
-            float damageRate = 1f - boss.CurrentHp / boss.MaxHp; // 준 피해 비율 (HP 60/100 → 0.4)
+            float damageRate = (startHp - boss.CurrentHp) / boss.MaxHp; // 이번 판에 준 피해 비율 (체크포인트 50 → 30이면 0.2). 지난 판 몫은 안 셈
             return Mathf.FloorToInt(reward.Souls * damageRate * reward.DeathRatio);
         }
 

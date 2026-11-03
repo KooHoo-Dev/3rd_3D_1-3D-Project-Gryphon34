@@ -1,4 +1,5 @@
-﻿using Study.Utilities;
+﻿using BossRaid.Combat;
+using Study.Utilities;
 using UnityEngine;
 
 namespace BossRaid.Player.States
@@ -27,6 +28,8 @@ namespace BossRaid.Player.States
                 chargeLevel = bonusLevel;
                 Owner.Sword.ShowChargeLevel(bonusLevel);
             }
+
+            CameraZoom.Play(Owner.ChargeZoomOffset, Owner.ChargeZoomOutTime); // 차지 중 카메라 멀어짐
         }
 
         public override void UpdateState(AnimatorStateInfo stateInfo)
@@ -49,6 +52,7 @@ namespace BossRaid.Player.States
         public override void Exit()
         {
             Owner.Sword.StopChargeEffect();
+            CameraZoom.Play(0f, Owner.ChargeZoomReturnTime); // 떼면 원래 거리로 (맞아서 나갈 때도)
             // 모은 시간으로 차지 단계를 정해서 칼에 넘겨준다 (공격 상태로 넘어가기 직전)
             Owner.Sword.ApplyCharge(chargingTime);
         }

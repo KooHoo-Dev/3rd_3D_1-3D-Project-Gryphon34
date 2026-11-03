@@ -58,6 +58,11 @@ namespace BossRaid.UI
             titleText.text = killed ? killedTitle : diedTitle;
             titleText.color = killed ? killedColor : diedColor;
             footerText.text = $"{Mathf.CeilToInt(hunt.ReturnDelay)}초 뒤 마을로 돌아갑니다";
+            if (killed == false)
+            {
+                string retry = hunt.RetriesLeft > 0 ? $"남은 기회 {hunt.RetriesLeft}번 (보스 체력 유지)" : "기회를 다 써서 보스가 처음부터 시작합니다";
+                footerText.text = $"{retry}\n{footerText.text}";
+            }
 
             ClearRows();
             if (reward.souls > 0) AddRow(soulIcon, ItemDisplay.SoulColor, ItemDisplay.SoulName, reward.souls);

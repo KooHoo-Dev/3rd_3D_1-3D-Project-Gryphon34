@@ -10,6 +10,7 @@ namespace BossRaid.Boss
         [SerializeField] private float magnitude = 1.2f;
         [SerializeField] private bool canBroken;
         [SerializeField] private int fromStage; // 이 단계부터 깨짐 (0·1 = 1단계부터, 2 = 2단계부터). 그 전 단계에선 내구도가 안 깎임
+        [SerializeField] private float stage2Durability; // 2단계 내구도 (0 = maxDurability 그대로). 1단계부터 깨지는 부위를 2단계에서만 쉽게
 
         private Boss boss;
         public object Owner => boss;
@@ -34,6 +35,13 @@ namespace BossRaid.Boss
             boss.ApplyHit(info, this);
         }
 
+        // 단계가 정해질 때 Boss.SetStage가 부름: 2단계고 stage2Durability가 있으면 그 값, 아니면 maxDurability (이미 깨진 부위는 그대로)
+        public void SetStage(int stage)
+        {
+            if (IsBroken) return;
+            CurrentDurability = stage >= 2 && stage2Durability > 0 ? stage2Durability : maxDurability;
+        }
+
         // 이번에 깎아서 깨졌으면 true (Boss가 이걸 보고 OnPartBroken을 보냄)
         public bool ReduceDurability(float amount)
         {
@@ -50,6 +58,7 @@ namespace BossRaid.Boss
         public void BrokenPart()
         {
             IsBroken = true;
+            CurrentDurability = 0; // 체크포인트로 바로 부술 때도 0
             Debug.Log($"{partName} broken!"); 
         }
 

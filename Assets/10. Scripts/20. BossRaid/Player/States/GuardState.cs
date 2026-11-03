@@ -1,3 +1,4 @@
+using BossRaid.Combat;
 using Study.Utilities;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -13,6 +14,7 @@ namespace BossRaid.Player.States
         public override void Enter()
         {
             Owner.StopMovement();
+            CameraZoom.Play(Owner.GuardZoomOffset, Owner.GuardZoomInTime); // 가드 중 카메라 가까워짐
         }
 
         public override void UpdateState(AnimatorStateInfo stateInfo)
@@ -37,6 +39,7 @@ namespace BossRaid.Player.States
         public override void Exit()
         {
             Owner.StopGuardPush();
+            CameraZoom.Play(0f, Owner.GuardZoomReturnTime); // 풀면 원래 거리로 (차지로 넘어가면 차지 Enter가 다시 덮음)
             Animator.SetBool(PlayerController.IsGuardingHash, false); // 아직 누르고 있으면 Locomotion이 다시 켬
         }
     }

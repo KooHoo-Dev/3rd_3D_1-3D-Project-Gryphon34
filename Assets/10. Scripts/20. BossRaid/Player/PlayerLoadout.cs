@@ -94,7 +94,7 @@ namespace BossRaid.Player
 
         // 임시: 대장간·냄비 테스트용. 소울 5000, 소재 10개씩, 레시피 전부 열림, 꺼져 있던 대장간·냄비 켜기
         [ContextMenu("Test Rich (대장간·냄비 열기)")]
-        private void TestRich()
+        public void TestRich() // TestCheats F2도 부름
         {
             Progress progress = GameData.Current;
             progress.souls += 5000;

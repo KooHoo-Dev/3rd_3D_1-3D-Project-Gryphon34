@@ -83,6 +83,7 @@ namespace BossRaid.Boss
         
         public event Action OnDeath;
         public event Action<BossPart> OnPartBroken; // 부위가 깨진 순간 (한 판에 부위마다 한 번)
+        public event Action<BossPart> OnPartRestored; // 체크포인트로 처음부터 부서진 채 시작 (보상·잘린 꼬리 없이 겉모습만). PartDecal이 데칼을 켬
         public event Action OnHpReduce; // 맞아서 HP가 깎인 순간 (체력 구간은 듣는 쪽이 CurrentHp / MaxHp로 계산)
         public event Action OnDiscovered; // 플레이어를 처음 발견한 순간 (한 판에 한 번). MusicPlayer가 전투 음악으로 바꿈
         public event Action<BossStates> OnStateChanged; // 상태가 바뀐 순간 (Enter 뒤). TutorialHint가 첫 공격을 봄
@@ -117,6 +118,7 @@ namespace BossRaid.Boss
             CurrentFatigue = Stage.MaxFatigue;
             IsRageFire = false;
             isRageRoarReserved = false;
+            foreach (BossPart part in GetComponentsInChildren<BossPart>(true)) part.SetStage(StageNumber);
 
             // 머티리얼을 바꾸고 번쩍임용 복사본을 다시 만듦 (이전 복사본은 지움)
             if (bodyMaterial != null)
@@ -168,20 +170,7 @@ namespace BossRaid.Boss
 
             if (part.CanBreakAt(StageNumber)) // 날개처럼 2단계부터 깨지는 부위는 1단계에선 내구도가 안 깎임
             {
-                if (part.IsBroken == false)
-                {
-                    bool broke = part.ReduceDurability(calculateDamage);
-                    if (broke)
-                    {
-                        OnPartBroken?.Invoke(part); // 소재 등은 듣는 쪽(HuntManager)이 처리
-                        HitEffect();
-                        // 꼬리: 안 보이게 될 부분의 콜라이더를 한 번 꺼 둠 (크기 0만으로는 Animator 타이밍에 따라 맞을 수 있어서)
-                        if (part.PartName == "Tail" && TailPosition != null)
-                        {
-                            foreach (Collider tailCollider in TailPosition.GetComponentsInChildren<Collider>()) tailCollider.enabled = false;
-                        }
-                    }
-                }
+                if (part.IsBroken == false && part.ReduceDurability(calculateDamage)) HandleBroken(part);
             }
             
             if (CurrentHp <= 0) CurrentHp = 0;
@@ -204,6 +193,51 @@ namespace BossRaid.Boss
             
             Debug.Log($"{gameObject.name} hit! HP: {CurrentHp}");
             Debug.Log($"{gameObject.name} hit! Fatigue: {CurrentFatigue}{(IsExhausted ? " (지침 중 → 안 깎음, 쉬고 나면 회복)" : "")}");
+        }
+
+        // 부위가 방금 깨짐: 소재 등은 듣는 쪽(HuntManager)이 처리, 여기선 번쩍임 + 꼬리 콜라이더
+        private void HandleBroken(BossPart part)
+        {
+            OnPartBroken?.Invoke(part);
+            HitEffect();
+            DisableTailColliders(part);
+        }
+
+        // 임시(TestCheats F6): 지금 단계에서 깰 수 있고 아직 안 깨진 부위 하나를 바로 깸. 보상·연출은 맞아서 깨질 때와 같음
+        public void TestBreakNextPart()
+        {
+            if (IsDead) return;
+            foreach (BossPart part in GetComponentsInChildren<BossPart>(true))
+            {
+                if (part.IsBroken || part.CanBreakAt(StageNumber) == false) continue;
+                part.BrokenPart();
+                HandleBroken(part);
+                return;
+            }
+            Debug.Log("[테스트] 더 깰 부위가 없습니다");
+        }
+
+        // 꼬리: 안 보이게 될 부분의 콜라이더를 한 번 꺼 둠 (크기 0만으로는 Animator 타이밍에 따라 맞을 수 있어서)
+        private void DisableTailColliders(BossPart part)
+        {
+            if (part.PartName != "Tail" || TailPosition == null) return;
+            foreach (Collider tailCollider in TailPosition.GetComponentsInChildren<Collider>()) tailCollider.enabled = false;
+        }
+
+        // 체크포인트에서 이어 싸움: SetStage 뒤에 HuntManager가 부름. HP를 정하고, 적힌 부위는 부서진 채로 (OnPartBroken은 안 보냄 → 보상 두 번 X)
+        // 분노 불꽃은 여기서 안 켬. 기준보다 낮게 시작하면 첫 타에 ApplyHit이 켬
+        public void RestoreCheckpoint(float hp, List<string> brokenPartNames)
+        {
+            CurrentHp = Mathf.Clamp(hp, 1f, MaxHp);
+
+            foreach (BossPart part in GetComponentsInChildren<BossPart>(true))
+            {
+                if (part.IsBroken || brokenPartNames.Contains(part.PartName) == false) continue;
+                part.BrokenPart();
+                DisableTailColliders(part);
+                OnPartRestored?.Invoke(part);
+            }
+            Debug.Log($"[보스] 체크포인트에서 시작 → HP {CurrentHp}/{MaxHp}, 부서진 부위 {string.Join(", ", brokenPartNames)}");
         }
 
         // HP가 단계 비율 아래로 처음 내려감: 근접에도 불, 이펙트 켬, 다음 대기에서 포효 (하던 공격은 안 끊음)

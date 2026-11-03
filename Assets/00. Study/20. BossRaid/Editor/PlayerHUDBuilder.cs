@@ -23,6 +23,7 @@ namespace BossRaid.Tools
 
         private static readonly Color BarBackColor = new Color(0.05f, 0.05f, 0.05f, 0.8f);
         private static readonly Color HealthColor = new Color(0.42f, 0.85f, 0.35f);
+        private static readonly Color HealthDelayColor = new Color(1f, 1f, 1f, 0.85f); // 초록 HP·노랑 스태미나와 밝기로 구분
         private static readonly Color StaminaColor = new Color(0.95f, 0.78f, 0.25f);
         private static readonly Color SlotBackColor = new Color(0.08f, 0.08f, 0.08f, 0.75f);
         private static readonly Color PotionColor = new Color(0.8f, 0.2f, 0.25f);
@@ -144,6 +145,39 @@ namespace BossRaid.Tools
             }
         }
 
+        // 만들어 둔 프리팹을 열어서 HP 바에 잔상(Delay)이 없으면 붙이고 PlayerHUD에 연결. 나머지는 안 건드림
+        [MenuItem("BossRaid/UI/Add Damage Trail To Player HUD")]
+        private static void AddDamageTrail()
+        {
+            if (AssetDatabase.LoadAssetAtPath<GameObject>(PrefabPath) == null)
+            {
+                Debug.LogWarning($"{PrefabPath}가 없습니다. Create Player HUD를 먼저 실행하세요");
+                return;
+            }
+
+            GameObject root = PrefabUtility.LoadPrefabContents(PrefabPath);
+            try
+            {
+                Transform healthBar = root.transform.Find("Status/HealthBar");
+                if (healthBar == null) Debug.LogWarning("PlayerHUD 안에 Status/HealthBar가 없어서 잔상을 못 붙였습니다");
+                else if (healthBar.Find("Delay") != null) Debug.Log("PlayerHUD에 이미 HP 잔상이 있습니다");
+                else
+                {
+                    Image delayFill = CreateDelayFill(healthBar, LoadOrCreateWhiteSprite());
+                    var so = new SerializedObject(root.GetComponent<PlayerHUD>());
+                    so.FindProperty("healthDelayFill").objectReferenceValue = delayFill;
+                    so.ApplyModifiedPropertiesWithoutUndo();
+
+                    PrefabUtility.SaveAsPrefabAsset(root, PrefabPath);
+                    Debug.Log("PlayerHUD에 HP 잔상을 붙였습니다");
+                }
+            }
+            finally
+            {
+                PrefabUtility.UnloadPrefabContents(root);
+            }
+        }
+
         private static GameObject BuildPrefab()
         {
             if (AssetDatabase.IsValidFolder(Folder) == false)
@@ -178,6 +212,7 @@ namespace BossRaid.Tools
                 new Vector2(70, -60), new Vector2(400, 40));
             RectTransform healthBar = CreateBar("HealthBar", status, new Vector2(0, 0), 18, white, HealthColor, out Image healthFill);
             RectTransform staminaBar = CreateBar("StaminaBar", status, new Vector2(0, -28), 12, white, StaminaColor, out Image staminaFill);
+            Image healthDelayFill = CreateDelayFill(healthBar, white);
 
             // 왼쪽 아래: 아이템 칸. 오른쪽 큰 칸 = 고른 것(R), 그 왼쪽 작은 칸 = 휠로 바꿀 것 (색·개수는 PlayerHUD가 칸마다 바꿈)
             RectTransform items = CreateRect("Items", root.transform, Vector2.zero, Vector2.zero, Vector2.zero, new Vector2(176, 100));
@@ -196,6 +231,7 @@ namespace BossRaid.Tools
             var so = new SerializedObject(hud);
             so.FindProperty("healthBar").objectReferenceValue = healthBar;
             so.FindProperty("healthFill").objectReferenceValue = healthFill;
+            so.FindProperty("healthDelayFill").objectReferenceValue = healthDelayFill;
             so.FindProperty("staminaBar").objectReferenceValue = staminaBar;
             so.FindProperty("staminaFill").objectReferenceValue = staminaFill;
             so.FindProperty("mainSlot").objectReferenceValue = mainSlot;
@@ -322,6 +358,22 @@ namespace BossRaid.Tools
             fill.fillOrigin = (int)Image.OriginHorizontal.Left;
             fill.fillAmount = 1f;
             return bar;
+        }
+
+        // HP 바 안 채우기(Fill)와 같은 크기의 Filled 이미지를 맨 뒤(첫 자식)에 깔아서 Fill 뒤로 보이게 함
+        private static Image CreateDelayFill(Transform healthBar, Sprite white)
+        {
+            RectTransform rect = CreateStretch("Delay", healthBar, 3);
+            rect.SetAsFirstSibling();
+            var delay = rect.gameObject.AddComponent<Image>();
+            delay.sprite = white;
+            delay.color = HealthDelayColor;
+            delay.type = Image.Type.Filled;
+            delay.fillMethod = Image.FillMethod.Horizontal;
+            delay.fillOrigin = (int)Image.OriginHorizontal.Left;
+            delay.fillAmount = 1f;
+            delay.raycastTarget = false;
+            return delay;
         }
 
         // 칸 하나: 배경 + 색 도형(아이콘 자리) + 키 글자(없으면 생략) + 개수. size는 정사각형 한 변

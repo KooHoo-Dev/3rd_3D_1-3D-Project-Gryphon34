@@ -31,18 +31,21 @@ namespace BossRaid.Boss
         {
             foreach (DecalPair pair in pairs)
             {
-                if (pair.decal != null) pair.decal.enabled = false;
+                // 체크포인트로 이미 부서진 부위는 켠 채로 (HuntManager.Start가 이 Start보다 먼저 돌 수도 있어서)
+                if (pair.decal != null) pair.decal.enabled = pair.part != null && pair.part.IsBroken;
             }
         }
 
         private void OnEnable()
         {
             boss.OnPartBroken += HandlePartBroken;
+            boss.OnPartRestored += HandlePartBroken; // 처음부터 부서진 채 시작해도 같은 데칼
         }
 
         private void OnDisable()
         {
             boss.OnPartBroken -= HandlePartBroken;
+            boss.OnPartRestored -= HandlePartBroken;
         }
 
         private void HandlePartBroken(BossPart part)

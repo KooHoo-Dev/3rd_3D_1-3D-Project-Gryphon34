@@ -37,6 +37,7 @@ namespace BossRaid.Flow
             bool isNear = Vector3.Distance(player.transform.position, transform.position) <= interactDistance;
             panel.ShowPrompt(isNear);
 
+            if (PauseMenu.IsPaused) return; // 일시정지 중엔 키를 안 받음 (닫기 키가 커서·플레이어를 되돌리는 것 막기)
             if (SimpleInput.GetKeyDown(Key.E) == false) return;
             if (panel.IsOpen) panel.Close();
             else if (isNear && player.enabled) panel.Open(this); // 다른 메뉴(헌터북 등)가 열려 있으면 플레이어가 꺼져 있음

@@ -5866,10 +5866,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BossRaid.Boss.BossPart
   partName: FrontLeg_L
-  maxDurability: 80
+  maxDurability: 60
   magnitude: 1.2
   canBroken: 1
   fromStage: 0
+  stage2Durability: 80
 --- !u!114 &5665109260796848326
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5946,7 +5947,7 @@ MonoBehaviour:
     bodyMaterial: {fileID: 0}
     rageFireHpRate: 0
   - maxHp: 1300
-    maxFatigue: 150
+    maxFatigue: 120
     attackRate: 1.3
     bodyMaterial: {fileID: 2100000, guid: a75b9f14691d3514c86f133b1a2a5bf1, type: 2}
     rageFireHpRate: 0.5
@@ -6286,7 +6287,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BossRaid.Boss.BossPart
   partName: Wing_R
-  maxDurability: 100
+  maxDurability: 50
   magnitude: 1.3
   canBroken: 1
   fromStage: 2
@@ -6611,10 +6612,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BossRaid.Boss.BossPart
   partName: FrontLeg_R
-  maxDurability: 80
+  maxDurability: 60
   magnitude: 1.2
   canBroken: 1
   fromStage: 0
+  stage2Durability: 80
 --- !u!114 &1053771364203698995
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6768,7 +6770,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BossRaid.Boss.BossPart
   partName: Wing_L
-  maxDurability: 100
+  maxDurability: 50
   magnitude: 1.3
   canBroken: 1
   fromStage: 2
@@ -7573,10 +7575,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BossRaid.Boss.BossPart
   partName: Tail
-  maxDurability: 120
+  maxDurability: 60
   magnitude: 1.2
   canBroken: 1
   fromStage: 0
+  stage2Durability: 80
 --- !u!114 &6594056608237601175
 MonoBehaviour:
   m_ObjectHideFlags: 0

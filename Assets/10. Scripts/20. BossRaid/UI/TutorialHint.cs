@@ -134,6 +134,8 @@ namespace BossRaid.UI
 
         private void Update()
         {
+            if (PauseMenu.IsPaused) return; // 일시정지 중에 슬로모션 시간이 끝나 timeScale을 1로 되돌리는 것 막기
+
             if (isSlow)
             {
                 bool pressed = SimpleInput.GetKeyDown(Key.LeftCtrl) || SimpleInput.GetKeyDown(Key.Space);

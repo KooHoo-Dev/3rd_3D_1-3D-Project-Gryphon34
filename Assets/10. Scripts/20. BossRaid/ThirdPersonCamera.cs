@@ -52,11 +52,16 @@ namespace BossRaid
         private Vector3 shakeOffset;
         private Tweener shakeTween;
 
+        // 거리 요청: 기본 거리 distance에 더하는 값 (차지 중 멀어짐 등). 벽 충돌은 이 값을 더한 거리로 계산
+        private float zoomOffset;
+        private Tweener zoomTween;
+
         public bool IsTargeting { get; private set; }
 
         private void OnEnable()
         {
             CameraShake.OnShakeRequested += HandleShakeRequested;
+            CameraZoom.OnZoomRequested += HandleZoomRequested;
         }
 
         private void OnDisable()
@@ -64,6 +69,9 @@ namespace BossRaid
             CameraShake.OnShakeRequested -= HandleShakeRequested;
             shakeTween?.Kill();
             shakeOffset = Vector3.zero;
+            CameraZoom.OnZoomRequested -= HandleZoomRequested;
+            zoomTween?.Kill();
+            zoomOffset = 0f;
         }
 
         // 연달아 맞으면 앞의 흔들림을 끊고 새로 (안 끊으면 둘이 같은 값을 번갈아 씀)
@@ -73,6 +81,13 @@ namespace BossRaid
             shakeOffset = Vector3.zero;
             shakeTween = DOTween.Shake(() => shakeOffset, x => shakeOffset = x, duration, strength)
                 .OnComplete(() => shakeOffset = Vector3.zero);
+        }
+
+        // 새 요청이 오면 앞의 것을 끊고 지금 값에서 새 목표로 (차지를 빨리 떼면 멀어지던 중에 바로 돌아옴)
+        private void HandleZoomRequested(float offset, float duration)
+        {
+            zoomTween?.Kill();
+            zoomTween = DOTween.To(() => zoomOffset, x => zoomOffset = x, offset, duration);
         }
 
         private void Start()
@@ -173,10 +188,11 @@ namespace BossRaid
         {
             Vector3 origin = transform.position;
             Vector3 direction = -transform.forward;
+            float wantedDistance = distance + zoomOffset; // 거리 요청까지 더한 원하는 거리
             int count = Physics.SphereCastNonAlloc(origin, cameraRadius, direction, cameraHits,
-                distance, cameraCollisionMask, QueryTriggerInteraction.Ignore);
+                wantedDistance, cameraCollisionMask, QueryTriggerInteraction.Ignore);
 
-            float closest = distance;
+            float closest = wantedDistance;
             for (int i = 0; i < count; i++)
             {
                 // 플레이어 자신의 콜라이더는 무시합니다

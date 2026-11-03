@@ -82,7 +82,7 @@ namespace BossRaid.UI
         {
             MenuRow row = Instantiate(rowTemplate, rowParent);
             row.gameObject.SetActive(true);
-            row.SetText(recipe.Name, GetEffectText(recipe), recipe.ToCostText());
+            row.SetText(recipe.Name, GetEffectText(recipe), recipe.ToCostText(GameData.Current));
 
             string label = pot.IsEating(recipe) ? "먹는 중" : "요리";
             row.SetMain(label, pot.CanCook(recipe), () =>

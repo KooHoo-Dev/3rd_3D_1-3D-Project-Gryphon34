@@ -8,6 +8,7 @@ namespace BossRaid.UI
 {
     // 다크소울식 플레이어 HUD입니다.
     // - 왼쪽 위: HP 바, 그 아래 스태미나 바. 바 길이는 최대치에 비례합니다 (최대 HP +25 같은 버프가 붙으면 바가 길어짐)
+    //   맞으면 HP 바 뒤에 깎인 만큼 흰 잔상이 남았다가 따라 줄어듦
     // - 왼쪽 아래: 아이템 칸. 큰 칸 = 지금 고른 것(R로 씀), 옆 작은 칸 = 휠로 바꿀 것
     // - 오른쪽 아래: 가진 소울 (GameData.Current.souls). 늘면 위에 +N을 띄우고 잠깐 뒤 주르륵 더함 (다크소울처럼). 줄면 바로
     // 값은 매 프레임 플레이어에게서 읽어 옵니다. 플레이어는 이 HUD를 모릅니다.
@@ -20,6 +21,12 @@ namespace BossRaid.UI
         [SerializeField] private RectTransform staminaBar;
         [SerializeField] private Image staminaFill;
         [SerializeField] private float pixelsPerPoint = 4f; // 최대치 1당 바 길이(px). HP 100이면 400px
+
+        [Header("HP 잔상 (비우면 안 씀)")]
+        [SerializeField] private Image healthDelayFill;        // HP 채우기 뒤에 깔린 Filled 이미지
+        [SerializeField] private float delayWaitTime = 0.8f;   // 맞고 나서 잔상이 줄기 시작할 때까지
+        [SerializeField] private float maxHold = 1.2f;         // 연달아 맞아도 잔상이 기다리는 시간은 합쳐서 여기까지
+        [SerializeField] private float delayDrainSpeed = 30f;  // 1초에 줄어드는 HP (보스와 달리 비율이 아님. 바가 길어져도 같은 속도)
 
         [Header("아이템 칸 (큰 칸 = 고른 것, 작은 칸 = 휠로 바꿀 것)")]
         [SerializeField] private CanvasGroup mainSlot;
@@ -60,6 +67,12 @@ namespace BossRaid.UI
         private float countSpeed;
         private float countWaitTimer;
 
+        // HP 잔상: 비율이 아니라 HP 값으로 기억 (최대 HP가 늘어 비율만 줄 때 맞은 것처럼 보이지 않게)
+        private float delayedHealth; // 잔상이 가리키는 HP
+        private float lastHealth;    // 지난 프레임 HP (줄었으면 새로 맞은 것)
+        private float delayTimer;
+        private float heldTime;      // 이번 잔상이 지금까지 기다린 시간
+
         private void Start()
         {
             // 씬마다 플레이어가 하나라서 찾아서 씁니다.
@@ -75,11 +88,14 @@ namespace BossRaid.UI
             health = player.Health;
             stamina = player.Stamina;
             potion = player.Potion;
+            delayedHealth = health.CurrentHealth;
+            lastHealth = health.CurrentHealth;
         }
 
         private void Update()
         {
             UpdateBar(healthBar, healthFill, health.CurrentHealth, health.MaxHealth);
+            UpdateHealthDelay(health.CurrentHealth, health.MaxHealth);
             UpdateBar(staminaBar, staminaFill, stamina.CurrentStamina, stamina.MaxStamina);
             UpdateItemSlots();
             UpdateSouls();
@@ -129,6 +145,35 @@ namespace BossRaid.UI
         {
             bar.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, max * pixelsPerPoint);
             fill.fillAmount = max > 0 ? current / max : 0f;
+        }
+
+        // 히트스톱·튜토리얼 슬로모션 중에도 같은 속도로 줄게 unscaled 시간
+        private void UpdateHealthDelay(float current, float max)
+        {
+            if (healthDelayFill == null) return;
+
+            if (current < lastHealth) // 새로 맞음 → 다시 기다림. 연달아 맞아도 합쳐서 maxHold까지만 (불 피해는 매 프레임이라 없으면 안 줆)
+            {
+                if (delayedHealth <= lastHealth) heldTime = 0f; // 잔상이 다 따라왔었으면 새로 시작
+                delayTimer = Mathf.Min(delayWaitTime, Mathf.Max(0f, maxHold - heldTime));
+            }
+            lastHealth = current;
+
+            if (delayedHealth <= current) // HP가 참(회복약, 부활) → 잔상 없음
+            {
+                delayedHealth = current;
+            }
+            else if (delayTimer > 0f)
+            {
+                delayTimer -= Time.unscaledDeltaTime;
+                heldTime += Time.unscaledDeltaTime;
+            }
+            else
+            {
+                delayedHealth = Mathf.MoveTowards(delayedHealth, current, delayDrainSpeed * Time.unscaledDeltaTime);
+            }
+
+            healthDelayFill.fillAmount = max > 0 ? delayedHealth / max : 0f;
         }
 
         // 큰 칸에 고른 칸(potion.CurrentIndex), 작은 칸에 다른 칸. 0 = 회복약, 1 = 인간성

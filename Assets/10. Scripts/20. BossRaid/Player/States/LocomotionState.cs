@@ -1,4 +1,5 @@
-﻿using Study.Utilities;
+﻿using BossRaid.Combat;
+using Study.Utilities;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -13,10 +14,16 @@ namespace BossRaid.Player.States
         
         public override bool BlocksStaminaRegen => false;
 
+        private bool isMoving; // 지난 프레임에 이동 입력이 있었는지. 바뀐 순간에만 카메라 거리를 요청하려고 기억
+
         public override void Enter()
         {
             Animator.SetBool(PlayerController.IsAttackHash, false);
             Animator.SetBool(PlayerController.IsChargingHash, false);
+
+            // 구르기·마시기는 카메라 요청이 없어서, 돌아온 순간 지금 움직임에 맞춰 다시 요청
+            isMoving = SimpleInput.GetMoveAxisRaw() != Vector2.zero;
+            RequestMoveZoom();
         }
 
         public override void UpdateState(AnimatorStateInfo stateInfo)
@@ -28,6 +35,14 @@ namespace BossRaid.Player.States
             }
 
             Owner.HandleMovement();
+
+            // 걷기 시작 / 멈춤이 바뀐 순간만 (매 프레임 부르면 트윈이 계속 새로 시작돼서 안 움직임)
+            bool hasMoveInput = SimpleInput.GetMoveAxisRaw() != Vector2.zero;
+            if (hasMoveInput != isMoving)
+            {
+                isMoving = hasMoveInput;
+                RequestMoveZoom();
+            }
 
             // 가드: 누르고 있는 동안 IsGuarding. 누른 순간부터 퍼펙트 가드 시간을 셈 (떼고 다시 눌러야 다시 셈)
             if (SimpleInput.GetKeyDown(Key.LeftCtrl))
@@ -54,6 +69,15 @@ namespace BossRaid.Player.States
                 if(Owner.Stamina.TryUseStamina(Owner.DodgeStamina))
                     Animator.SetTrigger(PlayerController.DodgeHash);
             }
+        }
+
+        // 움직이면 멀어지고, 멈추면 원래 거리로
+        private void RequestMoveZoom()
+        {
+            if (isMoving)
+                CameraZoom.Play(Owner.MoveZoomOffset, Owner.MoveZoomOutTime);
+            else
+                CameraZoom.Play(0f, Owner.MoveZoomReturnTime);
         }
 
         #region 안 쓰는 것 (상쇄·태클, 11/02 뺌)

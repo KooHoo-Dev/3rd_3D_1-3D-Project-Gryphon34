@@ -65,5 +65,29 @@ namespace BossRaid.Data
             }
             return text.Length > 0 ? text.ToString() : "무료";
         }
+
+        // "소울 150/200 · 화룡 비늘 3/2" 가진 양/필요한 양. 모자란 것만 빨갛게 (숫자로도 읽히게, 색만으로 알리지 않음)
+        public string ToCostText(Progress progress)
+        {
+            StringBuilder text = new StringBuilder();
+            if (Souls > 0) AppendCost(text, "소울", progress.souls, Souls);
+            for (int i = 0; i < System.Enum.GetValues(typeof(MaterialType)).Length; i++)
+            {
+                var type = (MaterialType)i;
+                int count = GetCount(type);
+                if (count <= 0) continue;
+                AppendCost(text, UI.ItemDisplay.GetName(type), progress.materials[i], count);
+            }
+            return text.Length > 0 ? text.ToString() : "무료";
+        }
+
+        private const string ShortColor = "#FF7A7A"; // 모자란 재료 글자색
+
+        private static void AppendCost(StringBuilder text, string name, int have, int need)
+        {
+            if (text.Length > 0) text.Append(" · ");
+            string cost = $"{name} {have}/{need}";
+            text.Append(have < need ? $"<color={ShortColor}>{cost}</color>" : cost);
+        }
     }
 }

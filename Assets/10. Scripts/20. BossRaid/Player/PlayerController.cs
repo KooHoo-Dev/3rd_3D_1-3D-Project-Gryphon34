@@ -68,6 +68,30 @@ namespace BossRaid.Player
         [Header("Attack Cancel")]
         [SerializeField] private float attackCancelTime = 0f; // _End 칸 진행률이 이 값 이상이면 구르기·가드로 후딜을 끊을 수 있음 (0 = 들어가자마자)
         public float AttackCancelTime => attackCancelTime;
+
+        [Header("Charge Camera")]
+        [SerializeField] private float chargeZoomOffset;     // 차지 중 카메라가 기본 거리보다 이만큼 멀어짐
+        [SerializeField] private float chargeZoomOutTime;    // 멀어지는 데 걸리는 시간
+        [SerializeField] private float chargeZoomReturnTime; // 떼서 내려칠 때 원래 거리로 돌아오는 시간
+        public float ChargeZoomOffset => chargeZoomOffset;
+        public float ChargeZoomOutTime => chargeZoomOutTime;
+        public float ChargeZoomReturnTime => chargeZoomReturnTime;
+
+        [Header("Guard Camera")]
+        [SerializeField] private float guardZoomOffset;     // 가드 중 카메라 거리 차이 (음수 = 가까워짐)
+        [SerializeField] private float guardZoomInTime;     // 가까워지는 데 걸리는 시간
+        [SerializeField] private float guardZoomReturnTime; // 가드를 풀 때 원래 거리로 돌아오는 시간
+        public float GuardZoomOffset => guardZoomOffset;
+        public float GuardZoomInTime => guardZoomInTime;
+        public float GuardZoomReturnTime => guardZoomReturnTime;
+
+        [Header("Move Camera")]
+        [SerializeField] private float moveZoomOffset;     // 걷기·달리기 중 카메라가 기본 거리보다 이만큼 멀어짐
+        [SerializeField] private float moveZoomOutTime;    // 멀어지는 데 걸리는 시간
+        [SerializeField] private float moveZoomReturnTime; // 멈추면 원래 거리로 돌아오는 시간
+        public float MoveZoomOffset => moveZoomOffset;
+        public float MoveZoomOutTime => moveZoomOutTime;
+        public float MoveZoomReturnTime => moveZoomReturnTime;
         public bool IsInGuardState => currentState is GuardState; // 가드 칸에 있는지 (GuardHandIK가 읽음). 애니메이터 파라미터 IsGuarding과 다름
 
         private int comboBonusLevel; // 퍼펙트 가드 성공 → 다음 한 타의 차지 시작 단계 (0 = 없음). 구르거나 맞으면 사라짐
@@ -324,7 +348,11 @@ namespace BossRaid.Player
             bool isTackleMotion = Animator.GetCurrentAnimatorStateInfo(0).tagHash == TackleTagHash
                                   || (Animator.IsInTransition(0) && Animator.GetNextAnimatorStateInfo(0).tagHash == TackleTagHash);
             if (currentState != dodgeState && isTackleMotion == false) return;
-            Movement.UpdateAnimMoveDelta(Animator.deltaPosition);
+
+            // 점프가 없으니 위아래는 버림 (안 버리면 구르기 때 몸이 뜸)
+            Vector3 delta = Animator.deltaPosition;
+            delta.y = 0f;
+            Movement.UpdateAnimMoveDelta(delta);
         }
 
         #region 안 쓰는 것 (상쇄·태클, 11/02 뺌)

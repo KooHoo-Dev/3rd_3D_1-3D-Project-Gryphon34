@@ -23,6 +23,9 @@ namespace BossRaid.Data
         // 죽은 자리에 떨어진 소울 (amount 0 = 없음). 한 번에 하나만 (또 죽으면 덮어씀)
         public DroppedSoul droppedSoul = new DroppedSoul();
 
+        // 보스 체크포인트 (넘은 체력 구간, 죽은 횟수, 부서진 부위). HuntManager가 죽을 때 적고 투기장 시작 때 되돌림
+        public BossCheckpoint checkpoint = new BossCheckpoint();
+
         // 인간성: 태우면 회복약 최대 개수 +1 (최대 5), 사용하면 사람 상태 (최대 HP +25, 죽으면 끔)
         public int currentMaxPotion = 3;
         public bool isHuman;

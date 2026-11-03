@@ -67,6 +67,7 @@ namespace BossRaid.Player
 
         private void Update()
         {
+            if (UI.PauseMenu.IsPaused) return; // 일시정지 중엔 휠·마시기 키를 안 받음
             UpdateIndex();
 
             if (isHealing == false) return;

@@ -75,6 +75,7 @@ namespace BossRaid.UI
                 if (noticeTimer <= 0) noticeText.gameObject.SetActive(false);
             }
 
+            if (PauseMenu.IsPaused) return; // 일시정지 중엔 키를 안 받음 (닫기 키가 커서·플레이어를 되돌리는 것 막기)
             if (SimpleInput.GetKeyDown(Key.Tab) == false) return;
             if (IsOpen) Close();
             else if (player.enabled) Open(); // 다른 메뉴(화톳불·대장간·냄비)가 열려 있으면 플레이어가 꺼져 있음

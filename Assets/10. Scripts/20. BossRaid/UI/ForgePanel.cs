@@ -87,7 +87,7 @@ namespace BossRaid.UI
             string info = GetStatText(shown);
             if (current != null && next != null) info += $"\n→ +{next.Level}: {GetStatText(next)}"; // 강화하면 이렇게 바뀜
 
-            string cost = next != null ? next.ToCostText() : "최대 강화";
+            string cost = next != null ? next.ToCostText(GameData.Current) : "최대 강화";
 
             MenuRow row = Instantiate(rowTemplate, rowParent);
             row.gameObject.SetActive(true);
