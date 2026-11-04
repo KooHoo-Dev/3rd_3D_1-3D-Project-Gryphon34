@@ -13,7 +13,7 @@ namespace BossRaid.Player.States
         public override void UpdateState(AnimatorStateInfo stateInfo)
         {
             bool isAttack = SimpleInput.GetMouseButtonDown(SimpleInput.MouseButton.Left);
-            if (stateInfo.normalizedTime < 0.8f && isAttack)
+            if (stateInfo.normalizedTime < 0.9f && isAttack)
             {
                 if((Animator.GetBool(PlayerController.IsAttackHash) == false) &&
                    Owner.Stamina.CanUseStamina(Owner.AttackStamina))
