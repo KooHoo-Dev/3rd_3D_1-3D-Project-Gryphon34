@@ -63,6 +63,13 @@ namespace BossRaid.Boss
         }
 
 
+        // 임시(TestCheats F8): 내구도를 한 대만 맞으면 깨지는 값으로. 깨진 부위는 그대로
+        public void TestNearBreak()
+        {
+            if (IsBroken) return;
+            CurrentDurability = Mathf.Min(CurrentDurability, 1f);
+        }
+
         [ContextMenu("Test Hit")]
         private void TestHit()
         {

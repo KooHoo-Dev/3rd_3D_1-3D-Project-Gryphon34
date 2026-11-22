@@ -217,6 +217,17 @@ namespace BossRaid.Boss
             Debug.Log("[테스트] 더 깰 부위가 없습니다");
         }
 
+        // 임시(TestCheats F8): 지금 단계에서 깰 수 있는 부위를 전부 깨지기 직전으로. 다음 한 대에 깨지면서 보상·연출은 평소와 같음
+        // F5(2단계로)는 내구도를 다시 채우므로 F5 다음에 눌러야 함
+        public void TestNearBreakParts()
+        {
+            foreach (BossPart part in GetComponentsInChildren<BossPart>(true))
+            {
+                if (part.CanBreakAt(StageNumber)) part.TestNearBreak();
+            }
+            Debug.Log($"[테스트] {StageNumber}단계에서 깰 수 있는 부위를 깨지기 직전으로");
+        }
+
         // 꼬리: 안 보이게 될 부분의 콜라이더를 한 번 꺼 둠 (크기 0만으로는 Animator 타이밍에 따라 맞을 수 있어서)
         private void DisableTailColliders(BossPart part)
         {

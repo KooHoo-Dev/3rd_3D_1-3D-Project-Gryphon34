@@ -6,13 +6,14 @@ using UnityEngine.InputSystem;
 namespace BossRaid.Flow
 {
     // 임시: 플레이 테스트용 치트 + 화면 정보창. 에디터에서만 동작 (빌드에선 빈 컴포넌트)
+    // 영상 녹화용 빌드: Assets/csc.rsp(-define:RECORDING_CHEATS)가 있으면 빌드에서도 동작 (정보창은 처음에 꺼짐, F1로 켬). 녹화 끝나면 csc.rsp 삭제
     // 클래스는 빌드에도 남겨 둠: 통째로 빼면 씬에 붙인 컴포넌트가 Missing Script가 됨
-    // F1 정보창 / F2 Test Rich / F3 무적 / F4 보스 처치 / F5 지금 판을 2단계로 / F6 부위 하나 깨기 / F7 보스 지치게
+    // F1 정보창 / F2 Test Rich / F3 무적 / F4 보스 처치 / F5 지금 판을 2단계로 / F6 부위 하나 깨기 / F7 보스 지치게 / F8 부위 깨지기 직전
     // 두 씬에 빈 오브젝트 하나씩 만들어 붙이면 됨. 플레이어·보스·HuntManager는 알아서 찾음 (마을엔 보스가 없음)
     public class TestCheats : MonoBehaviour
     {
-#if UNITY_EDITOR
-        private bool showInfo = true; // 칸으로 두지 않음: #if 안의 칸은 빌드와 저장 모양이 달라짐
+#if UNITY_EDITOR || RECORDING_CHEATS
+        private bool showInfo; // 칸으로 두지 않음: #if 안의 칸은 빌드와 저장 모양이 달라짐. 에디터에선 켜고 시작 (Start)
 
         private PlayerController player;
         private Boss.Boss boss;
@@ -30,6 +31,7 @@ namespace BossRaid.Flow
 
         private void Start()
         {
+            showInfo = Application.isEditor; // 녹화 빌드에선 화면에 안 보이게 꺼 두고 시작
             player = FindAnyObjectByType<PlayerController>();
             boss = FindAnyObjectByType<Boss.Boss>();
             huntManager = FindAnyObjectByType<HuntManager>();
@@ -106,6 +108,9 @@ namespace BossRaid.Flow
             if (keyboard.f7Key.wasPressedThisFrame && boss != null)
                 boss.ReduceFatigue(boss.CurrentFatigue); // 남은 피로를 다 깎음 → 퍼펙트 가드로 지칠 때와 같은 길 (이미 지쳤으면 안 함)
 
+            if (keyboard.f8Key.wasPressedThisFrame && boss != null)
+                boss.TestNearBreakParts();
+
             if (keyboard.f5Key.wasPressedThisFrame && boss != null)
             {
                 // 보상·소울도 2단계로 맞추려고 GameData도 같이 바꿈
@@ -141,7 +146,7 @@ namespace BossRaid.Flow
         private string BuildInfoText()
         {
             Progress progress = GameData.Current;
-            string text = "<b>[테스트] F1 끄기 · F2 부자 · F3 무적 · F4 처치 · F5 2단계 · F6 부위 · F7 지침</b>\n";
+            string text = "<b>[테스트] F1 끄기 · F2 부자 · F3 무적 · F4 처치 · F5 2단계 · F6 부위 · F7 지침 · F8 부위 직전</b>\n";
 
             if (boss != null)
             {
